@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import Chords from '../definitions/chords.json';
 import Scales from '../definitions/scales.json';
 
 Vue.use(Vuex);
@@ -48,6 +49,36 @@ export default new Vuex.Store({
                 notes.push(state.notes[(rootNoteIndex + semitone ) % state.notes.length]);
             });
             return notes;
+        },
+        availableScaleChords(state, getters) {
+            const scale = Scales[state.scale];
+            const out = [];
+
+            // compare for each available note in the scale
+            // whether all known Chords have notes that fit with the scale
+
+            const scaleNotes = getters.availableScaleNotes;
+
+            for (let noteIndex = 0; noteIndex < scale.length; ++noteIndex) {
+                const note = scaleNotes[noteIndex];
+                Object.keys(Chords).forEach(chordName => {
+                    const semitones = Chords[chordName];
+                    const chordNotes = [];
+
+                    // collect all notes for the chord
+                    semitones.forEach(semitone => {
+                        const chordNoteIndex = state.notes.indexOf(note);
+                        chordNotes.push(state.notes[(chordNoteIndex + semitone) % state.notes.length])
+                    });
+
+                    for (let i = 0; i < chordNotes.length; ++i) {
+                        if (!scaleNotes.includes(chordNotes[i]))
+                            return;
+                    }
+                    out.push(`${note} ${chordName}`);
+                });
+            }
+            return out;
         },
     },
     mutations: {

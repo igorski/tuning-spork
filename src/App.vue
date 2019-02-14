@@ -59,19 +59,23 @@
                 </select>
             </div>
         </div>
+        <chords />
+        <p>This trinket is <a href="https://www.github.com/igorski/guitar-scale-visualiser" target="_blank">open source</a>. Go make it better.</p>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import Fretboard from './components/fretboard'
+import Chords from './components/chords'
 import store from './store';
 
 export default {
     name: 'guitar-scale-visualiser',
     store,
     components: {
-        Fretboard
+        Fretboard,
+        Chords,
     },
     computed: {
         ...mapState([

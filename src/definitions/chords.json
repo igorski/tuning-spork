@@ -1,0 +1,19 @@
+{
+    "add9": [0, 2, 4, 7],
+    "augmented": [0, 4, 3],
+    "diminished 7th": [0, 3, 6, 9],
+    "major": [0, 4, 7],
+    "major 7th": [0, 4, 7, 11],
+    "7th": [0, 4, 7, 10],
+    "7th suspended": [0, 5, 7, 10],
+    "9th": [0, 2, 4, 7, 10],
+    "13th": [0, 4, 9, 10],
+    "minor": [0, 3, 7],
+    "minor 6th": [0, 3, 9],
+    "minor 7th": [0, 3, 7, 10],
+    "minor 9th": [0, 2, 3, 7],
+    "minor 11th": [0, 2, 3, 10],
+    "power chord": [0, 7],
+    "suspended": [0, 5, 7 ],
+    "suspended 2nd": [0, 2, 7]
+}
