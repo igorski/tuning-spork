@@ -20,17 +20,28 @@ const GUITAR_TUNING = [
     ['E', 'B', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#']
 ];
 
+const UKELELE_TUNING = [
+    ['A', 'E', 'C', 'G']
+];
+
 /* internal methods */
 
 const getTunings = (state) => {
-    return state.instrumentType === 'bass' ? BASS_TUNING : GUITAR_TUNING;
+    switch (state.instrumentType) {
+        default:
+            return GUITAR_TUNING;
+        case 'bass':
+            return BASS_TUNING;
+        case 'ukelele':
+            return UKELELE_TUNING;
+    }
 };
 
 export default new Vuex.Store({
     state: {
         notes: ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'],
         scales: Scales,
-        instrumentType: 'guitar',       // 'guitar' or 'bass'
+        instrumentType: 'guitar',       // 'guitar', 'bass' or 'ukelele'
         key: 'E',                       // none more guitar friendly
         scale: Object.keys(Scales)[0],  // TODO: assumption that scales have content :p
         tuning: GUITAR_TUNING[0],       // start out as regular six string, notes sorted top to bottom

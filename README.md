@@ -78,7 +78,8 @@ guitar string.
 
 ## Roadmap
 
-* Show all chords that belong to a chosen scale
+* Show chord fingerings
 * List of tunings to select from
+* Mobile view
 * Fancy stylesheet
 * "Name my chord" (draw a chord on the fretboard and get the chord name and compatible scales)

@@ -12,7 +12,8 @@
             <!-- fret wire -->
             <div v-for="fret in AMOUNT_OF_FRETS"
                  class="fret"
-                 :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
+                 :key="`fret ${fret}`"
+                 :style="{ left: `${(fret + 1 ) * 100 / AMOUNT_OF_FRETS.length}%`}"
             ></div>
             <!-- scale notes -->
             <div v-for="fret in AMOUNT_OF_FRETS"
@@ -20,8 +21,8 @@
                  class="note"
                  :key="`string ${index} fret ${fret}`"
                  :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
-                 :class="{ root: getNoteByFret(fret) === key }"
-            >{{ viewOption === 'frets' ? fret : getNoteByFret(fret) }}</div>
+                 :class="{ root: getNoteByFret(fret) === key, decimal: fret > 9 }"
+            ><span>{{ viewOption === 'frets' ? fret : getNoteByFret(fret) }}</span></div>
         </div>
     </div>
 </template>
@@ -80,13 +81,13 @@ export default {
 
 <style lang="scss" scoped>
 
-    $height: 40px;
+    $size: 40px;
 
     .string-container {
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-        height: $height;
+        height: $size;
     }
 
     .string {
@@ -99,23 +100,40 @@ export default {
         .fret {
             position: absolute;
             width: 2px;
-            height: $height;
-            top: -($height / 2);
+            height: $size;
+            top: -($size / 2);
             background-color: grey;
+
+            // nut
+            &:first-child {
+                width: 6px;
+                background-color: #d6d6d6;
+            }
         }
 
         .note {
             position: absolute;
             top: -18px;
-            margin-left: ($height / 2);
+            width: $size / 2;
+            height: $size / 2;
+            margin-left: ($size / 2);
             background-color: #FFF;
             border: 2px solid blue;
             border-radius: 50%;
-            padding: 5px 10px;
+            padding: 5px;
             font-weight: bold;
 
             &.root {
                 border-color: red;
+            }
+
+            span {
+                position: absolute;
+                left: $size / 4;
+            }
+             
+            &.decimal span {
+               left: $size / 7;
             }
         }
     }

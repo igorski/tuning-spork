@@ -8,6 +8,7 @@
             will be available in subsequent releases.
         </p>
         <div v-for="chord in availableScaleChords"
+             :key="chord"
              class="chord"
         >
             {{ chord }}

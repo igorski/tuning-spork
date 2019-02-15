@@ -1,6 +1,8 @@
 <template>
     <div class="fretboard">
-        <div v-for="(note, index) in tuning">
+        <div v-for="(note, index) in tuning"
+             :key="`string_${index}`"
+        >
             <string :index="index" />
         </div>
     </div>
@@ -25,7 +27,7 @@ export default {
 <style lang="scss">
     .fretboard {
         width: 100%;
-        padding-top: 10px;
+        padding: 30px 0;
     }
 </style>
 

@@ -1,14 +1,13 @@
 <template>
     <div id="app">
         <h1>guitar scale visualiser</h1>
-        <fretboard />
-        <div id="interface">
+        <div class="interface">
             <div class="option">
             <label>Instrument</label>
                 <select id="instrumentType"
                         @change="changeInstrumentType($event.target.value)"
                 >
-                    <option v-for="type in ['guitar', 'bass']"
+                    <option v-for="type in ['guitar', 'bass', 'ukelele']"
                             :key="`${type}_instrument`"
                             :selected="type === instrumentType"
                     >{{ type }}</option>
@@ -25,6 +24,9 @@
                     >{{ amount }}</option>
                 </select>
             </div>
+        </div>
+        <fretboard />
+        <div class="interface">
             <div class="option">
                 <label>Key / <span class="root-note">root note</span></label>
                 <select id="rootNote"
@@ -122,12 +124,12 @@ export default {
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
-        margin: 60px auto 0;
+        margin: 20px auto 0;
         max-width: 960px;
     }
 
-    #interface {
-        padding: 20px 0;
+    .interface {
+        padding: 0;
     }
 
     .option {
