@@ -129,11 +129,8 @@ export default {
 
             span {
                 position: absolute;
-                left: $size / 4;
-            }
-             
-            &.decimal span {
-               left: $size / 7;
+                left: 0;
+                width: 100%;
             }
         }
     }
