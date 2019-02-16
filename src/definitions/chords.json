@@ -11,9 +11,8 @@
     "minor": [0, 3, 7],
     "minor 6th": [0, 3, 9],
     "minor 7th": [0, 3, 7, 10],
-    "minor 9th": [0, 2, 3, 7],
+    "minor 9th": [0, 2, 3, 7, 10],
     "minor 11th": [0, 2, 3, 10],
-    "power chord": [0, 7],
     "suspended": [0, 5, 7 ],
     "suspended 2nd": [0, 2, 7]
 }

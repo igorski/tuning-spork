@@ -3,6 +3,7 @@
         <select class="string-tuning"
                 @change="handleTuningChange($event.target.value)">
             <option v-for="n in notes"
+                    :key="`string_${index}_${n}`"
                     :selected="n === note"
             >{{ n }}</option>
         </select>

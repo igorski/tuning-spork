@@ -1,6 +1,7 @@
 <template>
     <div id="app">
         <h1>guitar scale visualiser</h1>
+        <!-- instrument interface -->
         <div class="interface">
             <div class="option">
             <label>Instrument</label>
@@ -25,7 +26,9 @@
                 </select>
             </div>
         </div>
+        <!-- instrument fretboard -->
         <fretboard />
+        <!-- scale interface -->
         <div class="interface">
             <div class="option">
                 <label>Key / <span class="root-note">root note</span></label>
@@ -61,7 +64,10 @@
                 </select>
             </div>
         </div>
-        <chords />
+        <!-- chord list -->
+        <chords
+                v-if="instrumentType === 'guitar'"
+        />
         <p>This trinket is <a href="https://www.github.com/igorski/guitar-scale-visualiser" target="_blank">open source</a>. Go make it better.</p>
     </div>
 </template>

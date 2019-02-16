@@ -86,7 +86,7 @@ export default new Vuex.Store({
                         if (!scaleNotes.includes(chordNotes[i]))
                             return;
                     }
-                    out.push(`${note} ${chordName}`);
+                    out.push({ name: `${note} ${chordName}`, notes: chordNotes });
                 });
             }
             return out;
