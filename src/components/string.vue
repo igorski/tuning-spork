@@ -16,14 +16,27 @@
                  :key="`fret ${fret}`"
                  :style="{ left: `${(fret + 1 ) * 100 / AMOUNT_OF_FRETS.length}%`}"
             ></div>
-            <!-- scale notes -->
-            <div v-for="fret in AMOUNT_OF_FRETS"
-                 v-if="isNoteInScale(fret)"
-                 class="note"
-                 :key="`string ${index} fret ${fret}`"
-                 :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
-                 :class="{ root: getNoteByFret(fret) === key, decimal: fret > 9 }"
-            ><span>{{ viewOption === 'frets' ? fret : getNoteByFret(fret) }}</span></div>
+            <!-- app mode 0 : show scale notes -->
+            <template v-if="appMode === 0">
+                <div v-for="fret in AMOUNT_OF_FRETS"
+                     v-if="isNoteInScale(fret)"
+                     class="note"
+                     :key="`string ${index} fret ${fret}`"
+                     :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
+                     :class="{ root: getNoteByFret(fret) === key, decimal: fret > 9 }"
+                ><span>{{ viewOption === 'frets' ? fret : getNoteByFret(fret) }}</span></div>
+            </template>
+            <!-- app mode 1 : allow manual fretting of string -->
+            <template v-else>
+                <div v-for="fret in AMOUNT_OF_FRETS"
+                     class="note"
+                     :key="`string ${index} fret ${fret}`"
+                     :class="{ hidden: fret !== activeFret }"
+                     :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
+                     @click="activeFret !== fret ? activeFret = fret : activeFret = undefined"
+                 ><span>{{ fret }}</span>
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -49,6 +62,8 @@ export default {
     }),
     computed: {
         ...mapState([
+            'chord',
+            'appMode',
             'notes',
             'tuning',
             'key',
@@ -60,11 +75,20 @@ export default {
         note() {
             // is open string note for the current tuning
             return this.tuning[this.index];
+        },
+        activeFret: {
+            get() {
+                return this.chord[this.index];
+            },
+            set(value) {
+                this.setChordStringFretIndex({ index: this.index, value });
+            }
         }
     },
     methods: {
         ...mapMutations([
-            'tuneString'
+            'tuneString',
+            'setChordStringFretIndex'
         ]),
         isNoteInScale(fret) {
             return this.availableScaleNotes.includes(this.getNoteByFret(fret));
@@ -132,6 +156,10 @@ export default {
                 position: absolute;
                 left: 0;
                 width: 100%;
+            }
+
+            &.hidden {
+                opacity: 0;
             }
         }
     }

@@ -78,8 +78,8 @@ guitar string.
 
 ## Roadmap
 
-* Show chord fingerings
+* Fix bug where duplicate chord fingerings are displayed
 * List of tunings to select from
 * Mobile view
 * Fancy stylesheet
-* "Name my chord" (draw a chord on the fretboard and get the chord name and compatible scales)
+

@@ -39,13 +39,15 @@ const getTunings = (state) => {
 
 export default new Vuex.Store({
     state: {
+        appMode: 0,                     // either 0 (scale visualiser) or 1 (name my chord)
         notes: ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'],
         scales: Scales,
         instrumentType: 'guitar',       // 'guitar', 'bass' or 'ukelele'
         key: 'E',                       // none more guitar friendly
         scale: Object.keys(Scales)[0],  // TODO: assumption that scales have content :p
         tuning: GUITAR_TUNING[0],       // start out as regular six string, notes sorted top to bottom
-        viewOption: 'frets',            // 'frets' or 'notes',
+        viewOption: 'frets',            // whether to visualise 'frets' or 'notes',
+        chord: []                       // chord visualised by 'Name my chord'-mode
     },
     getters: {
         availableStringAmount(state) {
@@ -91,11 +93,35 @@ export default new Vuex.Store({
             }
             return out;
         },
+        getChordByIntervals: state => intervals => {
+            let out = null;
+            Object.keys(Chords).forEach(chordName => {
+                if (JSON.stringify(Chords[chordName]) === JSON.stringify(intervals)) {
+                    out = chordName;
+                }
+            });
+            return out;
+        },
+        getCompatibleScalesForIntervals: state => intervals => {
+            const out = [];
+            Object.keys(Scales).forEach(scaleName => {
+                if (intervals.every(interval => Scales[scaleName].indexOf(interval) > -1 )) {
+                    out.push(scaleName);
+                }
+            });
+            return out;
+        }
     },
     mutations: {
+        setAppMode(state, mode) {
+            state.appMode = mode;
+        },
         setInstrumentType(state, type) {
-            state.instrumentType = type;
-            state.tuning = getTunings(state)[0].concat();
+            if (state.instrumentType !== type) {
+                state.instrumentType = type;
+                state.tuning = getTunings(state)[0].concat();
+                state.chord = [];
+            }
         },
         setKey(state, key) {
             state.key = key;
@@ -111,6 +137,9 @@ export default new Vuex.Store({
         },
         setViewOption(state, type) {
             state.viewOption = type;
+        },
+        setChordStringFretIndex(state, { index, value }) {
+            Vue.set(state.chord, index, value);
         }
     },
     actions: {
