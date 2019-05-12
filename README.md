@@ -82,4 +82,4 @@ guitar string.
 * List of tunings to select from
 * Mobile view
 * Fancy stylesheet
-
+* Toggle for 3 and multi note chord listings
