@@ -110,6 +110,17 @@ export default new Vuex.Store({
                 }
             });
             return out;
+        },
+        fretRange: state => (startFret = 0, visibleFrets = 4) => {
+            const out = [];
+            for (let i = 0; i <= visibleFrets; ++i) {
+                out[i] = startFret + i;
+            }
+            return out;
+        },
+        isPowerChord: state => chord => {
+            const name = chord.name.replace(' ', '');
+            return name.length === 2 && name.charAt(1) === '5';
         }
     },
     mutations: {

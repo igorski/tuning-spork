@@ -70,8 +70,8 @@
                 </div>
             </div>
             <!-- chord list -->
-            <chords
-                    v-if="instrumentType === 'guitar'"
+            <chord-list
+                v-if="instrumentType === 'guitar'"
             />
         </template>
         <template v-else>
@@ -94,9 +94,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
-import Fretboard from './components/fretboard'
-import Chords from './components/chords'
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import Fretboard from './components/fretboard';
+import ChordList from './components/chord-list';
 import store from './store';
 
 export default {
@@ -104,7 +104,7 @@ export default {
     store,
     components: {
         Fretboard,
-        Chords,
+        ChordList
     },
     data: () => ({
         foundChord: null,

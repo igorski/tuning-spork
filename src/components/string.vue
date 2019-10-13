@@ -18,8 +18,7 @@
             ></div>
             <!-- app mode 0 : show scale notes -->
             <template v-if="appMode === 0">
-                <div v-for="fret in AMOUNT_OF_FRETS"
-                     v-if="isNoteInScale(fret)"
+                <div v-for="fret in fretsInScale"
                      class="note"
                      :key="`string ${index} fret ${fret}`"
                      :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
@@ -83,7 +82,10 @@ export default {
             set(value) {
                 this.setChordStringFretIndex({ index: this.index, value });
             }
-        }
+        },
+        fretsInScale() {
+            return AMOUNT_OF_FRETS.filter(fret => this.isNoteInScale(fret));
+        },
     },
     methods: {
         ...mapMutations([
