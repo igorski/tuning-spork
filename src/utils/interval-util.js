@@ -20,14 +20,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Vue from 'vue';
-import App from './App.vue';
-import store from './store';
-import './registerServiceWorker';
+import Scales from '@/definitions/scales.json';
 
-Vue.config.productionTip = false;
+export const getCompatibleScalesForIntervals = intervals => {
+    const out = [];
+    Object.keys(Scales).forEach(scaleName => {
+        if (intervals.every(interval => Scales[scaleName].indexOf(interval) > -1 )) {
+            out.push(scaleName);
+        }
+    });
+    return out;
+};
 
-new Vue({
-  store,
-  render: h => h(App)
-}).$mount('#app');
+export const fretRange = (startFret = 0, visibleFrets = 4) => {
+    const out = [];
+    for (let i = 0; i <= visibleFrets; ++i) {
+        out[i] = startFret + i;
+    }
+    return out;
+};

@@ -1,20 +1,51 @@
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 <template>
     <div id="chord-overlay">
         <h2>{{ chord.name }}</h2>
-        <chord-shape v-for="(shape, index) in shapes"
-                     :key="`shape${index}`"
-                     :first-string="shape.firstString"
-                     :first-fret="shape.firstFret"
-                     :fretted-notes="shape.frettedNotes"
-                     :visible-frets="visibleFrets"
-                     class="chord-shape"
-        />
+        <p v-if="!shapes.length">
+            Could not resolve shapes for {{ chord.name }} for {{ instrumentType }}.
+            This is either due to an idiosyncratic tuning or this application
+            requiring further development.
+        </p>
+        <template v-else>
+            <chord-shape v-for="(shape, index) in shapes"
+                         :key="`shape${index}`"
+                         :first-string="shape.firstString"
+                         :first-fret="shape.firstFret"
+                         :fretted-notes="shape.frettedNotes"
+                         :visible-frets="visibleFrets"
+                         class="chord-shape"
+            />
+        </template>
     </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import ChordShape from './chord-shape';
+import { isPowerChord } from '@/utils/chord-util';
+import { fretRange } from '@/utils/interval-util';
 
 // the frets from which we will start calculating our chords (0 = open chord)
 const STARTING_FRETS = [0, 2, 4, 6, 8, 10];
@@ -41,10 +72,7 @@ export default {
         ...mapState([
             'tuning',
             'notes',
-        ]),
-        ...mapGetters([
-            'fretRange',
-            'isPowerChord',
+            'instrumentType',
         ]),
         strings() {
             return [...this.tuning].reverse();
@@ -83,13 +111,17 @@ export default {
         frettedNotes(requestedFret) {
             // prevent recursing too much when fret start offset is getting ridiculously high
             // (either chord cannot be resolved for tuning or the fret sizes are getting uncomfortable)
-            if (isNaN(requestedFret) || requestedFret > 1.25 * OCTAVE ) {
+            if (isNaN(requestedFret)) {
                 return null;
             }
-            const { firstFret, fretStartOffset, firstString } = this.getRootNoteStartFret(requestedFret);
+            const { firstFret, firstString } = this.getRootNoteStartFret(requestedFret);
+            if (firstFret > OCTAVE) {
+                return null;
+            }
+
             const frettedNotes = new Array(this.strings.length);
             const foundNotes = [this.chordRoot];
-            const range = this.fretRange(firstFret, this.visibleFrets);
+            const range = fretRange(firstFret, this.visibleFrets);
             const lastFret = range[range.length - 1];
             frettedNotes[firstString] = firstFret;
 
@@ -119,7 +151,7 @@ export default {
                     frettedNotes[string] = frets[0];
                 }
                 // for power chords we allow doubling of the octave note and that's it
-                if (this.isPowerChord(this.chord) && foundNotes.length > 3) {
+                if (isPowerChord(this.chord) && foundNotes.length > 3) {
                     break;
                 }
             }

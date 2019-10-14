@@ -20,14 +20,33 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Vue from 'vue';
-import App from './App.vue';
-import store from './store';
-import './registerServiceWorker';
+ import Chords from '@/definitions/chords.json';
 
-Vue.config.productionTip = false;
+/**
+ * Get the name of the chord described by given intervals
+ *
+ * @param {Array<number>} intervals
+ * @return {string|null}
+ */
+export const getChordByIntervals = intervals => {
+     let out = null;
+     Object.keys(Chords).forEach(chordName => {
+         if (JSON.stringify(Chords[chordName]) === JSON.stringify(intervals)) {
+             out = chordName;
+         }
+     });
+     return out;
+ };
 
-new Vue({
-  store,
-  render: h => h(App)
-}).$mount('#app');
+/**
+ * Whether given chord is a power chord
+ *
+ * @param {name: string, notes: Array<string>} chord
+ * @return {boolean}
+ */
+export const isPowerChord = chord => {
+    // TODO being lazy and assuming chord name is correct, we
+    // should check the notes for containing a root and fifth only
+    const chordName = chord.name.replace(' ', '');
+    return chordName.length === 2 && chordName.charAt(1) === '5';
+};

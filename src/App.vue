@@ -1,3 +1,25 @@
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 <template>
     <div id="app">
         <h1>guitar scale visualiser</h1>
@@ -70,9 +92,7 @@
                 </div>
             </div>
             <!-- chord list -->
-            <chord-list
-                v-if="instrumentType === 'guitar'"
-            />
+            <chord-list />
         </template>
         <template v-else>
             <div v-if="foundChord">
@@ -95,9 +115,11 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import Fretboard from './components/fretboard';
-import ChordList from './components/chord-list';
-import store from './store';
+import Fretboard from '@/components/fretboard';
+import ChordList from '@/components/chord-list';
+import { getChordByIntervals } from '@/utils/chord-util';
+import { getCompatibleScalesForIntervals } from '@/utils/interval-util';
+import store from '@/store';
 
 export default {
     name: 'guitar-scale-visualiser',
@@ -125,8 +147,6 @@ export default {
         ]),
         ...mapGetters([
             'availableStringAmount',
-            'getChordByIntervals',
-            'getCompatibleScalesForIntervals'
         ])
     },
     watch: {
@@ -180,7 +200,7 @@ export default {
             // collect all intervals for every note
 
             let intervals = this.getIntervals(this.chord, rootNoteIndex);
-            let chord = this.getChordByIntervals(intervals);
+            let chord = getChordByIntervals(intervals);
 
             if (chord) {
                 this.foundChord = `${rootNote} ${chord}`;
@@ -206,7 +226,7 @@ export default {
                 filteredChord[bassIndex] = undefined;
 
                 intervals = this.getIntervals(filteredChord, rootNoteIndex);
-                chord = this.getChordByIntervals(intervals);
+                chord = getChordByIntervals(intervals);
 
                 if (chord) {
                     this.foundChord = `${rootNote} ${chord}/${bassNote}`;
@@ -214,7 +234,7 @@ export default {
             }
             if (this.foundChord) {
                 this.foundChordRoot = rootNote;
-                this.foundScales = this.getCompatibleScalesForIntervals(intervals, rootNote);
+                this.foundScales = getCompatibleScalesForIntervals(intervals, rootNote);
             }
         },
         getIntervals(chord, rootNoteIndex) {
