@@ -69,6 +69,11 @@ export default new Vuex.Store({
         scale: Object.keys(Scales)[0],  // TODO: assumption that scales have content :p
         tuning: GUITAR_TUNING[0],       // start out as regular six string, notes sorted top to bottom
         viewOption: 'frets',            // whether to visualise 'frets' or 'notes',
+        chordOptions: {
+            power: false,
+            basic: true,
+            extended: false,
+        },
         chord: []                       // chord visualised by 'Name my chord'-mode
     },
     getters: {
@@ -150,7 +155,12 @@ export default new Vuex.Store({
         },
         setChordStringFretIndex(state, { index, value }) {
             Vue.set(state.chord, index, value);
-        }
+        },
+        setChordOption(state, { option, value}) {
+            if (/power|basic|extended/.test(option)) {
+                state.chordOptions[option] = value;
+            }
+        },
     },
     actions: {
 

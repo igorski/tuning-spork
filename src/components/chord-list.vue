@@ -27,12 +27,38 @@
             :chord="selectedChord"
         />
         <h2>Available chords</h2>
+        <fieldset>
+            <div class="input-wrapper">
+                <input type="checkbox"
+                       v-model="powerChords"
+                       id="powerChords"
+                       name="powerChords"
+                />
+                <label for="powerChords">Power chords</label>
+            </div>
+            <div class="input-wrapper">
+                <input type="checkbox"
+                       v-model="basicChords"
+                       id="basicChords"
+                       name="basicChords"
+                />
+                <label for="basicChords">Basic chords</label>
+            </div>
+            <div class="input-wrapper">
+                <input type="checkbox"
+                       v-model="extendedChords"
+                       id="extendedChords"
+                       name="extendedChords"
+                />
+                <label for="extendedChords">Extended chords</label>
+            </div>
+        </fieldset>
         <p>
             These chords fit the chosen scale. You can use the above scale to improvise freely
             over a chord progression made of below chords.
             Hover over the chord to view recommended fingerings for your instrument and its tuning.
         </p>
-        <div v-for="chordObject in availableScaleChords"
+        <div v-for="chordObject in filteredChords"
              :key="chordObject.name"
              class="chord"
              @mouseover="selectedChord = chordObject"
@@ -44,7 +70,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import { isPowerChord } from '@/utils/chord-util';
 import ChordOverlay from './chord-overlay';
 
 export default {
@@ -55,10 +82,56 @@ export default {
         selectedChord: null,
     }),
     computed: {
+        ...mapState([
+            'chordOptions',
+        ]),
         ...mapGetters([
             'availableScaleChords',
         ]),
+        powerChords: {
+            get() {
+                return this.chordOptions.power;
+            },
+            set(value) {
+                this.setChordOption({ option: 'power', value });
+            },
+        },
+        basicChords: {
+            get() {
+                return this.chordOptions.basic;
+            },
+            set(value) {
+                this.setChordOption({ option: 'basic', value });
+            }
+        },
+        extendedChords: {
+            get() {
+                return this.chordOptions.extended;
+            },
+            set(value) {
+                this.setChordOption({ option: 'extended', value });
+            }
+        },
+        filteredChords() {
+            return this.availableScaleChords.filter(chord => {
+                if (this.powerChords && isPowerChord(chord)) {
+                    return chord;
+                }
+                if (this.basicChords && chord.notes.length === 3) {
+                    return chord;
+                }
+                if (this.extendedChords && chord.notes.length > 3) {
+                    return chord;
+                }
+                return null;
+            });
+        },
     },
+    methods: {
+        ...mapMutations([
+            'setChordOption',
+        ]),
+    }
 };
 </script>
 

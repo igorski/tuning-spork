@@ -47,6 +47,6 @@ export const getChordByIntervals = intervals => {
 export const isPowerChord = chord => {
     // TODO being lazy and assuming chord name is correct, we
     // should check the notes for containing a root and fifth only
-    const chordName = chord.name.replace(' ', '');
+    const chordName = chord.name.replace(/\s|b|#/g, '');
     return chordName.length === 2 && chordName.charAt(1) === '5';
 };
