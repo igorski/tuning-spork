@@ -115,7 +115,7 @@ export default {
                 return null;
             }
             const { firstFret, firstString } = this.getRootNoteStartFret(requestedFret);
-            if (firstFret > OCTAVE) {
+            if (firstFret >= OCTAVE) {
                 return null;
             }
 
@@ -205,15 +205,17 @@ export default {
             this.strings.forEach(openStringNote => {
                 for (let fret = fretStartOffset; fret < OCTAVE + fretStartOffset; ++fret) {
                     const note = this.getNoteByFret(fret, openStringNote);
-                    if ( note === this.chordRoot) {
+                    if (note === this.chordRoot) {
                         found.push(fret);
                     }
                 }
             });
+
             // only consider the first three strings for the root note
             // TODO: what about those 8 and 9 strings??
             found = found.slice(0, 3);
-            const firstString = fretStartOffset > 7 ? 0 : found.indexOf(Math.min.apply(Math, found));
+            const closest = found.reduce((prev, curr) => (Math.abs(curr - fretStartOffset) < Math.abs(prev - fretStartOffset)) ? curr : prev);
+            const firstString = found.indexOf(closest);
 
             /**
              * Get the fret number of the first strings root note
