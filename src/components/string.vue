@@ -76,7 +76,11 @@ export default {
         index: {
             type: Number,
             required: true
-        }
+        },
+        note: {
+            type: String,
+            required: true
+        },
     },
     data: () => ({
         AMOUNT_OF_FRETS,
@@ -93,10 +97,6 @@ export default {
         ...mapGetters([
             'availableScaleNotes',
         ]),
-        note() {
-            // is open string note for the current tuning
-            return this.tuning[this.index];
-        },
         activeFret: {
             get() {
                 return this.chord[this.index];

@@ -30,25 +30,36 @@
         <!-- instrument interface -->
         <div class="interface">
             <div class="option">
-            <label>Instrument</label>
+                <label for="instrumentType">Instrument</label>
                 <select id="instrumentType"
-                        @change="changeInstrumentType($event.target.value)"
+                        v-model="selectedInstrumentType"
                 >
                     <option v-for="type in ['guitar', 'bass', 'ukelele']"
                             :key="`${type}_instrument`"
-                            :selected="type === instrumentType"
+                            :value="type"
                     >{{ type }}</option>
                 </select>
             </div>
             <div class="option">
-                <label>Amount of strings</label>
+                <label for="stringAmount">Amount of strings</label>
                 <select id="stringAmount"
-                        @change="changeStringAmount($event.target.value)"
+                        v-model.number="selectedStringAmount"
                 >
-                    <option v-for="amount in availableStringAmount"
-                            :key="`${amount} strings`"
-                            :selected="amount === tuning.length"
+                    <option v-for="amount in availableStringAmountsForCurrentInstrument"
+                            :key="`${amount}_strings`"
+                            :value="amount"
                     >{{ amount }}</option>
+                </select>
+            </div>
+            <div class="option">
+                <label for="tuning">Tuning</label>
+                <select id="tuning"
+                        v-model="selectedTuning"
+                >
+                    <option v-for="tun in availableTuningsForCurrentStringAmount"
+                            :key="`${tun.name}_tuning`"
+                            :value="tun"
+                    >{{ tun.name }}</option>
                 </select>
             </div>
         </div>
@@ -146,8 +157,33 @@ export default {
             'viewOption',
         ]),
         ...mapGetters([
-            'availableStringAmount',
-        ])
+            'availableStringAmountsForCurrentInstrument',
+            'availableTuningsForCurrentStringAmount',
+        ]),
+        selectedInstrumentType: {
+            get() {
+                return this.instrumentType;
+            },
+            set(value) {
+                this.setInstrumentType(value);
+            },
+        },
+        selectedStringAmount: {
+            get() {
+                return this.tuning.strings.length;
+            },
+            set(value) {
+                this.setStandardTuningForStringAmount(value);
+            },
+        },
+        selectedTuning: {
+            get() {
+                return this.tuning;
+            },
+            set(value) {
+                this.setTuning(value);
+            }
+        },
     },
     watch: {
         chord() { this.calculateChord() },
@@ -159,20 +195,15 @@ export default {
             'setInstrumentType',
             'setKey',
             'setScale',
-            'setStringAmount',
+            'setTuning',
+            'setStandardTuningForStringAmount',
             'setViewOption',
         ]),
-        changeInstrumentType(type) {
-            this.setInstrumentType(type);
-        },
         changeKey(note) {
             this.setKey(note);
         },
         changeScale(scale) {
             this.setScale(scale);
-        },
-        changeStringAmount(amount) {
-            this.setStringAmount(parseFloat(amount));
         },
         calculateChord() {
             // chord fingering changed, try to retrieve whether the chord fingering represents a known chord
@@ -192,7 +223,7 @@ export default {
             if (typeof rootFret !== 'number') {
                 return; // no notes found
             }
-            let openStringNote = this.tuning[rootString];
+            let openStringNote = this.tuning.strings[rootString];
             let rootNoteIndex = this.notes.indexOf(openStringNote);
             let rootNote = this.notes[(rootNoteIndex + rootFret) % this.notes.length];
             rootNoteIndex = this.notes.indexOf(rootNote);
@@ -215,7 +246,7 @@ export default {
                 openStringNote = null;
                 rootFret = null;
                 while (!rootFret && --rootString > 0) {
-                    openStringNote = this.tuning[rootString];
+                    openStringNote = this.tuning.strings[rootString];
                     rootFret = this.chord[rootString];
                 }
                 rootNoteIndex = this.notes.indexOf(openStringNote);
@@ -239,13 +270,13 @@ export default {
         },
         getIntervals(chord, rootNoteIndex) {
             const intervals = [];
-            let stringIndex = this.tuning.length;
+            let stringIndex = this.selectedStringAmount;
             while (stringIndex--) {
                 const stringFret = chord[stringIndex];
                 if (typeof stringFret !== 'number') {
                     continue;
                 }
-                const openStringNote = this.tuning[stringIndex];
+                const openStringNote = this.tuning.strings[stringIndex];
                 const stringNoteIndex = this.notes.indexOf(openStringNote);
                 const frettedNote = this.notes[(stringNoteIndex + stringFret) % this.notes.length];
 

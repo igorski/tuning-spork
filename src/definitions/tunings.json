@@ -1,0 +1,29 @@
+[
+  { "type": "guitar",  "name": "Standard",       "strings": [ "E", "A", "D", "G", "B", "E" ] },
+  { "type": "guitar",  "name": "Open C",         "strings": [ "C", "G", "C", "E", "G", "C" ] },
+  { "type": "guitar",  "name": "Open D",         "strings": [ "D", "A", "D", "F#", "A", "D" ] },
+  { "type": "guitar",  "name": "Open D minor",   "strings": [ "D", "A", "D", "F", "A", "D" ] },
+  { "type": "guitar",  "name": "Open G",         "strings": [ "D", "G", "D", "G", "B", "D" ] },
+  { "type": "guitar",  "name": "Half step down", "strings": [ "D#", "G#", "C#", "F#", "A#", "D#" ] },
+  { "type": "guitar",  "name": "Full step down", "strings": [ "D", "G", "C", "F", "A", "D" ] },
+  { "type": "guitar",  "name": "Drop D",         "strings": [ "D", "A", "D", "G", "B", "E" ] },
+  { "type": "guitar",  "name": "Drop C",         "strings": [ "C", "G", "C", "F", "A", "D" ] },
+  { "type": "guitar",  "name": "Drop B",         "strings": [ "B", "F#", "B", "E", "G#", "C#" ] },
+  { "type": "guitar",  "name": "Drop A",         "strings": [ "A", "E", "A", "D", "F#", "B" ] },
+  { "type": "guitar",  "name": "Baritone 4th",   "strings": [ "B", "E", "A", "D", "F#", "B" ] },
+  { "type": "guitar",  "name": "Baritone 5th",   "strings": [ "A", "D", "G", "C", "E", "A" ] },
+
+  { "type": "guitar",  "name": "Standard",       "strings": [ "B", "E", "B", "G", "D", "A", "E" ] },
+  { "type": "guitar",  "name": "Full step down", "strings": [ "A", "D", "A", "F", "C", "G", "D" ] },
+  { "type": "guitar",  "name": "Standard",       "strings": [ "F#", "B", "E", "B", "G", "D", "A", "E" ] },
+  { "type": "guitar",  "name": "Standard",       "strings": [ "C#", "F#", "B", "E", "B", "G", "D", "A", "E" ] },
+
+  { "type": "bass",    "name": "Standard",       "strings": [ "E", "A", "D", "G" ] },
+  { "type": "bass",    "name": "Drop D",         "strings": [ "D", "A", "D", "G" ] },
+  { "type": "bass",    "name": "Standard",       "strings": [ "B", "E", "A", "D", "G" ] },
+  { "type": "bass",    "name": "Standard",       "strings": [ "B", "E", "A", "D", "G", "C" ] },
+
+  { "type": "ukelele", "name": "Standard",       "strings": [ "G", "C", "E", "A" ] },
+  { "type": "ukelele", "name": "Guitar",         "strings": [ "D", "G", "B", "E" ] },
+  { "type": "ukelele", "name": "D tuning",       "strings": [ "A", "D", "F#", "B" ] }
+]

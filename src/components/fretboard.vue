@@ -22,10 +22,12 @@
  */
 <template>
     <div class="fretboard">
-        <div v-for="(note, index) in tuning"
+        <div v-for="(note, index) in tuning.strings"
              :key="`string_${index}`"
         >
-            <string :index="index" />
+            <string :index="index"
+                    :note="note"
+            />
         </div>
     </div>
 </template>

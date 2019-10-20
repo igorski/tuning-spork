@@ -75,7 +75,7 @@ export default {
             'instrumentType',
         ]),
         strings() {
-            return [...this.tuning].reverse();
+            return [...this.tuning.strings].reverse();
         },
         chordRoot() {
             return this.chord.notes[0];
@@ -210,11 +210,9 @@ export default {
                     }
                 }
             });
-
-            // only consider the first three strings for the root note
-            // TODO: what about those 8 and 9 strings??
-            found = found.slice(0, 3);
-            const closest = found.reduce((prev, curr) => (Math.abs(curr - fretStartOffset) < Math.abs(prev - fretStartOffset)) ? curr : prev);
+            const closest = found.reduce((prev, curr) => {
+                return Math.abs(curr - fretStartOffset) < Math.abs(prev - fretStartOffset) ? curr : prev;
+            });
             const firstString = found.indexOf(closest);
 
             /**

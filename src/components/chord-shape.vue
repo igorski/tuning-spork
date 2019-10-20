@@ -27,7 +27,7 @@
             <div v-for="(note, stringIndex) in strings"
                  :key="`string_${stringIndex}`"
                  class="string"
-                 :style="{ left: `${stringIndex / tuning.length * 100}%` }"
+                 :style="{ left: `${stringIndex / strings.length * 100}%` }"
             >
                 {{ note }}
                 <div v-for="fret in visibleFretRange"
@@ -72,15 +72,12 @@ export default {
             'tuning',
         ]),
         strings() {
-            return [...this.tuning].reverse();
+            return [...this.tuning.strings].reverse();
         },
         visibleFretRange() {
             return fretRange(this.firstFret, this.visibleFrets);
         },
     },
-    methods: {
-
-    }
 };
 </script>
 

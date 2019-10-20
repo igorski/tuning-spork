@@ -84,6 +84,7 @@ export default {
     computed: {
         ...mapState([
             'chordOptions',
+            'tuning',
         ]),
         ...mapGetters([
             'availableScaleChords',
@@ -124,7 +125,8 @@ export default {
                     return chord;
                 }
                 return null;
-            });
+
+            }).filter(chord => chord.notes.length <= this.tuning.strings.length);
         },
     },
     methods: {
