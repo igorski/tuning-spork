@@ -23,13 +23,8 @@
 <template>
     <div id="chord-overlay">
         <h2>{{ chord.name }}</h2>
-        <p v-if="!shapes.length">
-            Could not resolve shapes for {{ chord.name }} for {{ instrumentType }}.
-            This is either due to an idiosyncratic tuning or this application
-            requiring further development.
-        </p>
-        <template v-else>
-            <chord-shape v-for="(shape, index) in shapes"
+        <template v-if="shapes.length">
+            <chord-shape v-for="(shape, index) in sortedShapes"
                          :key="`shape${index}`"
                          :first-string="shape.firstString"
                          :first-fret="shape.firstFret"
@@ -38,14 +33,19 @@
                          class="chord-shape"
             />
         </template>
+        <p v-else>
+            Could not resolve shapes for {{ chord.name }} for {{ instrumentType }}.
+            This is either due to an idiosyncratic tuning or this application
+            requiring further development.
+        </p>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import ChordShape from './chord-shape';
 import { isPowerChord } from '@/utils/chord-util';
 import { fretRange } from '@/utils/interval-util';
+import ChordShape from './chord-shape';
 
 // the frets from which we will start calculating our chords (0 = open chord)
 const STARTING_FRETS = [0, 2, 4, 6, 8, 10];
@@ -83,6 +83,14 @@ export default {
         chordFifth() {
             // get the fifth in this chord (note: not all chords might have a 5th defined)
             return this.getNoteByFret(7, this.chordRoot);
+        },
+        sortedShapes() {
+            // lower frets first
+            return [...this.shapes].sort((a, b) => {
+                if (a.firstFret < b.firstFret) return -1;
+                if (a.firstFret > b.firstFret) return 1;
+                return 0;
+            });
         },
     },
     mounted() {
@@ -151,7 +159,7 @@ export default {
                     frettedNotes[string] = frets[0];
                 }
                 // for power chords we allow doubling of the octave note and that's it
-                if (isPowerChord(this.chord) && foundNotes.length > 3) {
+                if (isPowerChord(this.chord) && frettedNotes.filter(n => typeof n === 'number').length > 2) {
                     break;
                 }
             }
@@ -245,11 +253,16 @@ export default {
         background-color: rgba(255,200,200,.90);
         width: 50%;
         margin-left: -25%;
-        height: 250px;
+        min-height: 250px;
         pointer-events: none;
     }
 
-    .chord-shape:not(:first-child) {
-        margin-left: 30px;
+    .chord-shape {
+        &:not(:first-child) {
+            margin-left: 30px;
+        }
+        &:nth-child(n+5) {
+            margin-top: 75px;
+        }
     }
 </style>

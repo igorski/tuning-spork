@@ -22,8 +22,7 @@
  */
 <template>
     <div class="chord-wrapper">
-        <div class="fretboard"
-        >
+        <div class="fretboard">
             <div v-for="(note, stringIndex) in strings"
                  :key="`string_${stringIndex}`"
                  class="string"
@@ -92,6 +91,7 @@ export default {
 
     .fretboard {
         position: relative;
+        display: block;
         border-right: 1px solid grey;
         height: inherit;
     }
