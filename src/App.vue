@@ -30,37 +30,25 @@
         <!-- instrument interface -->
         <div class="interface">
             <div class="option">
-                <label for="instrumentType">Instrument</label>
-                <select id="instrumentType"
-                        v-model="selectedInstrumentType"
-                >
-                    <option v-for="type in ['guitar', 'bass', 'ukelele']"
-                            :key="`${type}_instrument`"
-                            :value="type"
-                    >{{ type }}</option>
-                </select>
+                <label>Instrument</label>
+                <model-select :options="mapSelectOptions(['guitar', 'bass', 'ukelele'])"
+                              v-model="selectedInstrumentType"
+                              class="select medium-list"
+                />
+            </div>
+            <div v-if="availableStringAmountsForCurrentInstrument.length > 0" class="option">
+                <label>Amount of strings</label>
+                <model-select :options="mapSelectOptions(availableStringAmountsForCurrentInstrument)"
+                              v-model="selectedStringAmount"
+                              class="select small-list"
+                />
             </div>
             <div class="option">
-                <label for="stringAmount">Amount of strings</label>
-                <select id="stringAmount"
-                        v-model.number="selectedStringAmount"
-                >
-                    <option v-for="amount in availableStringAmountsForCurrentInstrument"
-                            :key="`${amount}_strings`"
-                            :value="amount"
-                    >{{ amount }}</option>
-                </select>
-            </div>
-            <div class="option">
-                <label for="tuning">Tuning</label>
-                <select id="tuning"
-                        v-model="selectedTuning"
-                >
-                    <option v-for="tun in availableTuningsForCurrentStringAmount"
-                            :key="`${tun.name}_tuning`"
-                            :value="tun"
-                    >{{ tun.name }}</option>
-                </select>
+                <label>Tuning</label>
+                <model-select :options="availableTunings"
+                              v-model="selectedTuning"
+                              class="select large-list"
+                />
             </div>
         </div>
         <!-- instrument fretboard -->
@@ -70,36 +58,26 @@
             <div class="interface">
                 <div class="option">
                     <label>Key / <span class="root-note">root note</span></label>
-                    <select id="rootNote"
-                            @change="changeKey($event.target.value)"
-                    >
-                        <option v-for="note in notes"
-                                :key="`note ${note}`"
-                                :selected="note === key"
-                        >{{ note }}</option>
-                    </select>
+                    <model-select :options="availableNotes"
+                                  v-model="selectedKey"
+                                  class="select small-list"
+                    />
                 </div>
                 <div class="option">
                     <label>Scale</label>
-                    <select id="scale"
-                            @change="changeScale($event.target.value)"
-                    >
-                        <option v-for="scaleName in Object.keys(scales)"
-                                :key="`${scaleName} scale`"
-                                :selected="scaleName === scale"
-                        >{{ scaleName }}</option>
-                    </select>
+                    <model-select
+                        :options="availableScales"
+                        v-model="selectedScale"
+                        placeholder="Find scale by name"
+                        class="select large-list"
+                    />
                 </div>
                 <div class="option">
                     <label>View</label>
-                    <select id="viewOption"
-                            @change="setViewOption($event.target.value)"
-                    >
-                        <option v-for="option in ['frets', 'notes']"
-                                :key="option"
-                                :selected="viewOption === option"
-                        >{{ option }}</option>
-                    </select>
+                    <model-select :options="availableViewOptions"
+                                  v-model="selectedViewOption"
+                                  class="select medium-list"
+                    />
                 </div>
             </div>
             <!-- chord list -->
@@ -126,16 +104,22 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import Fretboard from '@/components/fretboard';
-import ChordList from '@/components/chord-list';
+import { ModelSelect } from 'vue-search-select';
 import { getChordByIntervals } from '@/utils/chord-util';
 import { getCompatibleScalesForIntervals } from '@/utils/interval-util';
+import { ucFirst } from '@/utils/string-util';
+import Fretboard from '@/components/fretboard';
+import ChordList from '@/components/chord-list';
 import store from '@/store';
+
+import 'semantic-ui-css/components/dropdown.min.css'
+import 'vue-search-select/dist/VueSearchSelect.css';
 
 export default {
     name: 'guitar-scale-visualiser',
     store,
     components: {
+        ModelSelect,
         Fretboard,
         ChordList
     },
@@ -161,29 +145,41 @@ export default {
             'availableTuningsForCurrentStringAmount',
         ]),
         selectedInstrumentType: {
-            get() {
-                return this.instrumentType;
-            },
-            set(value) {
-                this.setInstrumentType(value);
-            },
+            get() { return this.instrumentType; },
+            set(value) { this.setInstrumentType(value); }
         },
         selectedStringAmount: {
-            get() {
-                return this.tuning.strings.length;
-            },
-            set(value) {
-                this.setStandardTuningForStringAmount(value);
-            },
+            get() { return this.tuning.strings.length; },
+            set(value) { this.setStandardTuningForStringAmount(value); }
         },
         selectedTuning: {
-            get() {
-                return this.tuning;
-            },
-            set(value) {
-                this.setTuning(value);
-            }
+            get() { return this.tuning.name; },
+            set(value) { this.setTuning(this.availableTuningsForCurrentStringAmount.find(t => t.name === value)); }
         },
+        selectedScale: {
+            get() { return this.scale; },
+            set(value) { this.setScale(value); }
+        },
+        selectedKey: {
+            get() { return this.key; },
+            set(value) { this.setKey(value); }
+        },
+        selectedViewOption: {
+            get() { return this.viewOption; },
+            set(value) { this.setViewOption(value); }
+        },
+        availableNotes() {
+            return this.mapSelectOptions(this.notes);
+        },
+        availableTunings() {
+            return this.mapSelectOptions(this.availableTuningsForCurrentStringAmount.map(t => t.name));
+        },
+        availableScales() {
+            return this.mapSelectOptions(Object.keys(this.scales).sort());
+        },
+        availableViewOptions() {
+            return this.mapSelectOptions(['frets', 'notes']);
+        }
     },
     watch: {
         chord() { this.calculateChord() },
@@ -199,12 +195,6 @@ export default {
             'setStandardTuningForStringAmount',
             'setViewOption',
         ]),
-        changeKey(note) {
-            this.setKey(note);
-        },
-        changeScale(scale) {
-            this.setScale(scale);
-        },
         calculateChord() {
             // chord fingering changed, try to retrieve whether the chord fingering represents a known chord
             if (this.appMode !== 1 ) {
@@ -294,7 +284,18 @@ export default {
             this.setAppMode(0);
             this.setKey(key);
             this.setScale(scale);
-        }
+        },
+        mapSelectOptions(items) {
+            // format select options for vue-search-select component
+            return items.map(value => {
+                if (typeof value === 'object') return value;
+                let text = ucFirst(value.toString());
+                // NOTE: values and text MUST be different due to bug described in
+                // https://github.com/moreta/vue-search-select/issues/112
+                if (text === value) text += ' ';
+                return { value, text };
+            });
+        },
     }
 };
 </script>
@@ -353,4 +354,25 @@ export default {
         border: 2px solid #999;
         margin: 0 7px 7px;
     }
+
+    .select {
+        display: inline-block !important; // semantic-ui-css override
+
+        &.small-list {
+            max-width: 65px;
+        }
+        &.medium-list {
+            max-width: 100px;
+        }
+        &.large-list {
+            max-width: 200px;
+        }
+        .text {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
+        }
+    }
+
 </style>

@@ -61,7 +61,7 @@ export default new Vuex.Store({
         instrumentType: 'guitar',       // 'guitar', 'bass' or 'ukelele'
         tuning: standardTuningForInstrument('guitar', 6), // start as six string
         key: 'E',                       // none more guitar friendly
-        scale: Object.keys(Scales)[0],  // TODO: assumption that scales list always has content
+        scale: Object.keys(Scales).find(name => name === 'major'),
         viewOption: 'frets',            // whether to visualise 'frets' or 'notes',
         chordOptions: {
             power: false,
