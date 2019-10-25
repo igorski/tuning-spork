@@ -129,7 +129,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+    @import '@/styles/layout.scss';
     $size: 40px;
 
     .string-container {
@@ -166,14 +166,14 @@ export default {
             width: $size / 2;
             height: $size / 2;
             margin-left: ($size / 2);
-            background-color: #FFF;
-            border: 2px solid blue;
+            background-color: $color-3;
             border-radius: 50%;
             padding: 5px;
             font-weight: bold;
 
             &.root {
-                border-color: red;
+                background-color: $color-2;
+                color: $color-1;
             }
 
             span {

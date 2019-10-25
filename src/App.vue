@@ -21,84 +21,84 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 <template>
-    <div id="app">
-        <h1>guitar scale visualiser</h1>
-        <div class="mode-switcher">
-            <button :class="{ 'active': appMode === 0 }" type="button" @click="setAppMode(0)">Scale generator</button>
-            <button :class="{ 'active': appMode === 1 }" type="button" @click="setAppMode(1)">Name my chord!</button>
-        </div>
-        <!-- instrument interface -->
-        <div class="interface">
-            <div class="option">
-                <label>Instrument</label>
-                <model-select :options="mapSelectOptions(['guitar', 'bass', 'ukelele'])"
-                              v-model="selectedInstrumentType"
-                              class="select medium-list"
-                />
-            </div>
-            <div v-if="availableStringAmountsForCurrentInstrument.length > 0" class="option">
-                <label>Amount of strings</label>
-                <model-select :options="mapSelectOptions(availableStringAmountsForCurrentInstrument)"
-                              v-model="selectedStringAmount"
-                              class="select small-list"
-                />
-            </div>
-            <div class="option">
-                <label>Tuning</label>
-                <model-select :options="availableTunings"
-                              v-model="selectedTuning"
-                              class="select large-list"
-                />
-            </div>
-        </div>
-        <!-- instrument fretboard -->
-        <fretboard />
-        <template v-if="appMode === 0">
-            <!-- scale interface -->
+    <div id="gsv">
+        <application-menu />
+        <div class="app">
+            <!-- instrument interface -->
             <div class="interface">
                 <div class="option">
-                    <label>Key / <span class="root-note">root note</span></label>
-                    <model-select :options="availableNotes"
-                                  v-model="selectedKey"
-                                  class="select small-list"
-                    />
-                </div>
-                <div class="option">
-                    <label>Scale</label>
-                    <model-select
-                        :options="availableScales"
-                        v-model="selectedScale"
-                        placeholder="Find scale by name"
-                        class="select large-list"
-                    />
-                </div>
-                <div class="option">
-                    <label>View</label>
-                    <model-select :options="availableViewOptions"
-                                  v-model="selectedViewOption"
+                    <label>Instrument</label>
+                    <model-select :options="mapSelectOptions(['guitar', 'bass', 'ukelele'])"
+                                  v-model="selectedInstrumentType"
                                   class="select medium-list"
                     />
                 </div>
-            </div>
-            <!-- chord list -->
-            <chord-list />
-        </template>
-        <template v-else>
-            <div v-if="foundChord">
-                <h2>{{ foundChord }}</h2>
-            </div>
-            <div v-if="foundScales.length">
-                <p>The following scales are in key with this chord:</p>
-                <div v-for="scale in foundScales"
-                     class="scale"
-                     :key="scale"
-                     @click="showScale(foundChordRoot, scale)"
-                >
-                    {{ foundChordRoot }} {{ scale }}
+                <div v-if="availableStringAmountsForCurrentInstrument.length > 1" class="option">
+                    <label>Amount of strings</label>
+                    <model-select :options="mapSelectOptions(availableStringAmountsForCurrentInstrument)"
+                                  v-model="selectedStringAmount"
+                                  class="select small-list"
+                    />
+                </div>
+                <div v-if="availableTunings.length > 1" class="option">
+                    <label>Tuning</label>
+                    <model-select :options="availableTunings"
+                                  v-model="selectedTuning"
+                                  class="select large-list"
+                    />
                 </div>
             </div>
-        </template>
-        <p>This trinket is <a href="https://www.github.com/igorski/guitar-scale-visualiser" target="_blank">open source</a>. Go make it better.</p>
+            <!-- instrument fretboard -->
+            <fretboard />
+            <template v-if="appMode === 0">
+                <!-- scale interface -->
+                <div class="interface">
+                    <div class="option">
+                        <label>Key / <span class="root-note">root note</span></label>
+                        <model-select :options="availableNotes"
+                                      v-model="selectedKey"
+                                      class="select small-list"
+                        />
+                    </div>
+                    <div class="option">
+                        <label>Scale</label>
+                        <model-select
+                            :options="availableScales"
+                            v-model="selectedScale"
+                            placeholder="Find scale by name"
+                            class="select large-list"
+                        />
+                    </div>
+                    <div class="option">
+                        <label>View</label>
+                        <model-select :options="availableViewOptions"
+                                      v-model="selectedViewOption"
+                                      class="select medium-list"
+                        />
+                    </div>
+                </div>
+                <!-- chord list -->
+                <chord-list />
+            </template>
+            <template v-else>
+                <div v-if="foundChord">
+                    <h2>{{ foundChord }}</h2>
+                </div>
+                <div v-if="foundScales.length">
+                    <p>The following scales are in key with this chord:</p>
+                    <div v-for="scale in foundScales"
+                         class="scale"
+                         :key="scale"
+                         @click="showScale(foundChordRoot, scale)"
+                    >
+                        {{ foundChordRoot }} {{ scale }}
+                    </div>
+                </div>
+            </template>
+        </div>
+        <footer class="footer">
+            <p>This trinket is <a href="https://www.github.com/igorski/guitar-scale-visualiser" target="_blank">open source</a>. Go make it better.</p>
+        </footer>
     </div>
 </template>
 
@@ -108,6 +108,7 @@ import { ModelSelect } from 'vue-search-select';
 import { getChordByIntervals } from '@/utils/chord-util';
 import { getCompatibleScalesForIntervals } from '@/utils/interval-util';
 import { ucFirst } from '@/utils/string-util';
+import ApplicationMenu from '@/components/application-menu';
 import Fretboard from '@/components/fretboard';
 import ChordList from '@/components/chord-list';
 import store from '@/store';
@@ -119,6 +120,7 @@ export default {
     name: 'guitar-scale-visualiser',
     store,
     components: {
+        ApplicationMenu,
         ModelSelect,
         Fretboard,
         ChordList
@@ -127,6 +129,7 @@ export default {
         foundChord: null,
         foundChordRoot: null,
         foundScales: [],
+        menuOpened: false,
     }),
     computed: {
         ...mapState([
@@ -301,36 +304,16 @@ export default {
 </script>
 
 <style lang="scss">
-    #app {
-        font-family: 'Avenir', Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-align: center;
-        color: #2c3e50;
-        margin: 20px auto 0;
-        max-width: 960px;
-    }
+    @import '@/styles/layout.scss';
 
-    .mode-switcher {
-        margin: 0 0 20px;
-
-        button {
-            cursor: pointer;
-            display: inline-block;
-            margin: 0 5px;
-            padding: 5px 10px;
-            border: 1px solid #000;
-            background-color: #FFF;
-
-            &.active {
-                background-color: cornflowerblue;
-                color: #FFF;
-             }
-        }
+    .app {
+        margin: $menu-height auto 0;
+        max-width: $app-width;
     }
 
     .interface {
-        padding: 0;
+        padding: $spacing-medium 0 0;
+        @include boxSize();
     }
 
     .option {
@@ -342,7 +325,7 @@ export default {
         }
 
         .root-note {
-            color: red;
+            color: $color-2;
         }
     }
 
@@ -375,4 +358,18 @@ export default {
         }
     }
 
+    /* mobile view */
+
+    @media screen and ( max-width: $mobile-width ) {
+        .option {
+            display: inline-block;
+            margin-bottom: $spacing-small;
+            width: 100%;
+
+            label {
+                width: 30%;
+                max-width: 100px;
+            }
+        }
+    }
 </style>

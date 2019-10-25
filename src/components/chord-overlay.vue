@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 <template>
-    <div id="chord-overlay">
+    <div class="chord-overlay">
         <h2>{{ chord.name }}</h2>
         <template v-if="shapes.length">
             <chord-shape v-for="(shape, index) in sortedShapes"
@@ -244,7 +244,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    #chord-overlay {
+    @import '@/styles/_mixins.scss';
+    @import '@/styles/_variables.scss';
+
+    .chord-overlay {
         position: fixed;
         top: 50px;
         left: 50%;
@@ -254,7 +257,8 @@ export default {
         width: 50%;
         margin-left: -25%;
         min-height: 250px;
-        pointer-events: none;
+        @include noEvents();
+        z-index: $z-index-overlay;
     }
 
     .chord-shape {

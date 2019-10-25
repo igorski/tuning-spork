@@ -1,0 +1,27 @@
+/* layout variables */
+
+$app-width: 960px;
+$tablet-portrait-width: 768px;
+$mobile-width: 685px; // the threshold below which we start to use the mobile view
+
+// components
+$menu-height: 55px;
+$toggle-width: 55px;
+
+// spacings
+$spacing-xsmall: 4px;
+$spacing-small: 7px;
+$spacing-medium: 14px;
+$spacing-large: 28px;
+$spacing-xlarge: 56px;
+
+// colors
+$color-1: #36494E; // charcoal
+$color-2: #9BC1BC; // cambridge blue
+$color-3: #74776B; // nickel
+$color-4: #F1E0C5; // pearl
+
+// view stacking
+$z-index-header: 1;
+$z-index-menu: 2;
+$z-index-overlay: 3;
