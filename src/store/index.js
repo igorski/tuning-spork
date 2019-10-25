@@ -46,7 +46,7 @@ const getTunings = (state) => {
 
 const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
     return TUNINGS.find(tuning => {
-        if (tuning.type !== instrumentType || tuning.name !== 'Standard') {
+        if (tuning.type !== instrumentType || tuning.name.trim().slice(0, 8).toLowerCase() !== 'standard') {
             return;
         }
         return optStringAmount > 0 ? tuning.strings.length === optStringAmount : tuning;
