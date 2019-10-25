@@ -4,7 +4,7 @@
             <div class="toggle" @click="setMenuOpened(!menuOpened)">
                 <span>&#9776;</span>
             </div>
-            <h1>Pluck!</h1>
+            <!-- <h1>Pluck!</h1> -->
             <div class="menu-list">
                 <button :class="{ 'active': appMode === 0 }" type="button" @click="scaleGeneratorClick()">Scale generator</button>
                 <button :class="{ 'active': appMode === 1 }" type="button" @click="nameMyChordClick()">Name my chord!</button>
@@ -93,6 +93,18 @@ export default {
     .menu-list button {
         display: inline;
         cursor: pointer;
+    }
+
+    /* anything above mobile */
+
+    @media screen and ( min-width: $mobile-width ) {
+        .menu-list {
+            padding-top: $spacing-small;
+
+            button {
+                @include button();
+            }
+        }
     }
 
     /* mobile view */

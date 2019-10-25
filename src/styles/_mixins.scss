@@ -44,3 +44,26 @@
   overflow-y: auto;
   overflow-x: hidden; /* we should never want this in modal windows */
 }
+
+@mixin button() {
+    cursor: pointer;
+    border-radius: $spacing-large;
+    padding: $spacing-small * 1.5;
+    font-weight: bold;
+    background-color: $color-2;
+    border: 2px solid $color-3;
+    color: $color-3;
+    margin-right: $spacing-small;
+
+    &.disabled {
+        background-color: $color-3;
+        border-color: $color-2;
+        color: $color-2;
+    }
+
+    &.active,
+    &:hover {
+        background-color: $color-1;
+        border-color: $color-1;
+    }
+}

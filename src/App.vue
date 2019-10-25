@@ -24,60 +24,72 @@
     <div id="gsv">
         <application-menu />
         <div class="app">
-            <!-- instrument interface -->
-            <div class="interface">
-                <div class="option">
-                    <label>Instrument</label>
-                    <model-select :options="mapSelectOptions(['guitar', 'bass', 'ukelele'])"
-                                  v-model="selectedInstrumentType"
-                                  class="select medium-list"
-                    />
-                </div>
-                <div v-if="availableStringAmountsForCurrentInstrument.length > 1" class="option">
-                    <label>Amount of strings</label>
-                    <model-select :options="mapSelectOptions(availableStringAmountsForCurrentInstrument)"
-                                  v-model="selectedStringAmount"
-                                  class="select small-list"
-                    />
-                </div>
-                <div v-if="availableTunings.length > 1" class="option">
-                    <label>Tuning</label>
-                    <model-select :options="availableTunings"
-                                  v-model="selectedTuning"
-                                  class="select large-list"
-                    />
-                </div>
-            </div>
-            <!-- instrument fretboard -->
-            <fretboard />
-            <template v-if="appMode === 0">
-                <!-- scale interface -->
+            <!-- configuration menu toggle (mobile only) -->
+            <button type="button"
+                    class="configuration-toggle"
+                    @click="setConfigurationOpened(!configurationOpened)"
+            >Configure instrument</button>
+            <!-- instrument and scale configuration -->
+            <div class="configuration" :class="{ expanded: configurationOpened }">
+                <div class="configuration-close-button"
+                     @click="setConfigurationOpened(false)"
+                >&#x2715;</div>
                 <div class="interface">
                     <div class="option">
-                        <label>Key / <span class="root-note">root note</span></label>
-                        <model-select :options="availableNotes"
-                                      v-model="selectedKey"
-                                      class="select small-list"
-                        />
-                    </div>
-                    <div class="option">
-                        <label>Scale</label>
-                        <model-select
-                            :options="availableScales"
-                            v-model="selectedScale"
-                            placeholder="Find scale by name"
-                            class="select large-list"
-                        />
-                    </div>
-                    <div class="option">
-                        <label>View</label>
-                        <model-select :options="availableViewOptions"
-                                      v-model="selectedViewOption"
+                        <label>Instrument</label>
+                        <model-select :options="mapSelectOptions(['guitar', 'bass', 'ukelele'])"
+                                      v-model="selectedInstrumentType"
                                       class="select medium-list"
                         />
                     </div>
+                    <div v-if="availableStringAmountsForCurrentInstrument.length > 1" class="option">
+                        <label>Amount of strings</label>
+                        <model-select :options="mapSelectOptions(availableStringAmountsForCurrentInstrument)"
+                                      v-model="selectedStringAmount"
+                                      class="select small-list"
+                        />
+                    </div>
+                    <div v-if="availableTunings.length > 1" class="option">
+                        <label>Tuning</label>
+                        <model-select :options="availableTunings"
+                                      v-model="selectedTuning"
+                                      class="select large-list"
+                        />
+                    </div>
                 </div>
-                <!-- chord list -->
+                <!-- scale configuration interface -->
+                <template v-if="appMode === 0">
+                    <div class="interface">
+                        <div class="option">
+                            <label>Key / <span class="root-note">root note</span></label>
+                            <model-select :options="availableNotes"
+                                          v-model="selectedKey"
+                                          class="select small-list"
+                            />
+                        </div>
+                        <div class="option">
+                            <label>Scale</label>
+                            <model-select
+                                :options="availableScales"
+                                v-model="selectedScale"
+                                placeholder="Find scale by name"
+                                class="select large-list"
+                            />
+                        </div>
+                        <div class="option">
+                            <label>View</label>
+                            <model-select :options="availableViewOptions"
+                                          v-model="selectedViewOption"
+                                          class="select medium-list"
+                            />
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <!-- instrument fretboard -->
+            <fretboard />
+            <!-- compatible chords list -->
+            <template v-if="appMode === 0">
                 <chord-list />
             </template>
             <template v-else>
@@ -129,7 +141,7 @@ export default {
         foundChord: null,
         foundChordRoot: null,
         foundScales: [],
-        menuOpened: false,
+        configurationOpened: false,
     }),
     computed: {
         ...mapState([
@@ -203,7 +215,6 @@ export default {
             if (this.appMode !== 1 ) {
                 return;
             }
-
             this.foundChord = null;
             this.foundScales = [];
 
@@ -299,6 +310,9 @@ export default {
                 return { value, text };
             });
         },
+        setConfigurationOpened(opened) {
+            this.configurationOpened = opened;
+        },
     }
 };
 </script>
@@ -311,9 +325,15 @@ export default {
         max-width: $app-width;
     }
 
+    .configuration-toggle,
+    .configuration-close-button {
+        display: none; // mobile view only
+    }
+
     .interface {
         padding: $spacing-medium 0 0;
         @include boxSize();
+        @include noSelect();
     }
 
     .option {
@@ -361,14 +381,44 @@ export default {
     /* mobile view */
 
     @media screen and ( max-width: $mobile-width ) {
-        .option {
+        .configuration-toggle {
             display: inline-block;
+            margin: $spacing-medium auto 0;
+            @include button();
+        }
+        .configuration-close-button {
+            display: block;
+            position: absolute;
+            top: $spacing-medium;
+            right: $spacing-medium;
+        }
+        .configuration {
+            display: none;
+
+            &.expanded {
+                background-color: #FFF;
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: $z-index-overlay;
+            }
+        }
+        .option {
+            display: inline-flex;
             margin-bottom: $spacing-small;
             width: 100%;
+            text-align: left;
+            padding-left: $spacing-medium;
+            @include boxSize();
 
             label {
                 width: 30%;
-                max-width: 100px;
+            }
+            .select {
+                width: 70%;
             }
         }
     }

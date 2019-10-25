@@ -23,7 +23,8 @@
 <template>
     <div class="string-container">
         <select class="string-tuning"
-                @change="handleTuningChange($event.target.value)">
+                @change="handleTuningChange($event.target.value)"
+        >
             <option v-for="n in notes"
                     :key="`string_${index}_${n}`"
                     :selected="n === note"
@@ -170,6 +171,7 @@ export default {
             border-radius: 50%;
             padding: 5px;
             font-weight: bold;
+            color: $color-1;
 
             &.root {
                 background-color: $color-2;
@@ -187,4 +189,18 @@ export default {
             }
         }
     }
+
+    /* mobile view */
+
+    @media screen and ( max-width: $phone-width ) {
+        // for now these takes up too much space
+        .string-tuning,
+        .fret:first-child {
+            display: none;
+        }
+        .string {
+            left: -6%; // make up for missing "tuning peg" and nut
+        }
+    }
+
 </style>

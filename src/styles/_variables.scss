@@ -3,6 +3,7 @@
 $app-width: 960px;
 $tablet-portrait-width: 768px;
 $mobile-width: 685px; // the threshold below which we start to use the mobile view
+$phone-width: 420px; // the threshold we treat as a portrait phone
 
 // components
 $menu-height: 55px;
@@ -16,10 +17,11 @@ $spacing-large: 28px;
 $spacing-xlarge: 56px;
 
 // colors
-$color-1: #36494E; // charcoal
-$color-2: #9BC1BC; // cambridge blue
+$color-1: #F1E0C5; // pearl
+$color-2: #533747; // purple taupe
 $color-3: #74776B; // nickel
-$color-4: #F1E0C5; // pearl
+$color-4: #36494E; // charcoal
+$color-5: #9BC1BC; // cambridge blue
 
 // view stacking
 $z-index-header: 1;

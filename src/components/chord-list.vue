@@ -60,7 +60,7 @@
         </p>
         <div v-for="chordObject in filteredChords"
              :key="chordObject.name"
-             class="chord"
+             class="chord button"
              @mouseover="selectedChord = chordObject"
              @mouseout="selectedChord = null"
         >
@@ -138,12 +138,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    @import '@/styles/_variables.scss';
+
     .chord {
-        cursor: pointer;
         display: inline-block;
-        padding: 10px;
-        border-radius: 7px;
-        border: 2px solid #999;
-        margin: 0 7px 7px;
+        cursor: pointer;
+        border-radius: $spacing-large;
+        padding: $spacing-small ($spacing-small * 1.5);
+        background-color: $color-2;
+        border: 2px solid $color-4;
+        color: $color-1;
+        font-size: 90%;
+        font-weight: bold;
+        margin: 0 $spacing-small $spacing-small 0;
+
+        &:hover {
+            background-color: $color-1;
+            color: $color-4;
+        }
     }
 </style>

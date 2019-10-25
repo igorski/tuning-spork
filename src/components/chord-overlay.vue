@@ -249,24 +249,45 @@ export default {
 
     .chord-overlay {
         position: fixed;
-        top: 50px;
-        left: 50%;
-        border: 3px solid #000;
-        border-radius: 7px;
         background-color: rgba(255,200,200,.90);
-        width: 50%;
-        margin-left: -25%;
-        min-height: 250px;
-        @include noEvents();
         z-index: $z-index-overlay;
     }
 
     .chord-shape {
-        &:not(:first-child) {
-            margin-left: 30px;
+        margin-bottom: $spacing-large * 3;
+    }
+
+    /* anything above mobile view */
+
+    @media screen and ( min-width: $mobile-width ) {
+        .chord-overlay {
+            top: 50px;
+            left: 50%;
+            border: 3px solid #000;
+            border-radius: 7px;
+            width: 50%;
+            margin-left: -25%;
+            min-height: 250px;
+            @include noEvents();
         }
-        &:nth-child(n+5) {
-            margin-top: 75px;
+
+        .chord-shape {
+            &:not(:first-child) {
+                margin-left: 30px;
+            }
+            &:nth-child(n+5) {
+                margin-top: 75px;
+            }
+        }
+    }
+    /* mobile view */
+
+    @media screen and ( max-width: $mobile-width ) {
+        .chord-overlay {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
     }
 </style>
