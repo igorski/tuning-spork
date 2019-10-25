@@ -49,8 +49,11 @@ export default {
 </script>
 
 <style lang="scss">
+    @import '@/styles/_mixins.scss';
+
     .fretboard {
         width: 100%;
         padding: 30px 0;
+        @include noSelect();
     }
 </style>
