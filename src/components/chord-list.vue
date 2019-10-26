@@ -140,6 +140,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    @import '@/styles/_mixins.scss';
     @import '@/styles/_variables.scss';
 
     fieldset {
@@ -153,18 +154,18 @@ export default {
     .chord {
         display: inline-block;
         cursor: pointer;
-        border-radius: $spacing-large;
-        padding: $spacing-small ($spacing-small * 1.5);
+        border-radius: $spacing-small;
+        padding: $spacing-small $spacing-medium;
         background-color: $color-2;
-        border: 2px solid $color-4;
         color: $color-1;
         font-size: 90%;
         font-weight: bold;
         margin: 0 $spacing-small $spacing-small 0;
+        @include noSelect();
 
         &:hover {
-            background-color: $color-1;
-            color: $color-4;
+            background-color: $color-4;
+            color: $color-1;
         }
     }
 </style>

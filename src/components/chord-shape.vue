@@ -28,7 +28,7 @@
                  class="string"
                  :style="{ left: `${stringIndex / strings.length * 100}%` }"
             >
-                {{ note }}
+                <span class="note-name">{{ note }}</span>
                 <div v-for="fret in visibleFretRange"
                      :key="fret"
                      class="fret-marker"
@@ -81,6 +81,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    @import '@/styles/_variables.scss';
+
     .chord-wrapper {
         display: inline-block;
         width: 120px;
@@ -104,6 +106,11 @@ export default {
         height: 100%;
         top: 0;
         border-left: 1px solid grey;
+    }
+
+    .note-name {
+        position: absolute;
+        top: -$spacing-large;
     }
 
     .fret-marker {

@@ -33,9 +33,11 @@
                          class="chord-shape"
             />
         </template>
-        <p v-else>
-            Could not resolve shapes for {{ chord.name }} for {{ instrumentType }}.
-            This is either due to an idiosyncratic tuning or this application
+        <p v-else
+           class="description"
+        >
+            Could not resolve shapes for {{ chord.name }} for {{ instrumentType }} in {{ tuning.name }} tuning.
+            This is either due to the tuning require an impossible chord shape or this application
             requiring further development.
         </p>
     </div>
@@ -254,19 +256,24 @@ export default {
 
     .chord-overlay {
         position: fixed;
-        background-color: rgba(255,200,200,.90);
+        background-color: rgba(255,255,255,.9);
+        color: $color-5;
         z-index: $z-index-overlay;
     }
 
     .chord-shape {
-        margin-bottom: $spacing-large * 3;
+        margin: $spacing-medium 0 ($spacing-large * 2);
+    }
+
+    .description {
+        padding: 0 $spacing-small;
     }
 
     /* anything above mobile view */
 
     @media screen and ( min-width: $mobile-width ) {
         .chord-overlay {
-            top: 50px;
+            top: 50%;
             left: 50%;
             border: 3px solid #000;
             border-radius: 7px;
@@ -281,7 +288,7 @@ export default {
                 margin-left: 30px;
             }
             &:nth-child(n+5) {
-                margin-top: 75px;
+                margin-top: $spacing-small;
             }
         }
     }
