@@ -142,20 +142,25 @@ export default {
                 while (j--) {
                     fret = frets[j];
                     note = this.getNoteByFret(fret, this.strings[string]);
-                    // fret string if its note hadn't been fretted yet by a lower string
+                    // if this note hasn't yet been fretted, make this a candidate for fretting
                     if (!foundNotes.includes(note)) {
-                        // check if a higher string is able to fret this note at a lower
-                        // fret (meaning the chord is more comfortable on the fingers ;)
-                        if (fret < lastFret && !this.hasLowerFrettedNoteOnHigherString(note, fret, string)) {
-                            foundNotes.push(note);
-                            frettedNotes[string] = fret;
-                            break;
+                        // not so fast though, we need to make sure whether we can comfortably fret this puppy!
+                        // is a higher string able to fret this note at a lower fret ?
+                        if (!( fret < lastFret && !this.hasLowerFrettedNoteOnHigherString(note, fret, string))) {
+                            continue;
                         }
+                        foundNotes.push(note);
+                        frettedNotes[string] = fret;
+                        break;
                     }
                 }
-                // in case note had been fretted before, allow the last known fret
-                // to duplicate the note
+                // in case note had been fretted before, allow the last known fret to duplicate the note
                 if (!frettedNotes[string]) {
+                    // unless this is a large stretch, TODO: only for the lowest frets if we don't expect further notes?
+                    const stretch = fret - firstFret;
+                    if (stretch > 3) {
+                        continue;
+                    }
                     frettedNotes[string] = frets[0];
                 }
                 // for power chords we allow doubling of the octave note and that's it
