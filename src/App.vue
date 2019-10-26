@@ -93,6 +93,10 @@
                 <chord-list />
             </template>
             <template v-else>
+                <div v-if="!chord.length">
+                    Found a sweet soundin' chord and curious what it is called ? Just fret the strings above
+                    and we'll tell you what you are playing (and what scales go with it).
+                </div>
                 <div v-if="foundChord">
                     <h2>{{ foundChord }}</h2>
                 </div>
@@ -373,13 +377,16 @@ export default {
         }
     }
 
+    .footer {
+        height: $footerHeight;
+        width: 100%;
+    }
+
     /* anything above mobile view */
 
     @media screen and ( min-width: $mobile-width ) {
         .footer {
             position: fixed;
-            height: $footerHeight;
-            width: 100%;
             bottom: 0;
             background-color: $color-1;
         }
@@ -411,6 +418,8 @@ export default {
                 width: 100%;
                 height: 100%;
                 z-index: $z-index-overlay;
+                padding: $spacing-medium;
+                @include boxSize();
             }
         }
         .option {
@@ -423,6 +432,7 @@ export default {
 
             label {
                 width: 30%;
+                margin-top: $spacing-small;
             }
             .select {
                 width: 70%;

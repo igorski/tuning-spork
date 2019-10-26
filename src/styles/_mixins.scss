@@ -48,22 +48,18 @@
 @mixin button() {
     cursor: pointer;
     border-radius: $spacing-large;
-    padding: $spacing-small * 1.5;
+    padding: $spacing-medium;
     font-weight: bold;
-    background-color: $color-2;
-    border: 2px solid $color-3;
+    background-color: $color-1;
+    border: 3px solid $color-3;
     color: $color-3;
     margin-right: $spacing-small;
-
-    &.disabled {
-        background-color: $color-3;
-        border-color: $color-2;
-        color: $color-2;
-    }
+    font-size: .85em;
 
     &.active,
     &:hover {
-        background-color: $color-1;
-        border-color: $color-1;
+        background-color: $color-2;
+        border-color: $color-4;
+        color: $color-1;
     }
 }

@@ -21,7 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 <template>
-    <div class="chord-overlay">
+    <div class="chord-overlay"
+         @touchstart="$emit('close')"
+    >
         <h2>{{ chord.name }}</h2>
         <template v-if="shapes.length">
             <chord-shape v-for="(shape, index) in sortedShapes"
@@ -262,6 +264,7 @@ export default {
     }
 
     .chord-shape {
+        display: inline-block;
         margin: $spacing-medium 0 ($spacing-large * 2);
     }
 
@@ -292,6 +295,7 @@ export default {
             }
         }
     }
+
     /* mobile view */
 
     @media screen and ( max-width: $mobile-width ) {
@@ -300,6 +304,12 @@ export default {
             left: 0;
             width: 100%;
             height: 100%;
+            padding: 0 $spacing-medium;
+            @include boxSize();
+        }
+
+        .chord-shape {
+            margin-right: $spacing-large;
         }
     }
 </style>

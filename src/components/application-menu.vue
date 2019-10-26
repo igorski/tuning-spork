@@ -74,14 +74,15 @@ export default {
       width: $toggle-width;
       height: $menu-height;
       background-color: $color-3;
+      color: $color-1;
 
       span {
         position: absolute;
-        font-size: 150%;
+        font-size: $spacing-large;
         top: 50%;
         left: 50%;
-        margin-top: -$spacing-medium;
-        margin-left: -$spacing-small;
+        margin-top: -($spacing-medium * 1.5);
+        margin-left: -$spacing-medium;
       }
     }
 
@@ -129,7 +130,8 @@ export default {
                         border: none;
                         border-bottom: 1px solid $color-1;
                         background-color: transparent;
-                        padding: $spacing-medium;
+                        padding: $spacing-large;
+                        font-size: .85em;
                         @include boxSize;
                     }
                 }

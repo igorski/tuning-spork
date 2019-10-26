@@ -111,6 +111,7 @@ export default {
     .note-name {
         position: absolute;
         top: -$spacing-large;
+        font-weight: bold;
     }
 
     .fret-marker {

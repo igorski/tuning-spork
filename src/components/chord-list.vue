@@ -25,6 +25,7 @@
         <chord-overlay
             v-if="selectedChord !== null"
             :chord="selectedChord"
+            @close="setSelectedChord(null)"
         />
         <h2>Available chords</h2>
         <fieldset>
@@ -61,8 +62,9 @@
         <div v-for="chordObject in filteredChords"
              :key="chordObject.name"
              class="chord button"
-             @mouseover="selectedChord = chordObject"
-             @mouseout="selectedChord = null"
+             @touchstart="setSelectedChord(chordObject)"
+             @mouseover="setSelectedChord(chordObject)"
+             @mouseout="setSelectedChord(null)"
         >
             {{ chordObject.name }}
         </div>
@@ -135,6 +137,9 @@ export default {
         ...mapMutations([
             'setChordOption',
         ]),
+        setSelectedChord(chord = null) {
+            this.selectedChord = chord;
+        },
     }
 };
 </script>
