@@ -37,14 +37,14 @@
                 <div class="interface">
                     <div class="option">
                         <label>Instrument</label>
-                        <model-select :options="mapSelectOptions(['guitar', 'bass', 'ukelele'])"
+                        <model-select :options="formatOptions(['guitar', 'bass', 'ukelele'])"
                                       v-model="selectedInstrumentType"
                                       class="select medium-list"
                         />
                     </div>
                     <div v-if="availableStringAmountsForCurrentInstrument.length > 1" class="option">
                         <label>Amount of strings</label>
-                        <model-select :options="mapSelectOptions(availableStringAmountsForCurrentInstrument)"
+                        <model-select :options="formatOptions(availableStringAmountsForCurrentInstrument)"
                                       v-model="selectedStringAmount"
                                       class="select small-list"
                         />
@@ -119,7 +119,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex';
 import { ModelSelect } from 'vue-search-select';
 import { getChordByIntervals } from '@/utils/chord-util';
 import { getCompatibleScalesForIntervals } from '@/utils/interval-util';
-import { ucFirst } from '@/utils/string-util';
+import { mapSelectOptions } from '@/utils/select-util';
 import ApplicationMenu from '@/components/application-menu';
 import Fretboard from '@/components/fretboard';
 import ChordList from '@/components/chord-list';
@@ -184,16 +184,16 @@ export default {
             set(value) { this.setViewOption(value); }
         },
         availableNotes() {
-            return this.mapSelectOptions(this.notes);
+            return this.formatOptions(this.notes);
         },
         availableTunings() {
-            return this.mapSelectOptions(this.availableTuningsForCurrentStringAmount.map(t => t.name));
+            return this.formatOptions(this.availableTuningsForCurrentStringAmount.map(t => t.name));
         },
         availableScales() {
-            return this.mapSelectOptions(Object.keys(this.scales).sort());
+            return this.formatOptions(Object.keys(this.scales).sort());
         },
         availableViewOptions() {
-            return this.mapSelectOptions(['frets', 'notes']);
+            return this.formatOptions(['frets', 'notes']);
         }
     },
     watch: {
@@ -299,16 +299,8 @@ export default {
             this.setKey(key);
             this.setScale(scale);
         },
-        mapSelectOptions(items) {
-            // format select options for vue-search-select component
-            return items.map(value => {
-                if (typeof value === 'object') return value;
-                let text = ucFirst(value.toString());
-                // NOTE: values and text MUST be different due to bug described in
-                // https://github.com/moreta/vue-search-select/issues/112
-                if (text === value) text += ' ';
-                return { value, text };
-            });
+        formatOptions(items) {
+            return mapSelectOptions(items);
         },
         setConfigurationOpened(opened) {
             this.configurationOpened = opened;

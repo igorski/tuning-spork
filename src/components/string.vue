@@ -22,14 +22,10 @@
  */
 <template>
     <div class="string-container">
-        <select class="string-tuning"
-                @change="handleTuningChange($event.target.value)"
-        >
-            <option v-for="n in notes"
-                    :key="`string_${index}_${n}`"
-                    :selected="n === note"
-            >{{ n }}</option>
-        </select>
+        <model-select :options="formatOptions(notes)"
+                      v-model="tunedNote"
+                      class="string-tuning select"
+        />
         <div class="string"
              :style="{ height: `${index}px` }"
         >
@@ -65,6 +61,8 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
+import { ModelSelect } from 'vue-search-select';
+import { mapSelectOptions } from '@/utils/select-util';
 
 const AMOUNT_OF_FRETS = [];
 // one octave is enough, yo
@@ -73,6 +71,9 @@ for (let i = 0; i < 13; ++i) {
 }
 
 export default {
+    components: {
+        ModelSelect,
+    },
     props: {
         index: {
             type: Number,
@@ -98,6 +99,14 @@ export default {
         ...mapGetters([
             'availableScaleNotes',
         ]),
+        tunedNote: {
+            get() {
+                return this.tuning.strings[this.index];
+            },
+            set(note) {
+                this.tuneString({ index: this.index, note });
+            },
+        },
         activeFret: {
             get() {
                 return this.chord[this.index];
@@ -122,9 +131,9 @@ export default {
             const rootNoteIndex = this.notes.indexOf(this.note);
             return this.notes[(rootNoteIndex + fret) % this.notes.length];
         },
-        handleTuningChange(note) {
-            this.tuneString({ index: this.index, note });
-        }
+        formatOptions(items) {
+            return mapSelectOptions(items);
+        },
     }
 };
 </script>
@@ -138,6 +147,11 @@ export default {
         flex-direction: row;
         align-items: flex-start;
         height: $size;
+    }
+
+    .string-tuning {
+        max-width: 65px;
+        margin-top: -10px;
     }
 
     .string {
@@ -163,7 +177,7 @@ export default {
 
         .note {
             position: absolute;
-            top: -18px;
+            top: -15px;
             width: $size / 2;
             height: $size / 2;
             margin-left: ($size / 2);
