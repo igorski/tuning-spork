@@ -119,5 +119,6 @@ export default {
         display: block;
         width: 20px;
         height: 20px;
+        font-size: 90%;
     }
 </style>

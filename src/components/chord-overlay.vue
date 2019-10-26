@@ -22,9 +22,12 @@
  */
 <template>
     <div class="chord-overlay"
-         @touchstart="$emit('close')"
+         :class="{ tall: shapes.length > 3 }"
     >
         <h2 class="chord-name">{{ chord.name }}</h2>
+        <div class="close-button"
+             @click="closeOverlay()"
+        >&#x2715;</div>
         <template v-if="shapes.length">
             <chord-shape v-for="(shape, index) in sortedShapes"
                          :key="`shape${index}`"
@@ -248,6 +251,9 @@ export default {
             firstFret = Math.max(firstFret, fretStartOffset);
             return { firstFret, fretStartOffset, firstString };
         },
+        closeOverlay() {
+            this.$emit('close');
+        },
     }
 };
 </script>
@@ -269,11 +275,15 @@ export default {
 
     .chord-shape {
         display: inline-block;
-        margin: $spacing-medium 0 ($spacing-large * 2);
+        margin: $spacing-medium $spacing-large ($spacing-large * 2);
     }
 
     .description {
         padding: 0 $spacing-small;
+    }
+
+    .close-button {
+        display: none; // mobile only
     }
 
     /* anything above mobile view */
@@ -285,15 +295,18 @@ export default {
             border: 3px solid #000;
             border-radius: 7px;
             width: 50%;
+            height: 250px;
+            margin-top: -125px;
             margin-left: -25%;
-            min-height: 250px;
             @include noEvents();
+
+            &.tall {
+                height: 400px;
+                margin-top: -200px;
+            }
         }
 
         .chord-shape {
-            &:not(:first-child) {
-                margin-left: 30px;
-            }
             &:nth-child(n+5) {
                 margin-top: $spacing-small;
             }
@@ -314,6 +327,17 @@ export default {
 
         .chord-shape {
             margin-right: $spacing-large;
+
+            &:nth-child(n+4) {
+                margin-top: $spacing-large;
+            }
+        }
+
+        .close-button {
+            display: block;
+            position: absolute;
+            top: $spacing-medium;
+            right: $spacing-medium;
         }
     }
 </style>
