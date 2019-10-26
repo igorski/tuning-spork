@@ -113,7 +113,7 @@
             </template>
         </div>
         <footer class="footer">
-            <p>This trinket is <a href="https://www.github.com/igorski/guitar-scale-visualiser" target="_blank">open source</a>. Go make it better.</p>
+            <p>This trinket is <a href="https://www.github.com/igorski/guitar-scale-visualiser" target="_blank">open source</a>. Contributions welcome!</p>
         </footer>
     </div>
 </template>

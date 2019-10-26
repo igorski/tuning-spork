@@ -112,6 +112,7 @@ export default {
         position: absolute;
         top: -$spacing-large;
         font-weight: bold;
+        font-size: 80%;
     }
 
     .fret-marker {

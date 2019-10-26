@@ -24,7 +24,7 @@
     <div class="chord-overlay"
          @touchstart="$emit('close')"
     >
-        <h2>{{ chord.name }}</h2>
+        <h2 class="chord-name">{{ chord.name }}</h2>
         <template v-if="shapes.length">
             <chord-shape v-for="(shape, index) in sortedShapes"
                          :key="`shape${index}`"
@@ -261,6 +261,10 @@ export default {
         background-color: rgba(255,255,255,.9);
         color: $color-5;
         z-index: $z-index-overlay;
+    }
+
+    .chord-name {
+        padding-bottom: $spacing-medium;
     }
 
     .chord-shape {

@@ -45,12 +45,12 @@ const getTunings = (state) => {
 };
 
 const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
-    return TUNINGS.find(tuning => {
+    return cloneTuning(TUNINGS.find(tuning => {
         if (tuning.type !== instrumentType || tuning.name.trim().slice(0, 8).toLowerCase() !== 'standard') {
-            return;
+            return false;
         }
         return optStringAmount > 0 ? tuning.strings.length === optStringAmount : tuning;
-    });
+    }));
 };
 
 export default new Vuex.Store({
@@ -151,7 +151,7 @@ export default new Vuex.Store({
             Vue.set(state.tuning.strings, index, note);
         },
         setTuning(state, tuning) {
-            state.tuning = tuning;
+            state.tuning = cloneTuning(tuning);
         },
         setStandardTuningForStringAmount(state, amount) {
             state.tuning = standardTuningForInstrument(state.instrumentType, amount);
@@ -172,3 +172,12 @@ export default new Vuex.Store({
 
     }
 });
+
+/**
+ * clone tuning prior to setting it, this allows us to
+ * make changes to a tuning in memory, yet switch go
+ * back to the original tuning
+ */
+function cloneTuning(tuning) {
+    return { ...tuning, strings: tuning.strings.concat() };
+}
