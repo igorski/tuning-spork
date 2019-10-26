@@ -28,7 +28,7 @@
         />
         <h2>Available chords</h2>
         <fieldset>
-            <div class="input-wrapper">
+            <div class="ui checkbox">
                 <input type="checkbox"
                        v-model="powerChords"
                        id="powerChords"
@@ -36,7 +36,7 @@
                 />
                 <label for="powerChords">Power chords</label>
             </div>
-            <div class="input-wrapper">
+            <div class="ui checkbox">
                 <input type="checkbox"
                        v-model="basicChords"
                        id="basicChords"
@@ -44,7 +44,7 @@
                 />
                 <label for="basicChords">Basic chords</label>
             </div>
-            <div class="input-wrapper">
+            <div class="ui checkbox">
                 <input type="checkbox"
                        v-model="extendedChords"
                        id="extendedChords"
@@ -73,6 +73,8 @@
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import { isPowerChord } from '@/utils/chord-util';
 import ChordOverlay from './chord-overlay';
+
+import 'semantic-ui-css/components/checkbox.min.css'
 
 export default {
     components: {
@@ -139,6 +141,14 @@ export default {
 
 <style lang="scss" scoped>
     @import '@/styles/_variables.scss';
+
+    fieldset {
+        border: none;
+    }
+
+    .checkbox {
+        margin-right: $spacing-medium;
+    }
 
     .chord {
         display: inline-block;

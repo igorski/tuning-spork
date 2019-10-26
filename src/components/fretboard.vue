@@ -53,7 +53,7 @@ export default {
 
     .fretboard {
         width: 100%;
-        padding: 30px 0;
+        padding: 30px 0 0;
         @include noSelect();
     }
 </style>

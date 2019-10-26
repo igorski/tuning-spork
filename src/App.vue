@@ -312,9 +312,12 @@ export default {
 <style lang="scss">
     @import '@/styles/layout.scss';
 
+    $footerHeight: 55px;
+
     .app {
         margin: $menu-height auto 0;
         max-width: $app-width;
+        padding-bottom: $footerHeight;
     }
 
     .configuration-toggle,
@@ -367,6 +370,18 @@ export default {
             white-space: nowrap;
             overflow: hidden;
             width: 100%;
+        }
+    }
+
+    /* anything above mobile view */
+
+    @media screen and ( min-width: $mobile-width ) {
+        .footer {
+            position: fixed;
+            height: $footerHeight;
+            width: 100%;
+            bottom: 0;
+            background-color: $color-1;
         }
     }
 
