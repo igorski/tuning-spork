@@ -28,30 +28,30 @@
             @close="setSelectedChord(null)"
         />
         <h2>Available chords</h2>
-        <fieldset>
-            <div class="ui checkbox">
+        <fieldset class="chord-types">
+            <div class="ui checkbox chord-type-checkbox">
                 <input type="checkbox"
                        v-model="powerChords"
                        id="powerChords"
                        name="powerChords"
                 />
-                <label for="powerChords">Power chords</label>
+                <label for="powerChords" class="chord-type-label">Power chords</label>
             </div>
-            <div class="ui checkbox">
+            <div class="ui checkbox chord-type-checkbox">
                 <input type="checkbox"
                        v-model="basicChords"
                        id="basicChords"
                        name="basicChords"
                 />
-                <label for="basicChords">Basic chords</label>
+                <label for="basicChords" class="chord-type-label">Basic chords</label>
             </div>
-            <div class="ui checkbox">
+            <div class="ui checkbox chord-type-checkbox">
                 <input type="checkbox"
                        v-model="extendedChords"
                        id="extendedChords"
                        name="extendedChords"
                 />
-                <label for="extendedChords">Extended chords</label>
+                <label for="extendedChords" class="chord-type-label">Extended chords</label>
             </div>
         </fieldset>
         <p>
@@ -72,11 +72,11 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
-import { isPowerChord } from '@/utils/chord-util';
-import ChordOverlay from './chord-overlay';
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { isPowerChord } from "@/utils/chord-util";
+import ChordOverlay from "./chord-overlay";
 
-import 'semantic-ui-css/components/checkbox.min.css'
+import "semantic-ui-css/components/checkbox.min.css";
 
 export default {
     components: {
@@ -87,18 +87,18 @@ export default {
     }),
     computed: {
         ...mapState([
-            'chordOptions',
-            'tuning',
+            "chordOptions",
+            "tuning",
         ]),
         ...mapGetters([
-            'availableScaleChords',
+            "availableScaleChords",
         ]),
         powerChords: {
             get() {
                 return this.chordOptions.power;
             },
             set(value) {
-                this.setChordOption({ option: 'power', value });
+                this.setChordOption({ option: "power", value });
             },
         },
         basicChords: {
@@ -106,7 +106,7 @@ export default {
                 return this.chordOptions.basic;
             },
             set(value) {
-                this.setChordOption({ option: 'basic', value });
+                this.setChordOption({ option: "basic", value });
             }
         },
         extendedChords: {
@@ -114,7 +114,7 @@ export default {
                 return this.chordOptions.extended;
             },
             set(value) {
-                this.setChordOption({ option: 'extended', value });
+                this.setChordOption({ option: "extended", value });
             }
         },
         filteredChords() {
@@ -135,7 +135,7 @@ export default {
     },
     methods: {
         ...mapMutations([
-            'setChordOption',
+            "setChordOption",
         ]),
         setSelectedChord(chord = null) {
             this.selectedChord = chord;
@@ -145,32 +145,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import '@/styles/_mixins.scss';
-    @import '@/styles/_variables.scss';
+@import "@/styles/_mixins";
+@import "@/styles/_variables";
 
-    fieldset {
-        border: none;
-    }
+.chord-types {
+    border: none;
+}
 
-    .checkbox {
-        margin-right: $spacing-medium;
-    }
+.chord-type-checkbox {
+    margin-right: $spacing-medium;
+}
 
-    .chord {
-        display: inline-block;
-        cursor: pointer;
-        border-radius: $spacing-small;
-        padding: $spacing-small $spacing-medium;
-        background-color: $color-2;
+.chord-type-label {
+    cursor: pointer;
+}
+
+.chord {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: $spacing-small;
+    padding: $spacing-small $spacing-medium;
+    background-color: $color-2;
+    color: $color-1;
+    font-size: 90%;
+    font-weight: bold;
+    margin: 0 $spacing-small $spacing-small 0;
+    @include noSelect();
+
+    &:hover {
+        background-color: $color-4;
         color: $color-1;
-        font-size: 90%;
-        font-weight: bold;
-        margin: 0 $spacing-small $spacing-small 0;
-        @include noSelect();
-
-        &:hover {
-            background-color: $color-4;
-            color: $color-1;
-        }
     }
+}
 </style>

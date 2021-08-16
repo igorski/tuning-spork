@@ -1,6 +1,6 @@
 {
-  "name": "guitar-visualizer",
-  "short_name": "guitar-visualizer",
+  "name": "Tuning Spork!",
+  "short_name": "tuning-spork",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

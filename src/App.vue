@@ -113,7 +113,7 @@
             </template>
         </div>
         <footer class="footer">
-            <p>This trinket is <a href="https://www.github.com/igorski/guitar-scale-visualiser" target="_blank">open source</a>. Contributions welcome!</p>
+            <p>This trinket is <a href="https://www.github.com/igorski/tuning-spork" target="_blank">open source</a>. Contributions welcome!</p>
         </footer>
     </div>
 </template>
@@ -133,7 +133,6 @@ import 'semantic-ui-css/components/dropdown.min.css'
 import 'vue-search-select/dist/VueSearchSelect.css';
 
 export default {
-    name: 'guitar-scale-visualiser',
     store,
     components: {
         ApplicationMenu,

@@ -1,4 +1,4 @@
-# guitar scale visualizer
+# Tuning Spork
 
 A web based application that allows you to visualize the notes and chords of a large selection of scales
 onto your fretboard with support for custom tunings / strings.
@@ -78,5 +78,6 @@ guitar string.
 
 ## Roadmap
 
-* Mobile view
+* Improved mobile view
 * Fancy stylesheet
+* Tuner
