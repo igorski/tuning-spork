@@ -1,7 +1,8 @@
-# Tuning Spork
+# Tuning Spork!
 
 A web based application that allows you to visualize the notes and chords of a large selection of scales
-onto your fretboard with support for custom tunings / strings.
+onto your fretboard with support for custom tunings / strings. Also provides reverse scale lookup functionality
+by allowing you to draw a chord for any given tuning.
 
 ## Architecture
 
