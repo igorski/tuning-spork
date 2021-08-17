@@ -24,7 +24,7 @@ Configuration boilerplate generated with [Vue-CLI 3](https://cli.vuejs.org/confi
 Launches a local web server (available at _localhost:8080_) serving the application with live compilation and hot reload for development:
 
 ```
-npm run serve
+npm run dev
 ```
 
 Compile and minify application for production deployment (output wil be written to _./dist/_-folder):
@@ -76,6 +76,12 @@ Chord example:
 
 The visualiser interface will use these notes to generate scales from a given root note for each individual
 guitar string.
+
+## Contributors
+
+Kind words of gratitude to the following contributors for adding new features to the application:
+
+* Ivan Zabrodin (zivan2)
 
 ## Roadmap
 
