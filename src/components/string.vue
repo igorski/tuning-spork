@@ -42,7 +42,7 @@
                      :key="`string ${index} fret ${fret}`"
                      :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
                      :class="{ root: getNoteByFret(fret) === key, decimal: fret > 9 }"
-                ><span>{{ viewOption === 'frets' ? fret : getNoteByFret(fret) }}</span></div>
+                ><span>{{ viewOption === 'frets' ? fret : (viewOption == 'degrees' ? getScaleDegreeByFret(fret) : getNoteByFret(fret)) }}</span></div>
             </template>
             <!-- app mode 1 : allow manual fretting of string -->
             <template v-else>
@@ -134,6 +134,11 @@ export default {
         formatOptions(items) {
             return mapSelectOptions(items);
         },
+        getScaleDegreeByFret(fret) {
+            return this.availableScaleNotes.indexOf(
+                this.getNoteByFret(fret)
+            ) + 1
+        }
     }
 };
 </script>

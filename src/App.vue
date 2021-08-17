@@ -196,7 +196,7 @@ export default {
             return this.formatOptions(Object.keys(this.scales).sort());
         },
         availableViewOptions() {
-            return this.formatOptions(['frets', 'notes']);
+            return this.formatOptions(['frets', 'notes', 'degrees']);
         }
     },
     watch: {
