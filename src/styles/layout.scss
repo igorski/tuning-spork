@@ -1,5 +1,5 @@
-@import '_variables.scss';
-@import '_mixins.scss';
+@import "_variables";
+@import "_mixins";
 
 body {
     background-color: $color-1;
@@ -8,8 +8,8 @@ body {
     font-size: 16px;
 }
 
-#gsv {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+.tuning-spork {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
@@ -22,4 +22,24 @@ body {
 
 a, a:visited {
     color: $color-2;
+}
+
+.select {
+    display: inline-block !important; // semantic-ui-css override
+
+    &.small-list {
+        max-width: 65px;
+    }
+    &.medium-list {
+        max-width: 100px;
+    }
+    &.large-list {
+        max-width: 200px;
+    }
+    .text {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 100%;
+    }
 }

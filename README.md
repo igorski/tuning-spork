@@ -81,7 +81,7 @@ guitar string.
 
 Kind words of gratitude to the following contributors for adding new features to the application:
 
-* Ivan Zabrodin (zivan2)
+* Ivan Zabrodin (@zivan2)
 
 ## Roadmap
 
