@@ -59,12 +59,13 @@
             over a chord progression made of below chords.
             Hover over the chord to view recommended fingerings for your instrument and its tuning.
         </p>
-        <div v-for="chordObject in filteredChords"
-             :key="chordObject.name"
-             class="chord button"
-             @touchstart="setSelectedChord(chordObject)"
-             @mouseover="setSelectedChord(chordObject)"
-             @mouseout="setSelectedChord(null)"
+        <div
+            v-for="chordObject in filteredChords"
+            :key="chordObject.name"
+            class="chord-button"
+            @touchstart="setSelectedChord (chordObject )"
+            @mouseover="setSelectedChord( chordObject )"
+            @mouseout="setSelectedChord( null )"
         >
             {{ chordObject.name }}
         </div>
@@ -160,9 +161,9 @@ export default {
     cursor: pointer;
 }
 
-.chord {
-    display: inline-block;
+.chord-button {
     cursor: pointer;
+    display: inline-block;
     border-radius: $spacing-small;
     padding: $spacing-small $spacing-medium;
     background-color: $color-2;

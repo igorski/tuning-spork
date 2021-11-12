@@ -259,85 +259,85 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import '@/styles/_mixins.scss';
-    @import '@/styles/_variables.scss';
+@import "@/styles/_mixins";
+@import "@/styles/_variables";
 
+.chord-overlay {
+    position: fixed;
+    background-color: rgba(255,255,255,.9);
+    color: $color-5;
+    z-index: $z-index-overlay;
+}
+
+.chord-name {
+    padding-bottom: $spacing-medium;
+}
+
+.chord-shape {
+    display: inline-block;
+    margin: $spacing-medium $spacing-large ($spacing-large * 2);
+}
+
+.description {
+    padding: 0 $spacing-small;
+}
+
+.close-button {
+    display: none; // mobile only
+}
+
+/* anything above mobile view */
+
+@include large() {
     .chord-overlay {
-        position: fixed;
-        background-color: rgba(255,255,255,.9);
-        color: $color-5;
-        z-index: $z-index-overlay;
-    }
+        top: 50%;
+        left: 50%;
+        border: 3px solid #000;
+        border-radius: 7px;
+        width: 50%;
+        height: 250px;
+        margin-top: -125px;
+        margin-left: -25%;
+        @include noEvents();
 
-    .chord-name {
-        padding-bottom: $spacing-medium;
+        &.tall {
+            height: 400px;
+            margin-top: -200px;
+        }
     }
 
     .chord-shape {
-        display: inline-block;
-        margin: $spacing-medium $spacing-large ($spacing-large * 2);
+        &:nth-child(n+5) {
+            margin-top: $spacing-small;
+        }
+    }
+}
+
+/* mobile view */
+
+@include mobile() {
+    .chord-overlay {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0 $spacing-medium;
+        @include boxSize();
     }
 
-    .description {
-        padding: 0 $spacing-small;
+    .chord-shape {
+        margin-right: $spacing-large;
+
+        &:nth-child(n+4) {
+            margin-top: $spacing-large;
+        }
     }
 
     .close-button {
-        display: none; // mobile only
+        display: block;
+        position: absolute;
+        top: $spacing-medium;
+        right: $spacing-medium;
     }
-
-    /* anything above mobile view */
-
-    @media screen and ( min-width: $mobile-width ) {
-        .chord-overlay {
-            top: 50%;
-            left: 50%;
-            border: 3px solid #000;
-            border-radius: 7px;
-            width: 50%;
-            height: 250px;
-            margin-top: -125px;
-            margin-left: -25%;
-            @include noEvents();
-
-            &.tall {
-                height: 400px;
-                margin-top: -200px;
-            }
-        }
-
-        .chord-shape {
-            &:nth-child(n+5) {
-                margin-top: $spacing-small;
-            }
-        }
-    }
-
-    /* mobile view */
-
-    @media screen and ( max-width: $mobile-width ) {
-        .chord-overlay {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 0 $spacing-medium;
-            @include boxSize();
-        }
-
-        .chord-shape {
-            margin-right: $spacing-large;
-
-            &:nth-child(n+4) {
-                margin-top: $spacing-large;
-            }
-        }
-
-        .close-button {
-            display: block;
-            position: absolute;
-            top: $spacing-medium;
-            right: $spacing-medium;
-        }
-    }
+}
 </style>

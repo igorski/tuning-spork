@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2021 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,40 +20,33 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-<template>
-    <div class="fretboard">
-        <div v-for="(note, index) in tuning.strings"
-             :key="`string_${index}`"
-        >
-            <string :index="index"
-                    :note="note"
-            />
-        </div>
-    </div>
-</template>
+let audioContext;
 
-<script>
-import { mapState } from 'vuex';
-import String from './string';
-
-export default {
-    components: {
-        String
-    },
-    computed: {
-        ...mapState([
-            'tuning',
-        ]),
-    },
+/**
+ * The AudioContext will be muted on mobile devices until a user
+ * interaction has occurred. Call this method directly on a click.
+ */
+export const initAudioContext = () => {
+    if ( audioContext ) {
+        return; // already inited
+    }
+    if ( typeof window.AudioContext !== "undefined" ) {
+        audioContext = new window.AudioContext();
+    }
+    else if ( typeof window.webkitAudioContext !== "undefined" ) {
+        audioContext = new window.webkitAudioContext();
+    }
+    else {
+        new Error( "WebAudio API not supported" ); // not expected in this day and age
+    }
 };
-</script>
 
-<style lang="scss">
-@import "@/styles/_mixins";
+export const getAudioContext = () => audioContext;
 
-.fretboard {
-    width: 100%;
-    padding: 30px 0 0;
-    @include noSelect();
-}
-</style>
+export const createPitchAnalyser = ( outputNode, audioContext ) => {
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    outputNode.connect( analyser );
+
+    return analyser;
+};

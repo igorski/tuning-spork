@@ -81,44 +81,44 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import '@/styles/_variables.scss';
+@import "@/styles/_variables";
 
-    .chord-wrapper {
-        display: inline-block;
-        width: 120px;
-        height: 80px;
-        vertical-align: top;
-        text-align: center;
-    }
+.chord-wrapper {
+    display: inline-block;
+    width: 120px;
+    height: 80px;
+    vertical-align: top;
+    text-align: center;
+}
 
-    .fretboard {
-        position: relative;
-        display: block;
-        border-right: 1px solid grey;
-        height: inherit;
-    }
+.fretboard {
+    position: relative;
+    display: block;
+    border-right: 1px solid grey;
+    height: inherit;
+}
 
-    .string {
-        position: absolute;
-        color: #000;
-        font-weight: bold;
-        width: 10px;
-        height: 100%;
-        top: 0;
-        border-left: 1px solid grey;
-    }
+.string {
+    position: absolute;
+    color: #000;
+    font-weight: bold;
+    width: 10px;
+    height: 100%;
+    top: 0;
+    border-left: 1px solid grey;
+}
 
-    .note-name {
-        position: absolute;
-        top: -$spacing-large;
-        font-weight: bold;
-        font-size: 80%;
-    }
+.note-name {
+    position: absolute;
+    top: -$spacing-large;
+    font-weight: bold;
+    font-size: 80%;
+}
 
-    .fret-marker {
-        display: block;
-        width: 20px;
-        height: 20px;
-        font-size: 90%;
-    }
+.fret-marker {
+    display: block;
+    width: 20px;
+    height: 20px;
+    font-size: 90%;
+}
 </style>

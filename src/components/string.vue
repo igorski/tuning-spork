@@ -149,82 +149,81 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import '@/styles/layout.scss';
-    $size: 40px;
+@import "@/styles/layout";
+$size: 40px;
 
-    .string-container {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
+.string-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    height: $size;
+}
+
+.string-tuning {
+    max-width: 65px;
+    margin-top: -10px;
+}
+
+.string {
+    position: relative;
+    min-height: 1px;
+    margin-top: 10px;
+    width: 100%;
+    background-color: #000;
+
+    .fret {
+        position: absolute;
+        width: 2px;
         height: $size;
-    }
+        top: -($size / 2);
+        background-color: grey;
 
-    .string-tuning {
-        max-width: 65px;
-        margin-top: -10px;
-    }
-
-    .string {
-        position: relative;
-        min-height: 1px;
-        margin-top: 10px;
-        width: 100%;
-        background-color: #000;
-
-        .fret {
-            position: absolute;
-            width: 2px;
-            height: $size;
-            top: -($size / 2);
-            background-color: grey;
-
-            // nut
-            &:first-child {
-                width: 6px;
-                background-color: #d6d6d6;
-            }
+        // nut
+        &:first-child {
+            width: 6px;
+            background-color: #d6d6d6;
         }
+    }
 
-        .note {
-            position: absolute;
-            top: -15px;
-            width: $size / 2;
-            height: $size / 2;
-            margin-left: ($size / 2);
-            background-color: $color-3;
-            border-radius: 50%;
-            padding: 5px;
-            font-weight: bold;
+    .note {
+        position: absolute;
+        top: -15px;
+        width: $size / 2;
+        height: $size / 2;
+        margin-left: ($size / 2);
+        background-color: $color-3;
+        border-radius: 50%;
+        padding: 5px;
+        font-weight: bold;
+        color: $color-1;
+
+        &.root {
+            background-color: $color-2;
             color: $color-1;
+        }
 
-            &.root {
-                background-color: $color-2;
-                color: $color-1;
-            }
+        span {
+            position: absolute;
+            left: 0;
+            width: 100%;
+        }
 
-            span {
-                position: absolute;
-                left: 0;
-                width: 100%;
-            }
-
-            &.hidden {
-                opacity: 0;
-            }
+        &.hidden {
+            opacity: 0;
         }
     }
+}
 
-    /* mobile view */
+/* mobile view */
 
-    @media screen and ( max-width: $phone-width ) {
-        // for now these takes up too much space
-        .string-tuning,
-        .fret:first-child {
-            display: none;
-        }
-        .string {
-            left: -6%; // make up for missing "tuning peg" and nut
-        }
+@include mobile() {
+    // for now these takes up too much space
+    .string-tuning,
+    .fret:first-child {
+        display: none;
     }
-
+    .string {
+        left: -6%; // make up for missing "tuning peg" and nut
+    }
+}
 </style>

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -21,19 +21,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 <template>
-    <div id="gsv">
+    <div class="tuning-spork">
         <application-menu />
+        <tuner v-if="tunerOpened" @close="tunerOpened = false" />
         <div class="app">
             <!-- configuration menu toggle (mobile only) -->
-            <button type="button"
-                    class="configuration-toggle"
-                    @click="setConfigurationOpened(!configurationOpened)"
+            <button
+                type="button"
+                class="configuration-toggle"
+                @click="setConfigurationOpened(!configurationOpened)"
             >Configure instrument</button>
             <!-- instrument and scale configuration -->
             <div class="configuration" :class="{ expanded: configurationOpened }">
-                <div class="configuration-close-button"
-                     @click="setConfigurationOpened(false)"
-                >&#x2715;</div>
+                <button
+                    type="button"
+                    class="close-button"
+                    @click="setConfigurationOpened( false )"
+                >&#x2715;</button>
                 <div class="interface">
                     <div class="option">
                         <label>Instrument</label>
@@ -56,6 +60,11 @@
                                       class="select large-list"
                         />
                     </div>
+                    <button
+                        type="button"
+                        class="button"
+                        @click="openTuner()"
+                    >Tuner</button>
                 </div>
                 <!-- scale configuration interface -->
                 <template v-if="appMode === 0">
@@ -119,18 +128,19 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
-import { ModelSelect } from 'vue-search-select';
-import { getChordByIntervals } from '@/utils/chord-util';
-import { getCompatibleScalesForIntervals } from '@/utils/interval-util';
-import { mapSelectOptions } from '@/utils/select-util';
-import ApplicationMenu from '@/components/application-menu';
-import Fretboard from '@/components/fretboard';
-import ChordList from '@/components/chord-list';
-import store from '@/store';
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { ModelSelect } from "vue-search-select";
+import { getChordByIntervals } from "@/utils/chord-util";
+import { getCompatibleScalesForIntervals } from "@/utils/interval-util";
+import { mapSelectOptions } from "@/utils/select-util";
+import ApplicationMenu from "@/components/application-menu";
+import Fretboard from "@/components/fretboard";
+import ChordList from "@/components/chord-list";
+import { initAudioContext } from "@/utils/audio-util";
+import store from "@/store";
 
-import 'semantic-ui-css/components/dropdown.min.css'
-import 'vue-search-select/dist/VueSearchSelect.css';
+import "semantic-ui-css/components/dropdown.min.css"
+import "vue-search-select/dist/VueSearchSelect.css";
 
 export default {
     store,
@@ -138,29 +148,31 @@ export default {
         ApplicationMenu,
         ModelSelect,
         Fretboard,
-        ChordList
+        ChordList,
+        Tuner: () => import( "@/components/tuner" )
     },
     data: () => ({
         foundChord: null,
         foundChordRoot: null,
         foundScales: [],
         configurationOpened: false,
+        tunerOpened: false,
     }),
     computed: {
         ...mapState([
-            'appMode',
-            'chord',
-            'notes',
-            'scales',
-            'instrumentType',
-            'tuning',
-            'key',
-            'scale',
-            'viewOption',
+            "appMode",
+            "chord",
+            "notes",
+            "scales",
+            "instrumentType",
+            "tuning",
+            "key",
+            "scale",
+            "viewOption",
         ]),
         ...mapGetters([
-            'availableStringAmountsForCurrentInstrument',
-            'availableTuningsForCurrentStringAmount',
+            "availableStringAmountsForCurrentInstrument",
+            "availableTuningsForCurrentStringAmount",
         ]),
         selectedInstrumentType: {
             get() { return this.instrumentType; },
@@ -196,7 +208,7 @@ export default {
             return this.formatOptions(Object.keys(this.scales).sort());
         },
         availableViewOptions() {
-            return this.formatOptions(['frets', 'notes', 'degrees']);
+            return this.formatOptions(["frets", "notes", "degrees"]);
         }
     },
     watch: {
@@ -205,17 +217,17 @@ export default {
     },
     methods: {
         ...mapMutations([
-            'setAppMode',
-            'setInstrumentType',
-            'setKey',
-            'setScale',
-            'setTuning',
-            'setStandardTuningForStringAmount',
-            'setViewOption',
+            "setAppMode",
+            "setInstrumentType",
+            "setKey",
+            "setScale",
+            "setTuning",
+            "setStandardTuningForStringAmount",
+            "setViewOption",
         ]),
         calculateChord() {
             // chord fingering changed, try to retrieve whether the chord fingering represents a known chord
-            if (this.appMode !== 1 ) {
+            if ( this.appMode !== 1 ) {
                 return;
             }
             this.foundChord = null;
@@ -224,10 +236,10 @@ export default {
             // get the lowest fretted string to treat it as the root note (TODO: what about slash chords??)
             let rootString = this.chord.length;
             let rootFret;
-            while (typeof rootFret !== 'number' && --rootString > 0) {
+            while (typeof rootFret !== "number" && --rootString > 0) {
                 rootFret = this.chord[rootString];
             }
-            if (typeof rootFret !== 'number') {
+            if (typeof rootFret !== "number") {
                 return; // no notes found
             }
             let openStringNote = this.tuning.strings[rootString];
@@ -246,7 +258,7 @@ export default {
             // in case no chord was found but the amount of fretted notes exceeds that
             // of a triad, assume we are dealing with a slash chord (alternate note in bass)
             // try again with next higher string as assumed rootn ote
-            else if (this.chord.filter(fret => typeof fret === 'number').length > 3) {
+            else if (this.chord.filter(fret => typeof fret === "number").length > 3) {
                 const bassNote = rootNote;
                 const bassIndex = rootString;
 
@@ -275,167 +287,163 @@ export default {
                 this.foundScales = getCompatibleScalesForIntervals(intervals, rootNote);
             }
         },
-        getIntervals(chord, rootNoteIndex) {
+        getIntervals( chord, rootNoteIndex ) {
             const intervals = [];
             let stringIndex = this.selectedStringAmount;
-            while (stringIndex--) {
-                const stringFret = chord[stringIndex];
-                if (typeof stringFret !== 'number') {
+            while ( stringIndex-- ) {
+                const stringFret = chord[ stringIndex ];
+                if ( typeof stringFret !== "number" ) {
                     continue;
                 }
-                const openStringNote = this.tuning.strings[stringIndex];
-                const stringNoteIndex = this.notes.indexOf(openStringNote);
-                const frettedNote = this.notes[(stringNoteIndex + stringFret) % this.notes.length];
+                const openStringNote = this.tuning.strings[ stringIndex ];
+                const stringNoteIndex = this.notes.indexOf( openStringNote );
+                const frettedNote = this.notes[( stringNoteIndex + stringFret ) % this.notes.length ];
 
-                let interval = this.notes.indexOf(frettedNote) - rootNoteIndex;
-                if (interval < 0) {
+                let interval = this.notes.indexOf( frettedNote ) - rootNoteIndex;
+                if ( interval < 0 ) {
                     interval += this.notes.length;
                 }
-                if (!intervals.includes(interval)) {
-                    intervals.push(interval);
+                if ( !intervals.includes( interval )) {
+                    intervals.push( interval );
                 }
             }
-            return intervals.sort((a, b) => a - b);
+            return intervals.sort(( a, b ) => a - b );
         },
-        showScale(key, scale) {
-            this.setAppMode(0);
-            this.setKey(key);
-            this.setScale(scale);
+        showScale( key, scale ) {
+            this.setAppMode( 0 );
+            this.setKey( key );
+            this.setScale( scale );
         },
-        formatOptions(items) {
-            return mapSelectOptions(items);
+        formatOptions( items ) {
+            return mapSelectOptions( items );
         },
-        setConfigurationOpened(opened) {
+        setConfigurationOpened( opened ) {
             this.configurationOpened = opened;
         },
+        openTuner() {
+            initAudioContext();
+            this.configurationOpened = false;
+            this.tunerOpened = true;
+        }
     }
 };
 </script>
 
 <style lang="scss">
-    @import '@/styles/layout.scss';
+@import "@/styles/layout";
 
-    $footerHeight: 55px;
+$footerHeight: 55px;
 
-    .app {
-        margin: $menu-height auto 0;
-        max-width: $app-width;
-        padding-bottom: $footerHeight;
+.app {
+    margin: $menu-height auto 0;
+    max-width: $app-width;
+    padding-bottom: $footerHeight;
+}
+
+.button {
+    @include button();
+}
+
+.configuration-toggle,
+.configuration .close-button {
+    display: none; // mobile view only
+}
+
+.interface {
+    padding: $spacing-medium 0 0;
+    @include boxSize();
+    @include noSelect();
+}
+
+.option {
+    display: inline;
+    margin-right: 12px;
+
+    label {
+        margin-right: 7px;
     }
 
-    .configuration-toggle,
-    .configuration-close-button {
-        display: none; // mobile view only
+    .root-note {
+        color: $color-2;
     }
+}
 
-    .interface {
-        padding: $spacing-medium 0 0;
-        @include boxSize();
-        @include noSelect();
+.scale {
+    cursor: pointer;
+    display: inline-block;
+    padding: 10px;
+    border-radius: 7px;
+    border: 2px solid #999;
+    margin: 0 7px 7px;
+}
+
+.select {
+    display: inline-block !important; // semantic-ui-css override
+
+    &.small-list {
+        max-width: 65px;
     }
-
-    .option {
-        display: inline;
-        margin-right: 12px;
-
-        label {
-            margin-right: 7px;
-        }
-
-        .root-note {
-            color: $color-2;
-        }
+    &.medium-list {
+        max-width: 100px;
     }
-
-    .scale {
-        cursor: pointer;
-        display: inline-block;
-        padding: 10px;
-        border-radius: 7px;
-        border: 2px solid #999;
-        margin: 0 7px 7px;
+    &.large-list {
+        max-width: 200px;
     }
-
-    .select {
-        display: inline-block !important; // semantic-ui-css override
-
-        &.small-list {
-            max-width: 65px;
-        }
-        &.medium-list {
-            max-width: 100px;
-        }
-        &.large-list {
-            max-width: 200px;
-        }
-        .text {
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            width: 100%;
-        }
-    }
-
-    .footer {
-        height: $footerHeight;
+    .text {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
         width: 100%;
     }
+}
 
-    /* anything above mobile view */
+.footer {
+    height: $footerHeight;
+    width: 100%;
 
-    @media screen and ( min-width: $mobile-width ) {
-        .footer {
-            position: fixed;
-            bottom: 0;
-            background-color: $color-1;
-        }
+    @include large() {
+        position: fixed;
+        bottom: 0;
+        background-color: $color-1;
+    }
+}
+
+/* mobile view */
+
+@include mobile() {
+    .configuration-toggle {
+        display: inline-block;
+        margin: $spacing-medium auto 0;
+        @include largeButton();
     }
 
-    /* mobile view */
+    .configuration {
+        display: none;
 
-    @media screen and ( max-width: $mobile-width ) {
-        .configuration-toggle {
-            display: inline-block;
-            margin: $spacing-medium auto 0;
-            @include button();
-        }
-        .configuration-close-button {
+        &.expanded {
+            @include overlay( $mobile-width, $mobile-width );
             display: block;
-            position: absolute;
-            top: $spacing-medium;
-            right: $spacing-medium;
-        }
-        .configuration {
-            display: none;
 
-            &.expanded {
-                background-color: #FFF;
+            .close-button {
                 display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: $z-index-overlay;
-                padding: $spacing-medium;
-                @include boxSize();
-            }
-        }
-        .option {
-            display: inline-flex;
-            margin-bottom: $spacing-small;
-            width: 100%;
-            text-align: left;
-            padding-left: $spacing-medium;
-            @include boxSize();
-
-            label {
-                width: 30%;
-                margin-top: $spacing-small;
-            }
-            .select {
-                width: 70%;
             }
         }
     }
+    .option {
+        display: inline-flex;
+        margin-bottom: $spacing-small;
+        width: 100%;
+        text-align: left;
+        padding-left: $spacing-medium;
+        @include boxSize();
+
+        label {
+            width: 30%;
+            margin-top: $spacing-small;
+        }
+        .select {
+            width: 70%;
+        }
+    }
+}
 </style>

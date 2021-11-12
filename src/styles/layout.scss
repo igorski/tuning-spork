@@ -1,5 +1,6 @@
-@import '_variables.scss';
-@import '_mixins.scss';
+@import "_variables";
+@import "_mixins";
+@import "_typography";
 
 body {
     background-color: $color-1;
@@ -8,10 +9,8 @@ body {
     font-size: 16px;
 }
 
-#gsv {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+.tuning-spork {
+    @include bodyFont();
     text-align: center;
     color: $color-5;
     width: 100%;
