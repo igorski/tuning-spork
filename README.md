@@ -87,4 +87,3 @@ Kind words of gratitude to the following contributors for adding new features to
 
 * Improved mobile view
 * Fancy stylesheet
-* Tuner
