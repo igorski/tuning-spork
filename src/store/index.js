@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,11 +20,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Vue from 'vue';
-import Vuex from 'vuex';
-import Chords from '@/definitions/chords.json';
-import Scales from '@/definitions/scales.json';
-import Tunings from '@/definitions/tunings.json';
+import Vue from "vue";
+import Vuex from "vuex";
+import Chords from "@/definitions/chords.json";
+import Scales from "@/definitions/scales.json";
+import Tunings from "@/definitions/tunings.json";
 
 // reverse the string order
 const TUNINGS = Tunings.filter(t => ({ ...t, strings: t.strings.reverse() }));
@@ -36,17 +36,17 @@ Vue.use(Vuex);
 const getTunings = (state) => {
     switch (state.instrumentType) {
         default:
-            return TUNINGS.filter(t => t.type === 'guitar');
-        case 'bass':
-            return TUNINGS.filter(t => t.type === 'bass');
-        case 'ukelele':
-            return TUNINGS.filter(t => t.type === 'ukelele');
+            return TUNINGS.filter(t => t.type === "guitar");
+        case "bass":
+            return TUNINGS.filter(t => t.type === "bass");
+        case "ukelele":
+            return TUNINGS.filter(t => t.type === "ukelele");
     }
 };
 
 const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
     return cloneTuning(TUNINGS.find(tuning => {
-        if (tuning.type !== instrumentType || tuning.name.trim().slice(0, 8).toLowerCase() !== 'standard') {
+        if (tuning.type !== instrumentType || tuning.name.trim().slice(0, 8).toLowerCase() !== "standard") {
             return false;
         }
         return optStringAmount > 0 ? tuning.strings.length === optStringAmount : tuning;
@@ -56,19 +56,19 @@ const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
 export default new Vuex.Store({
     state: {
         appMode: 0,                     // either 0 (scale visualiser) or 1 (name my chord)
-        notes: ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'],
+        notes: ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"],
         scales: Scales,
-        instrumentType: 'guitar',       // 'guitar', 'bass' or 'ukelele'
-        tuning: standardTuningForInstrument('guitar', 6), // start as six string
-        key: 'E',                       // none more guitar friendly
-        scale: Object.keys(Scales).find(name => name === 'major'),
-        viewOption: 'frets',            // whether to visualise 'frets' or 'notes',
+        instrumentType: "guitar",       // "guitar", "bass" or "ukelele"
+        tuning: standardTuningForInstrument("guitar", 6), // start as six string
+        key: "E",                       // none more guitar friendly
+        scale: Object.keys(Scales).find(name => name.includes( "major" )),
+        viewOption: "frets",            // whether to visualise "frets" or "notes",
         chordOptions: {
             power: false,
             basic: true,
             extended: false,
         },
-        chord: []                       // chord visualised by 'Name my chord'-mode
+        chord: []                       // chord visualised by "Name my chord"-mode
     },
     getters: {
         availableStringAmountsForCurrentInstrument(state) {
