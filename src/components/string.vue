@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,37 +22,43 @@
  */
 <template>
     <div class="string-container">
-        <model-select :options="formatOptions(notes)"
-                      v-model="tunedNote"
-                      class="string-tuning select"
+        <model-select
+            :options="formatOptions(notes)"
+            v-model="tunedNote"
+            class="string-tuning select"
         />
-        <div class="string"
-             :style="{ height: `${index}px` }"
+        <div
+            class="string"
+            :style="{ height: `${index}px` }"
         >
             <!-- fret wire -->
-            <div v-for="fret in AMOUNT_OF_FRETS"
-                 class="fret"
-                 :key="`fret ${fret}`"
-                 :style="{ left: `${(fret + 1 ) * 100 / AMOUNT_OF_FRETS.length}%`}"
+            <div
+                v-for="fret in AMOUNT_OF_FRETS"
+                class="fret"
+                :key="`fret ${fret}`"
+                :style="{ left: `${(fret + 1 ) * 100 / AMOUNT_OF_FRETS.length}%`}"
             ></div>
             <!-- app mode 0 : show scale notes -->
             <template v-if="appMode === 0">
-                <div v-for="fret in fretsInScale"
-                     class="note"
-                     :key="`string ${index} fret ${fret}`"
-                     :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
-                     :class="{ root: getNoteByFret(fret) === key, decimal: fret > 9 }"
+                <div
+                    v-for="fret in fretsInScale"
+                    class="note"
+                    :key="`string ${index} fret ${fret}`"
+                    :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
+                    :class="{ root: getNoteByFret(fret) === key, decimal: fret > 9 }"
                 ><span>{{ getFretNode( fret ) }}</span></div>
             </template>
             <!-- app mode 1 : allow manual fretting of string -->
             <template v-else>
-                <div v-for="fret in AMOUNT_OF_FRETS"
-                     class="note"
-                     :key="`string ${index} fret ${fret}`"
-                     :class="{ hidden: fret !== activeFret }"
-                     :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
-                     @click="activeFret !== fret ? activeFret = fret : activeFret = undefined"
-                 ><span>{{ fret }}</span>
+                <div
+                    v-for="fret in AMOUNT_OF_FRETS"
+                    class="note"
+                    :key="`string ${index} fret ${fret}`"
+                    :class="{ hidden: fret !== activeFret }"
+                    :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
+                    @click="activeFret !== fret ? activeFret = fret : activeFret = undefined"
+                >
+                    <span>{{ fret }}</span>
                 </div>
             </template>
         </div>
@@ -169,7 +175,7 @@ $size: 40px;
     min-height: 1px;
     margin-top: 10px;
     width: 100%;
-    background-color: #000;
+    background-color: $color-strings;
 
     .fret {
         position: absolute;
@@ -195,7 +201,7 @@ $size: 40px;
         border-radius: 50%;
         padding: 5px;
         font-weight: bold;
-        color: $color-1;
+        color: $color-5;
 
         &.root {
             background-color: $color-2;

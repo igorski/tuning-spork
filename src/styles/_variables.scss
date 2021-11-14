@@ -7,6 +7,7 @@ $mobile-width: 685px; // the threshold below which we start to use the mobile vi
 // components
 $menu-height: 70px;
 $toggle-width: 55px;
+$footer-height: 55px;
 
 // spacings
 $spacing-xsmall: 4px;
@@ -16,11 +17,13 @@ $spacing-large: 28px;
 $spacing-xlarge: 56px;
 
 // colors
-$color-1: #F0EFF4; // anti-flash white
-$color-2: #832161; // russian violet
-$color-3: #3D2645; // dark raspberry
-$color-4: #D6C3C9; //
-$color-5: #000000; // registration black
+$color-1: #061121;//#FFFCF9; // background
+$color-2: #FF6978; // root notes / menu active states
+$color-3: #1768AC; // notes
+$color-4: #433E0E; // active state buttons
+$color-5: #061121; // header / background / dark colours
+$color-text: #63768D;
+$color-strings: #F4D06F;
 
 // view stacking
 $z-index-header: 1;

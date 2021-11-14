@@ -22,14 +22,24 @@
  */
 <template>
     <header class="header" :class="{ expanded: menuOpened }">
-        <nav class="menu">
-            <div class="toggle" @click="setMenuOpened(!menuOpened)">
+        <nav class="header__menu">
+            <div class="header__menu-toggle" @click="setMenuOpened(!menuOpened)">
                 <span>&#9776;</span>
             </div>
-            <!-- <h1>Pluck!</h1> -->
-            <div class="menu-list">
-                <button :class="{ 'active': appMode === 0 }" type="button" @click="scaleGeneratorClick()">Scale generator</button>
-                <button :class="{ 'active': appMode === 1 }" type="button" @click="nameMyChordClick()">Name my chord!</button>
+            <div class="header__menu-list">
+                <h1 class="header__title">Tuning spork!</h1>
+                <button
+                    type="button"
+                    class="menu-button"
+                    :class="{ 'menu-button--active': appMode === 0 }"
+                    @click="scaleGeneratorClick()"
+                >Scale generator</button>
+                <button
+                    type="button"
+                    class="menu-button"
+                    :class="{ 'menu-button--active': appMode === 1 }"
+                    @click="nameMyChordClick()"
+                >Name my chord!</button>
             </div>
         </nav>
     </header>
@@ -67,100 +77,76 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import "@/styles/layout";
+@import "@/styles/layout";
 
-    .header {
-        width: 100%;
-        height: $menu-height;
-        position: fixed;
+.header {
+    width: 100%;
+    height: $menu-height;
+    position: fixed;
+    background-color: $color-5;
+    top: 0;
+    left: 0;
+    z-index: $z-index-header;
+
+    &__title {
+        display: inline;
+        color: #FFF;
+        margin: 0 $spacing-medium 0 $spacing-small;
+
+        @include mobile() {
+            display: none;
+        }
+    }
+}
+
+.header__menu {
+    height: $menu-height;
+
+    @include ideal() {
+        max-width: $app-width;
+        margin: 0 auto;
+    }
+
+    &-toggle {
+        position: absolute;
+        display: none;
+        cursor: pointer;
         top: 0;
         left: 0;
-        z-index: $z-index-header;
+        width: $toggle-width;
+        height: $menu-height;
+        background-color: $color-3;
+        color: $color-1;
 
-        h1 {
-          color: #FFF;
-          display: inline;
-          margin: 0;
-          padding: 0;
-          padding-right: $spacing-medium;
-          font-size: 110%;
+        span {
+            position: absolute;
+            font-size: $spacing-large;
+            top: 50%;
+            left: 50%;
+            margin-top: -($spacing-medium * 1.5);
+            margin-left: -$spacing-medium;
         }
     }
 
-    .toggle {
-      position: absolute;
-      display: none;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      width: $toggle-width;
-      height: $menu-height;
-      background-color: $color-3;
-      color: $color-1;
+    &-list {
+        @include large() {
+            padding-left: $spacing-medium;
+            height: inherit;
 
-      span {
-        position: absolute;
-        font-size: $spacing-large;
-        top: 50%;
-        left: 50%;
-        margin-top: -($spacing-medium * 1.5);
-        margin-left: -$spacing-medium;
-      }
-    }
-
-    .menu {
-        background-color: $color-2;
-        height: $menu-height;
-    }
-
-    .menu-list button {
-        display: inline;
-        cursor: pointer;
-    }
-
-    /* anything above mobile */
-
-    @include large() {
-        .menu-list {
-            padding-top: $spacing-small;
-
-            button {
-                @include largeButton();
+            h1, button {
+                display: inline-block;
+                height: inherit;
             }
         }
-    }
 
-    /* mobile view */
+        @include mobile() {
+            position: absolute;
+            top: $menu-height;
+            display: none;
+        }
+    }
 
     @include mobile() {
-        header.expanded {
-            height: 100%;
-
-            .menu {
-                position: absolute;
-                overflow-y: auto;
-                height: 100%;
-
-                .menu-list {
-                    left: 0;
-                    display: block;
-                    width: 100%;
-                    height: 100%;
-
-                    button {
-                        width: 100%;
-                        border: none;
-                        border-bottom: 1px solid $color-1;
-                        background-color: transparent;
-                        padding: $spacing-large;
-                        font-size: .85em;
-                        @include boxSize;
-                    }
-                }
-            }
-        }
-
-      .menu {
         position: fixed;
         z-index: $z-index-menu;
         overflow: hidden;
@@ -168,20 +154,55 @@ export default {
         top: 0;
         left: 0;
 
-        .toggle {
+        &-toggle {
             display: block;
         }
+    }
+}
 
-        h1 {
-            display: none;
-        }
+.menu-button {
+    @include bodyFont();
+    display: inline;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-weight: bold;
+    color: #FFF;
+    font-size: 100%;
+    margin-right: $spacing-medium;
 
-        .menu-list {
+    &--active {
+        color: $color-2;
+    }
+}
+
+/* mobile view */
+
+@include mobile() {
+    .header.expanded {
+        height: 100%;
+
+        .header__menu {
             position: absolute;
-            top: $menu-height;
-            background-image: linear-gradient(to bottom,#fff 35%,#eee 90%);
-            background-repeat: repeat-x;
-            display: none;
+            overflow-y: auto;
+            height: 100%;
+
+            &-list {
+                left: 0;
+                display: block;
+                width: 100%;
+                height: 100%;
+
+                button {
+                    width: 100%;
+                    border: none;
+                    border-bottom: 1px solid $color-1;
+                    background-color: transparent;
+                    padding: $spacing-large;
+                    font-size: .85em;
+                    @include boxSize();
+                }
+            }
         }
     }
 }

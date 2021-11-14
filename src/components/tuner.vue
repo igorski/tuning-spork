@@ -145,6 +145,7 @@ export default {
 
 .tuner {
     @include overlay( 400px, 300px );
+    text-align: center;
 
     &__ui {
         padding: $spacing-large 0;

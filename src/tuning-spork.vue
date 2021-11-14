@@ -24,21 +24,21 @@
     <div class="tuning-spork">
         <application-menu />
         <tuner v-if="tunerOpened" @close="tunerOpened = false" />
-        <div class="app">
+        <div class="tuning-spork__app">
             <!-- configuration menu toggle (mobile only) -->
             <button
                 type="button"
-                class="configuration-toggle"
+                class="tuning-spork__configuration-toggle"
                 @click="setConfigurationOpened(!configurationOpened)"
             >Configure instrument</button>
             <!-- instrument and scale configuration -->
-            <div class="configuration" :class="{ expanded: configurationOpened }">
+            <div class="tuning-spork__configuration" :class="{ expanded: configurationOpened }">
                 <button
                     type="button"
                     class="close-button"
                     @click="setConfigurationOpened( false )"
                 >&#x2715;</button>
-                <div class="interface">
+                <div class="tuning-spork__configuration-interface">
                     <div class="option">
                         <label>Instrument</label>
                         <model-select :options="formatOptions(['guitar', 'bass', 'ukelele'])"
@@ -68,7 +68,7 @@
                 </div>
                 <!-- scale configuration interface -->
                 <template v-if="appMode === 0">
-                    <div class="interface">
+                    <div class="tuning-spork__configuration-interface">
                         <div class="option">
                             <label>Key / <span class="root-note">root note</span></label>
                             <model-select :options="availableNotes"
@@ -102,7 +102,7 @@
                 <chord-list />
             </template>
             <template v-else>
-                <div v-if="!chord.length">
+                <div v-if="!chord.length" class="explanation">
                     Found a sweet soundin' chord and curious what it is called ? Just fret the strings above
                     and we'll tell you what you are playing (and what scales go with it).
                 </div>
@@ -111,17 +111,18 @@
                 </div>
                 <div v-if="foundScales.length">
                     <p>The following scales are in key with this chord:</p>
-                    <div v-for="scale in foundScales"
-                         class="scale"
-                         :key="scale"
-                         @click="showScale(foundChordRoot, scale)"
+                    <div
+                        v-for="scale in foundScales"
+                        class="tuning-spork__scale"
+                        :key="scale"
+                        @click="showScale(foundChordRoot, scale)"
                     >
                         {{ foundChordRoot }} {{ scale }}
                     </div>
                 </div>
             </template>
         </div>
-        <footer class="footer">
+        <footer class="tuning-spork__footer">
             <p>This trinket is <a href="https://www.github.com/igorski/tuning-spork" target="_blank">open source</a>. Contributions welcome!</p>
         </footer>
     </div>
@@ -236,10 +237,10 @@ export default {
             // get the lowest fretted string to treat it as the root note (TODO: what about slash chords??)
             let rootString = this.chord.length;
             let rootFret;
-            while (typeof rootFret !== "number" && --rootString > 0) {
+            while ( typeof rootFret !== "number" && --rootString > 0 ) {
                 rootFret = this.chord[rootString];
             }
-            if (typeof rootFret !== "number") {
+            if ( typeof rootFret !== "number" ) {
                 return; // no notes found
             }
             let openStringNote = this.tuning.strings[rootString];
@@ -252,13 +253,13 @@ export default {
             let intervals = this.getIntervals(this.chord, rootNoteIndex);
             let chord = getChordByIntervals(intervals);
 
-            if (chord) {
+            if ( chord ) {
                 this.foundChord = `${rootNote} ${chord}`;
             }
             // in case no chord was found but the amount of fretted notes exceeds that
             // of a triad, assume we are dealing with a slash chord (alternate note in bass)
             // try again with next higher string as assumed rootn ote
-            else if (this.chord.filter(fret => typeof fret === "number").length > 3) {
+            else if ( this.chord.filter( fret => typeof fret === "number" ).length > 3) {
                 const bassNote = rootNote;
                 const bassIndex = rootString;
 
@@ -330,29 +331,15 @@ export default {
 </script>
 
 <style lang="scss">
+/* global styles */
 @import "@/styles/layout";
 
-$footerHeight: 55px;
-
-.app {
-    margin: $menu-height auto 0;
-    max-width: $app-width;
-    padding-bottom: $footerHeight;
+.ui.search.selection.dropdown>input.search {
+    @include boxSize(); // fixes issue in vue-search-select
 }
 
 .button {
     @include button();
-}
-
-.configuration-toggle,
-.configuration .close-button {
-    display: none; // mobile view only
-}
-
-.interface {
-    padding: $spacing-medium 0 0;
-    @include boxSize();
-    @include noSelect();
 }
 
 .option {
@@ -366,15 +353,23 @@ $footerHeight: 55px;
     .root-note {
         color: $color-2;
     }
-}
 
-.scale {
-    cursor: pointer;
-    display: inline-block;
-    padding: 10px;
-    border-radius: 7px;
-    border: 2px solid #999;
-    margin: 0 7px 7px;
+    @include mobile() {
+        display: inline-flex;
+        margin-bottom: $spacing-small;
+        width: 100%;
+        text-align: left;
+        padding-left: $spacing-medium;
+        @include boxSize();
+
+        label {
+            width: 30%;
+            margin-top: $spacing-small;
+        }
+        .select {
+            width: 70%;
+        }
+    }
 }
 
 .select {
@@ -397,52 +392,73 @@ $footerHeight: 55px;
     }
 }
 
-.footer {
-    height: $footerHeight;
-    width: 100%;
-
-    @include large() {
-        position: fixed;
-        bottom: 0;
-        background-color: $color-1;
+.explanation {
+    @include ideal() {
+        max-width: 600px;
+        margin: $spacing-medium auto $spacing-large;
     }
 }
+</style>
 
-/* mobile view */
+<style lang="scss" scoped>
+@import "@/styles/_variables";
+@import "@/styles/_mixins";
+@import "@/styles/_typography";
 
-@include mobile() {
-    .configuration-toggle {
-        display: inline-block;
-        margin: $spacing-medium auto 0;
-        @include largeButton();
-    }
+/* scoped styles */
 
-    .configuration {
-        display: none;
-
-        &.expanded {
-            @include overlay( $mobile-width, $mobile-width );
-            display: block;
-
-            .close-button {
-                display: block;
-            }
-        }
-    }
-    .option {
-        display: inline-flex;
-        margin-bottom: $spacing-small;
-        width: 100%;
-        text-align: left;
-        padding-left: $spacing-medium;
+.tuning-spork {
+    &__app {
         @include boxSize();
+        $topPadding: #{$menu-height + $spacing-medium};
+        margin: 0 auto;
+        padding-top: $topPadding;
+        max-width: $app-width;
+        min-height: calc(100% - #{$topPadding});
+        text-align: center;
+    }
 
-        label {
-            width: 30%;
-            margin-top: $spacing-small;
+    &__scale {
+        @include button();
+    }
+
+    &__footer {
+        height: $footer-height;
+        width: 100%;
+        text-align: center;
+    }
+
+    &__configuration {
+        padding: $spacing-small $spacing-small $spacing-medium;
+        border: 1px solid $color-2;
+
+        &-toggle,
+        .close-button {
+            display: none; // mobile view only
         }
-        .select {
-            width: 70%;
+
+        &-interface {
+            padding: $spacing-medium 0 0;
+            @include boxSize();
+            @include noSelect();
+        }
+
+        @include mobile() {
+            display: none;
+            &.expanded {
+                @include overlay( $mobile-width, $mobile-width );
+                display: block;
+
+                .close-button {
+                    display: block;
+                }
+            }
+
+            &-toggle {
+                @include button();
+                display: inline-block;
+                margin: $spacing-medium auto 0;
+            }
         }
     }
 }

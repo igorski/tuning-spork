@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -46,15 +46,16 @@
                 <label for="basicChords" class="chord-type-label">Basic chords</label>
             </div>
             <div class="ui checkbox chord-type-checkbox">
-                <input type="checkbox"
-                       v-model="extendedChords"
-                       id="extendedChords"
-                       name="extendedChords"
+                <input
+                    type="checkbox"
+                    v-model="extendedChords"
+                    id="extendedChords"
+                    name="extendedChords"
                 />
                 <label for="extendedChords" class="chord-type-label">Extended chords</label>
             </div>
         </fieldset>
-        <p>
+        <p class="explanation">
             These chords fit the chosen scale. You can use the above scale to improvise freely
             over a chord progression made of below chords.
             Hover over the chord to view recommended fingerings for your instrument and its tuning.
@@ -159,23 +160,10 @@ export default {
 
 .chord-type-label {
     cursor: pointer;
+    color: $color-text !important;
 }
 
 .chord-button {
-    cursor: pointer;
-    display: inline-block;
-    border-radius: $spacing-small;
-    padding: $spacing-small $spacing-medium;
-    background-color: $color-2;
-    color: $color-1;
-    font-size: 90%;
-    font-weight: bold;
-    margin: 0 $spacing-small $spacing-small 0;
-    @include noSelect();
-
-    &:hover {
-        background-color: $color-4;
-        color: $color-1;
-    }
+    @include button();
 }
 </style>
