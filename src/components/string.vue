@@ -93,7 +93,7 @@ export default {
         },
         editable: {
             type: Boolean,
-            default: false,
+            default: true,
         },
     },
     data: () => ({
@@ -170,7 +170,6 @@ $size: 40px;
     align-items: flex-start;
     height: $size;
 
-
     &__tuning {
         max-width: 65px;
         margin-top: -10px;
@@ -178,7 +177,7 @@ $size: 40px;
 
     &__note-name {
         @include bodyFont();
-        color: #FFF;
+        color: $color-text;
         font-weight: bold;
         width: $spacing-large;
     }

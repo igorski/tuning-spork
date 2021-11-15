@@ -102,10 +102,10 @@ export default {
 .header__menu {
     height: $menu-height;
 
-    @include ideal() {
-        max-width: $app-width;
-        margin: 0 auto;
-    }
+    // @include ideal() {
+    //     max-width: $app-width;
+    //     margin: 0 auto;
+    // }
 
     &-toggle {
         position: absolute;

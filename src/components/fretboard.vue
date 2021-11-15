@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,11 +22,13 @@
  */
 <template>
     <div class="fretboard">
-        <div v-for="(note, index) in tuning.strings"
-             :key="`string_${index}`"
+        <div
+            v-for="( note, index ) in tuning.strings"
+            :key="`string_${index}`"
         >
-            <string :index="index"
-                    :note="note"
+            <string
+                :index="index"
+                :note="note"
             />
         </div>
     </div>
@@ -53,7 +55,11 @@ export default {
 
 .fretboard {
     width: 100%;
-    padding: 30px 0 0;
+    padding: $spacing-large;
+    border: 1px solid $color-2;
+    background-color: $color-5;
+    border-radius: $spacing-small;
+    @include boxSize();
     @include noSelect();
 }
 </style>

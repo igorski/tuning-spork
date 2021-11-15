@@ -267,6 +267,7 @@ export default {
     background-color: rgba(255,255,255,.9);
     color: $color-5;
     z-index: $z-index-overlay;
+    text-align: center;
 }
 
 .chord-name {

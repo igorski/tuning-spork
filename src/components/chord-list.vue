@@ -152,6 +152,8 @@ export default {
 
 .chord-types {
     border: none;
+    padding: 0 0 $spacing-small;
+    margin: 0;
 }
 
 .chord-type-checkbox {
