@@ -21,20 +21,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 <template>
-    <div class="string-container">
+    <div class="string">
         <model-select
-            :options="formatOptions(notes)"
+            v-if="editable"
+            :options="formatOptions( notes )"
             v-model="tunedNote"
-            class="string-tuning select"
+            class="string__tuning select"
         />
+        <span v-else class="string__note-name">{{ tunedNote }}</span>
         <div
-            class="string"
+            class="string__wire"
             :style="{ height: `${index}px` }"
         >
             <!-- fret wire -->
             <div
                 v-for="fret in AMOUNT_OF_FRETS"
-                class="fret"
+                class="string__fret"
                 :key="`fret ${fret}`"
                 :style="{ left: `${(fret + 1 ) * 100 / AMOUNT_OF_FRETS.length}%`}"
             ></div>
@@ -42,7 +44,7 @@
             <template v-if="appMode === 0">
                 <div
                     v-for="fret in fretsInScale"
-                    class="note"
+                    class="string__note"
                     :key="`string ${index} fret ${fret}`"
                     :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
                     :class="{ root: getNoteByFret(fret) === key, decimal: fret > 9 }"
@@ -52,7 +54,7 @@
             <template v-else>
                 <div
                     v-for="fret in AMOUNT_OF_FRETS"
-                    class="note"
+                    class="string__note"
                     :key="`string ${index} fret ${fret}`"
                     :class="{ hidden: fret !== activeFret }"
                     :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
@@ -88,6 +90,10 @@ export default {
         note: {
             type: String,
             required: true
+        },
+        editable: {
+            type: Boolean,
+            default: false,
         },
     },
     data: () => ({
@@ -158,26 +164,34 @@ export default {
 @import "@/styles/layout";
 $size: 40px;
 
-.string-container {
+.string {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     height: $size;
-}
 
-.string-tuning {
-    max-width: 65px;
-    margin-top: -10px;
-}
 
-.string {
-    position: relative;
-    min-height: 1px;
-    margin-top: 10px;
-    width: 100%;
-    background-color: $color-strings;
+    &__tuning {
+        max-width: 65px;
+        margin-top: -10px;
+    }
 
-    .fret {
+    &__note-name {
+        @include bodyFont();
+        color: #FFF;
+        font-weight: bold;
+        width: $spacing-large;
+    }
+
+    &__wire {
+        position: relative;
+        min-height: 1px;
+        margin-top: 10px;
+        width: 100%;
+        background-color: $color-strings;
+    }
+
+    &__fret {
         position: absolute;
         width: 2px;
         height: $size;
@@ -191,7 +205,7 @@ $size: 40px;
         }
     }
 
-    .note {
+    &__note {
         position: absolute;
         top: -15px;
         width: $size / 2;
@@ -202,6 +216,7 @@ $size: 40px;
         padding: 5px;
         font-weight: bold;
         color: $color-5;
+        text-align: center;
 
         &.root {
             background-color: $color-2;
@@ -218,18 +233,18 @@ $size: 40px;
             opacity: 0;
         }
     }
-}
 
-/* mobile view */
+    /* mobile view */
 
-@include mobile() {
-    // for now these takes up too much space
-    .string-tuning,
-    .fret:first-child {
-        display: none;
-    }
-    .string {
-        left: -6%; // make up for missing "tuning peg" and nut
+    @include mobile() {
+        // for now these takes up too much space
+        &__tuning,
+        &__fret:first-child {
+            display: none;
+        }
+        &__wire {
+            left: -6%; // make up for missing "tuning peg" and nut
+        }
     }
 }
 </style>

@@ -38,7 +38,7 @@
                     class="close-button"
                     @click="setConfigurationOpened( false )"
                 >&#x2715;</button>
-                <div class="tuning-spork__configuration-interface">
+                <div class="tuning-spork__configuration-instrument">
                     <div class="option">
                         <label>Instrument</label>
                         <model-select :options="formatOptions(['guitar', 'bass', 'ukelele'])"
@@ -68,7 +68,7 @@
                 </div>
                 <!-- scale configuration interface -->
                 <template v-if="appMode === 0">
-                    <div class="tuning-spork__configuration-interface">
+                    <div class="tuning-spork__configuration-scale">
                         <div class="option">
                             <label>Key / <span class="root-note">root note</span></label>
                             <model-select :options="availableNotes"
@@ -395,7 +395,7 @@ export default {
 .explanation {
     @include ideal() {
         max-width: 600px;
-        margin: $spacing-medium auto $spacing-large;
+        margin: $spacing-medium 0 $spacing-large;
     }
 }
 </style>
@@ -415,7 +415,6 @@ export default {
         padding-top: $topPadding;
         max-width: $app-width;
         min-height: calc(100% - #{$topPadding});
-        text-align: center;
     }
 
     &__scale {
@@ -429,16 +428,24 @@ export default {
     }
 
     &__configuration {
-        padding: $spacing-small $spacing-small $spacing-medium;
-        border: 1px solid $color-2;
-
         &-toggle,
         .close-button {
             display: none; // mobile view only
         }
 
-        &-interface {
-            padding: $spacing-medium 0 0;
+        &-instrument {
+            border: 1px solid $color-2;
+            border-radius: $spacing-small;
+            padding: $spacing-medium $spacing-large;
+            margin-bottom: $spacing-medium;
+            @include boxSize();
+            @include noSelect();
+        }
+
+        &-scale {
+            border-radius: $spacing-small;
+            padding: $spacing-medium $spacing-large;
+            text-align: left;
             @include boxSize();
             @include noSelect();
         }
@@ -447,10 +454,13 @@ export default {
             display: none;
             &.expanded {
                 @include overlay( $mobile-width, $mobile-width );
+                margin-top: #{$menu-height + $spacing-large};
                 display: block;
 
                 .close-button {
                     display: block;
+                    top: $spacing-large;
+                    right: $spacing-large;
                 }
             }
 
