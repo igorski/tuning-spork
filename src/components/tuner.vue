@@ -164,10 +164,12 @@ export default {
         }
 
         &__pointer {
+            $pointerSize: $spacing-large;
             position: absolute;
-            width: $spacing-large;
-            height: $spacing-large;
-            bottom: -#{$spacing-large / 2};
+            width: $pointerSize;
+            height: $pointerSize;
+            bottom: -#{$pointerSize / 2};
+            margin-left: -#{$pointerSize / 2};
             border-radius: 50%;
             transition: left 250ms;
 
