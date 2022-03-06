@@ -85,8 +85,8 @@
     @include noSelect();
 
     &:hover {
-        background-color: $color-4;
-        color: $color-2;
+        background-color: $color-3;
+        color: $color-1;
     }
 }
 
@@ -125,5 +125,46 @@
 
     .content {
         padding-top: $spacing-large + $spacing-medium;
+    }
+}
+
+@mixin scrollablePanel( $additionalPadding: 0 ) {
+    $padding: #{$menu-height + $footer-height + $additionalPadding};
+    height: calc(100vh - #{$padding});
+    overflow-y: auto;
+    box-sizing: border-box;
+
+    @include mobile() {
+        $mobilePadding: #{$menu-height + $additionalPadding}; // there's no footer on mobile
+        height: calc(100vh - #{$mobilePadding});
+    }
+}
+
+@mixin hiddenOnMobile() {
+    .close-button {
+        display: none; // mobile view only
+    }
+
+    @include mobile() {
+        display: none;
+
+        &.expanded {
+            @include overlay( $mobile-width, $mobile-width );
+            margin-top: #{$menu-height};
+            display: block;
+
+            .close-button {
+                display: block;
+                top: $spacing-large;
+                right: #{$spacing-medium + $spacing-small};
+                color: $color-1;
+
+                &.secondary {
+                    color: $color-2;
+                    top: #{$spacing-medium + $spacing-small};
+                    right: $spacing-medium;
+                }
+            }
+        }
     }
 }

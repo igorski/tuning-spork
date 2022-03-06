@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import String from './string';
+import { mapState } from "vuex";
+import String from "./string";
 
 export default {
     components: {
@@ -44,21 +44,19 @@ export default {
     },
     computed: {
         ...mapState([
-            'tuning',
+            "tuning",
         ]),
     },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/styles/_mixins";
 
 .fretboard {
     width: 100%;
-    padding: $spacing-large;
-    border: 1px solid $color-2;
-    background-color: $color-5;
-    border-radius: $spacing-small;
+    padding: $spacing-medium $spacing-medium 0 0;
+    // background-color: $color-5;
     @include boxSize();
     @include noSelect();
 }

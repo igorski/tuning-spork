@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,31 +22,40 @@
  */
 <template>
     <div class="scale-selector">
-        <div class="option">
+        <slot name="default"></slot>
+        <div class="scale-selector__option scale-selector__key-select">
             <label>Key / <span class="root-note">root note</span></label>
             <model-select
                 :options="availableNotes"
                 v-model="selectedKey"
-                class="select small-list"
+                class="scale-selector__select small-list"
             />
         </div>
-        <div class="option">
-            <label>Scale</label>
-            <model-select
-                :options="availableScales"
-                v-model="selectedScale"
-                placeholder="Find scale by name"
-                class="select large-list"
-            />
-        </div>
-        <div class="option">
-            <label>View</label>
-            <model-select
-                :options="availableViewOptions"
-                v-model="selectedViewOption"
-                class="select medium-list"
-            />
-        </div>
+        <model-select
+            :options="availableScales"
+            :dropdown-should-open="false"
+            placeholder="Find scale by name"
+            @input="handleScaleSearch( $event )"
+            class="scale-selector__select search-only"
+        />
+        <ul
+            ref="scaleList"
+            class="scale-list"
+        >
+            <li
+                v-for="{ value, text } in availableScales"
+                :key="value"
+                class="scale-list__entry"
+                :data-value="value"
+                :class="{ selected: value === selectedScale }"
+            >
+                <button
+                    type="button"
+                    class="scale-list__entry-button"
+                    @click="selectedScale = value"
+                >{{ text }}</button>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -65,16 +74,12 @@ export default {
             "notes",
             "scale",
             "scales",
-            "viewOption",
         ]),
         availableNotes() {
             return mapSelectOptions( this.notes );
         },
         availableScales() {
             return mapSelectOptions( Object.keys( this.scales ).sort());
-        },
-        availableViewOptions() {
-            return mapSelectOptions([ "frets", "notes", "degrees" ]);
         },
         selectedScale: {
             get() {
@@ -92,27 +97,37 @@ export default {
                 this.setKey( value );
             }
         },
-        selectedViewOption: {
-            get() {
-                return this.viewOption;
-            },
-            set( value ) {
-                this.setViewOption( value );
-            }
-        },
+    },
+    mounted() {
+        this.scrollToSelection();
     },
     methods: {
         ...mapMutations([
             "setKey",
             "setScale",
-            "setViewOption",
         ]),
+        handleScaleSearch( scale ) {
+            this.selectedScale = scale;
+            this.scrollToSelection();
+        },
+        scrollToSelection() {
+            const scaleList = this.$refs.scaleList;
+            if ( !scaleList ) {
+                return;
+            }
+            scaleList.querySelector( `[data-value="${this.selectedScale}"]`)?.scrollIntoView?.({
+                behavior : "smooth",
+                block    : "center",
+                inline   : "nearest"
+            });
+        }
     }
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/styles/_mixins";
+@import "@/styles/ui";
 
 .scale-selector {
     border-radius: $spacing-small;
@@ -121,10 +136,74 @@ export default {
     @include boxSize();
     @include noSelect();
 
-    @include ideal() {
-        max-width: $app-width;
-        margin: 0 auto;
-        padding-left: 0;
+    @include large() {
+        min-width: $scale-selector-width;
+        max-width: $scale-selector-width;
+    }
+
+    @include mobile() {
+        &__key-select {
+            display: initial !important;
+        }
+    }
+
+    @include hiddenOnMobile();
+
+    &__option {
+        @include formField();
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    &__select {
+        @include selectField();
+
+        &.search-only {
+            margin: $spacing-small 0;
+        }
+    }
+
+    .root-note {
+        color: $color-2;
+    }
+}
+
+.scale-list {
+    @include scrollablePanel( 104px );
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    &__entry {
+        border-bottom: 1px solid $color-3;
+
+        &-button {
+            width: 100%;
+            height: 100%;
+            font-size: 0.9em;
+            text-align: left;
+            padding: $spacing-small;
+            background: none;
+            border: none;
+            color: $color-text;
+            cursor: pointer;
+
+            &:hover {
+                color: $color-2;
+                text-indent: $spacing-small;
+            }
+        }
+
+        &.selected {
+            background-color: $color-3;
+
+            .scale-list__entry-button {
+                color: #FFF;
+                font-weight: bold;
+                text-indent: $spacing-small;
+            }
+        }
     }
 }
 </style>

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,35 +24,37 @@
     <div class="instrument-selector">
         <h2 class="instrument-selector__title">{{ instrumentName }}</h2>
         <tuner v-if="tunerOpened" @close="tunerOpened = false" />
-        <div class="option">
+        <div class="instrument-selector__option">
             <label>Instrument</label>
             <model-select
                 :options="availableInstruments"
                 v-model="selectedInstrumentType"
-                class="select medium-list"
+                class="instrument-selector__select medium-list"
             />
         </div>
-        <div v-if="availableStringAmountsForCurrentInstrument.length > 1" class="option">
+        <div v-if="availableStringAmountsForCurrentInstrument.length > 1" class="instrument-selector__option">
             <label>Amount of strings</label>
             <model-select
                 :options="availableStringAmounts"
                 v-model="selectedStringAmount"
-                class="select small-list"
+                class="instrument-selector__select small-list"
             />
         </div>
-        <div v-if="availableTunings.length > 1" class="option">
+        <div v-if="availableTunings.length > 1" class="instrument-selector__option">
             <label>Tuning</label>
             <model-select
                 :options="availableTunings"
                 v-model="selectedTuning"
-                class="select large-list"
+                class="instrument-selector__select large-list"
             />
         </div>
         <button
             type="button"
-            class="button"
+            class="instrument-selector__tuner-button"
             @click="openTuner()"
-        >Tuner</button>
+        >
+            <img src="@/assets/icons/tuning-fork.svg" />
+        </button>
     </div>
 </template>
 
@@ -125,7 +127,6 @@ export default {
         openTuner() {
             initAudioContext();
             this.tunerOpened = true;
-            this.$emit( "opened", false );
         }
     },
 };
@@ -133,18 +134,49 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_mixins";
+@import "@/styles/ui";
 
 .instrument-selector {
     padding: $spacing-large;
-    margin-bottom: $spacing-medium;
     border-bottom: 1px solid $color-5;
     background-color: $color-2;
     color: $color-5;
     @include boxSize();
     @include noSelect();
 
+    @include large() {
+        margin: 0 $spacing-medium $spacing-medium 0;
+    }
+
     &__title {
         margin-top: 0;
+    }
+
+    &__option {
+        @include formField();
+    }
+
+    &__select {
+        @include selectField();
+        margin-right: $spacing-medium;
+    }
+
+    &__tuner-button {
+        cursor: pointer;
+        border-radius: 50%;
+        padding: 0 2px;
+        background: none;
+        border: 3px solid $color-1;
+        vertical-align: bottom;
+
+        &:hover {
+            background-color: $color-3;
+        }
+
+        img {
+            width: 30px;
+            height: 30px;
+        }
     }
 }
 </style>

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -30,18 +30,20 @@
         <h2>Available chords</h2>
         <fieldset class="chord-types">
             <div class="ui checkbox chord-type-checkbox">
-                <input type="checkbox"
-                       v-model="powerChords"
-                       id="powerChords"
-                       name="powerChords"
+                <input
+                    type="checkbox"
+                    v-model="powerChords"
+                    id="powerChords"
+                    name="powerChords"
                 />
                 <label for="powerChords" class="chord-type-label">Power chords</label>
             </div>
             <div class="ui checkbox chord-type-checkbox">
-                <input type="checkbox"
-                       v-model="basicChords"
-                       id="basicChords"
-                       name="basicChords"
+                <input
+                    type="checkbox"
+                    v-model="basicChords"
+                    id="basicChords"
+                    name="basicChords"
                 />
                 <label for="basicChords" class="chord-type-label">Basic chords</label>
             </div>
@@ -99,7 +101,7 @@ export default {
             get() {
                 return this.chordOptions.power;
             },
-            set(value) {
+            set( value ) {
                 this.setChordOption({ option: "power", value });
             },
         },
@@ -107,7 +109,7 @@ export default {
             get() {
                 return this.chordOptions.basic;
             },
-            set(value) {
+            set( value ) {
                 this.setChordOption({ option: "basic", value });
             }
         },
@@ -115,31 +117,31 @@ export default {
             get() {
                 return this.chordOptions.extended;
             },
-            set(value) {
+            set( value ) {
                 this.setChordOption({ option: "extended", value });
             }
         },
         filteredChords() {
-            return this.availableScaleChords.filter(chord => {
-                if (this.powerChords && isPowerChord(chord)) {
+            return this.availableScaleChords.filter( chord => {
+                if ( this.powerChords && isPowerChord( chord )) {
                     return chord;
                 }
-                if (this.basicChords && chord.notes.length === 3) {
+                if ( this.basicChords && chord.notes.length === 3 ) {
                     return chord;
                 }
-                if (this.extendedChords && chord.notes.length > 3) {
+                if ( this.extendedChords && chord.notes.length > 3 ) {
                     return chord;
                 }
                 return null;
 
-            }).filter(chord => chord.notes.length <= this.tuning.strings.length);
+            }).filter( chord => chord.notes.length <= this.tuning.strings.length );
         },
     },
     methods: {
         ...mapMutations([
             "setChordOption",
         ]),
-        setSelectedChord(chord = null) {
+        setSelectedChord( chord = null ) {
             this.selectedChord = chord;
         },
     }

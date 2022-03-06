@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,52 +24,79 @@
     <div class="tuning-spork">
         <application-menu />
         <div class="tuning-spork__app">
-            <!-- configuration menu toggle (mobile only) -->
-            <button
-                type="button"
-                class="tuning-spork__configuration-toggle"
-                @click="setConfigurationOpened( !configurationOpened )"
-            >Configure instrument</button>
-            <!-- instrument and scale configuration -->
-            <div class="tuning-spork__configuration" :class="{ expanded: configurationOpened }">
+            <!-- scale/configuration menu toggle (mobile only) -->
+            <div class="tuning-spork__configuration-buttons">
                 <button
                     type="button"
-                    class="close-button"
-                    @click="setConfigurationOpened( false )"
-                >&#x2715;</button>
-                <instrument-selector @opened="setConfigurationOpened( $event )"/>
-                <!-- scale configuration interface -->
-                <template v-if="appMode === 0">
-                    <scale-selector />
-                </template>
+                    class="tuning-spork__configuration-toggle"
+                    @click="setScaleSelectorOpened( !scaleSelectorOpened )"
+                >Select scale</button>
+                <button
+                    type="button"
+                    class="tuning-spork__configuration-toggle"
+                    @click="setConfigurationOpened( !configurationOpened )"
+                >Configure instrument</button>
             </div>
-            <div class="tuning-spork__container">
-                <!-- instrument fretboard -->
-                <fretboard />
-                <!-- compatible chords list -->
-                <template v-if="appMode === 0">
-                    <chord-list />
-                </template>
-                <template v-else>
-                    <div v-if="!chord.length" class="explanation">
-                        Found a sweet soundin' chord and curious what it is called ? Just fret the strings above
-                        and we'll tell you what you are playing (and what scales go with it).
-                    </div>
-                    <div v-if="foundChord">
-                        <h2>{{ foundChord }}</h2>
-                    </div>
-                    <div v-if="foundScales.length">
-                        <p>The following scales are in key with this chord:</p>
-                        <div
-                            v-for="scale in foundScales"
-                            class="tuning-spork__scale"
-                            :key="scale"
-                            @click="showScale(foundChordRoot, scale)"
+            <div class="tuning-spork__wrapper">
+                <div class="tuning-spork__container">
+                    <!-- scale configuration interface -->
+                    <div class="tuning-spork__scale-selector">
+                        <scale-selector
+                            v-if="appMode === 0"
+                            class="tuning-spork__aside"
+                            :class="{ expanded: scaleSelectorOpened }"
                         >
-                            {{ foundChordRoot }} {{ scale }}
-                        </div>
+                            <button
+                                type="button"
+                                class="close-button secondary"
+                                @click="setScaleSelectorOpened( false )"
+                            >&#x2715;</button>
+                        </scale-selector>
                     </div>
-                </template>
+                    <div class="tuning-spork__content">
+                        <!-- instrument configuration -->
+                        <div class="tuning-spork__configuration" :class="{ expanded: configurationOpened }">
+                            <button
+                                type="button"
+                                class="close-button"
+                                @click="setConfigurationOpened( false )"
+                            >&#x2715;</button>
+                            <instrument-selector @opened="setConfigurationOpened( $event )"/>
+                        </div>
+                        <!-- instrument fretboard -->
+                        <fretboard />
+                        <div class="tuning-spork__fretboard-view-option">
+                            <label>View</label>
+                            <model-select
+                                :options="availableViewOptions"
+                                v-model="selectedViewOption"
+                                class="scale-selector__select medium-list"
+                            />
+                        </div>
+                        <!-- compatible chords list -->
+                        <chord-list v-if="appMode === 0"/>
+                        <template v-else>
+                            <div v-if="!chord.length" class="explanation">
+                                Found a sweet soundin' chord and curious what it is called ? Just fret the strings above
+                                and we'll tell you what you are playing (and what scales go with it).
+                            </div>
+                            <div v-if="foundChord">
+                                <h2>{{ foundChord }}</h2>
+                            </div>
+                            <div v-if="foundScales.length">
+                                <p>The following scales are in key with this chord:</p>
+                                <div
+                                    v-for="scale in foundScales"
+                                    class="tuning-spork__scale"
+                                    :key="scale"
+                                    @click="showScale(foundChordRoot, scale)"
+                                >
+                                    {{ foundChordRoot }} {{ scale }}
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
             </div>
         </div>
         <footer class="tuning-spork__footer">
@@ -80,6 +107,7 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
+import { ModelSelect } from "vue-search-select";
 import { getChordByIntervals } from "@/utils/chord-util";
 import { getCompatibleScalesForIntervals } from "@/utils/interval-util";
 import ApplicationMenu from "@/components/application-menu";
@@ -87,6 +115,7 @@ import ChordList from "@/components/chord-list";
 import Fretboard from "@/components/fretboard";
 import InstrumentSelector from "@/components/instrument-selector";
 import ScaleSelector from "@/components/scale-selector";
+import { mapSelectOptions } from "@/utils/select-util";
 import store from "@/store";
 
 import "semantic-ui-css/components/dropdown.min.css"
@@ -99,12 +128,14 @@ export default {
         ChordList,
         Fretboard,
         InstrumentSelector,
+        ModelSelect,
         ScaleSelector,
     },
     data: () => ({
         foundChord: null,
         foundChordRoot: null,
         foundScales: [],
+        scaleSelectorOpened: false,
         configurationOpened: false,
     }),
     computed: {
@@ -113,7 +144,19 @@ export default {
             "chord",
             "notes",
             "tuning",
+            "viewOption",
         ]),
+        availableViewOptions() {
+            return mapSelectOptions([ "frets", "notes", "degrees" ]);
+        },
+        selectedViewOption: {
+            get() {
+                return this.viewOption;
+            },
+            set( value ) {
+                this.setViewOption( value );
+            }
+        },
     },
     watch: {
         chord() { this.calculateChord() },
@@ -124,6 +167,7 @@ export default {
             "setAppMode",
             "setKey",
             "setScale",
+            "setViewOption",
         ]),
         calculateChord() {
             // chord fingering changed, try to retrieve whether the chord fingering represents a known chord
@@ -215,6 +259,9 @@ export default {
             this.setKey( key );
             this.setScale( scale );
         },
+        setScaleSelectorOpened( opened ) {
+            this.scaleSelectorOpened = opened;
+        },
         setConfigurationOpened( opened ) {
             this.configurationOpened = opened;
         },
@@ -224,126 +271,100 @@ export default {
 
 <style lang="scss">
 /* global styles */
-@import "@/styles/layout";
-
-.ui.search.selection.dropdown>input.search {
-    @include boxSize(); // fixes issue in vue-search-select
-}
-
-.button {
-    @include button();
-}
-
-.option {
-    display: inline;
-    margin-right: 12px;
-
-    label {
-        margin-right: 7px;
-        font-weight: bold;
-    }
-
-    .root-note {
-        color: $color-2;
-    }
-
-    @include mobile() {
-        display: inline-flex;
-        margin-bottom: $spacing-small;
-        width: 100%;
-        text-align: left;
-        padding-left: $spacing-medium;
-        @include boxSize();
-
-        label {
-            width: 30%;
-            margin-top: $spacing-small;
-        }
-        .select {
-            width: 70%;
-        }
-    }
-}
-
-.select {
-    display: inline-block !important; // semantic-ui-css override
-
-    &.small-list {
-        max-width: 65px;
-    }
-    &.medium-list {
-        max-width: 100px;
-    }
-    &.large-list {
-        max-width: 200px;
-    }
-    .text {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        width: 100%;
-    }
-}
-
-.explanation {
-    @include ideal() {
-        max-width: 600px;
-        margin: $spacing-medium 0 $spacing-large;
-    }
-}
+@import "@/styles/global";
 </style>
 
 <style lang="scss" scoped>
+/* scoped styles */
 @import "@/styles/_variables";
 @import "@/styles/_mixins";
 @import "@/styles/_typography";
 
-/* scoped styles */
-
 .tuning-spork {
     &__app {
         @include boxSize();
-        $topPadding: #{$menu-height};
-        padding-top: $topPadding;
+        padding-top: #{$menu-height};
         width: 100%;
-        min-height: calc(100% - #{$topPadding});
+        height: calc(100% - #{$footer-height});
+    }
+
+    &__configuration-buttons {
+        display: flex;
+        margin: 0 $spacing-large $spacing-medium;
+
+        @include large() {
+            display: none;
+        }
+    }
+
+    &__wrapper {
+        // max-width: $app-width;
+        height: 100%;
+        margin: 0 auto;
     }
 
     &__container {
+        flex: 1;
+
+        @include large() {
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        @include mobile() {
+            padding: 0 $spacing-medium 0;
+        }
+    }
+
+    &__content,
+    &__aside {
+        flex: 1;
+    }
+
+    &__content {
+        @include scrollablePanel();
         max-width: $app-width;
-        margin: 0 auto;
+
+        @include mobile() {
+            @include scrollablePanel( 58px ); // 44px (button container) + $spacing-medium
+        }
     }
 
     &__scale {
         @include button();
     }
 
+    &__fretboard-view-option {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        max-width: 220px;
+
+        label, .dropdown {
+            flex: 1;
+        }
+    }
+
     &__footer {
         height: $footer-height;
         width: 100%;
         text-align: center;
+        border-top: 1px dashed $color-2;
+
+        @include mobile() {
+            display: none;
+        }
     }
 
     &__configuration {
-        &-toggle,
-        .close-button {
+        @include hiddenOnMobile();
+
+        &-toggle {
             display: none; // mobile view only
         }
 
         @include mobile() {
-            display: none;
-            &.expanded {
-                @include overlay( $mobile-width, $mobile-width );
-                margin-top: #{$menu-height + $spacing-large};
-                display: block;
-
-                .close-button {
-                    display: block;
-                    top: $spacing-large;
-                    right: $spacing-large;
-                }
-            }
-
             &-toggle {
                 @include button();
                 display: inline-block;
