@@ -135,14 +135,14 @@ export default {
         foundChord: null,
         foundChordRoot: null,
         foundScales: [],
-        scaleSelectorOpened: false,
-        configurationOpened: false,
     }),
     computed: {
         ...mapState([
             "appMode",
             "chord",
+            "configurationOpened",
             "notes",
+            "scaleSelectorOpened",
             "tuning",
             "viewOption",
         ]),
@@ -167,6 +167,8 @@ export default {
             "setAppMode",
             "setKey",
             "setScale",
+            "setConfigurationOpened",
+            "setScaleSelectorOpened",
             "setViewOption",
         ]),
         calculateChord() {
@@ -259,12 +261,6 @@ export default {
             this.setKey( key );
             this.setScale( scale );
         },
-        setScaleSelectorOpened( opened ) {
-            this.scaleSelectorOpened = opened;
-        },
-        setConfigurationOpened( opened ) {
-            this.configurationOpened = opened;
-        },
     }
 };
 </script>
@@ -347,10 +343,11 @@ export default {
     }
 
     &__footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         height: $footer-height;
         width: 100%;
-        text-align: center;
-        border-top: 1px dashed $color-2;
 
         @include mobile() {
             display: none;

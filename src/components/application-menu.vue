@@ -60,17 +60,23 @@ export default {
     methods: {
         ...mapMutations([
             "setAppMode",
+            "setConfigurationOpened",
+            "setScaleSelectorOpened",
         ]),
-        setMenuOpened(opened) {
+        setMenuOpened( opened ) {
             this.menuOpened = opened;
+            if ( opened ) {
+                this.setConfigurationOpened( false );
+                this.setScaleSelectorOpened( false );
+            }
         },
         scaleGeneratorClick() {
-            this.setAppMode(0);
-            this.setMenuOpened(false);
+            this.setAppMode( 0 );
+            this.setMenuOpened( false );
         },
         nameMyChordClick() {
-            this.setAppMode(1);
-            this.setMenuOpened(false);
+            this.setAppMode( 1 );
+            this.setMenuOpened( false );
         },
     }
 };

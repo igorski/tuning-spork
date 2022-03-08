@@ -90,6 +90,16 @@
     }
 }
 
+@mixin roundButton() {
+    @include button();
+    border: 2px solid $color-1;
+
+    &:hover {
+        background-color: $color-1;
+        color: $color-2;
+    }
+}
+
 @mixin overlay( $width, $height ) {
     position: fixed;
     z-index: $z-index-overlay;
@@ -133,6 +143,28 @@
     height: calc(100vh - #{$padding});
     overflow-y: auto;
     box-sizing: border-box;
+
+    @include large() {
+        &::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        &::-webkit-scrollbar-corner {
+            background-color: $color-1;
+        }
+
+        &::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: $spacing-medium;
+            background-color: $color-1;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: $spacing-medium;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+            background-color: $color-2;
+        }
+    }
 
     @include mobile() {
         $mobilePadding: #{$menu-height + $additionalPadding}; // there's no footer on mobile

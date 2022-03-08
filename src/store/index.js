@@ -56,12 +56,14 @@ const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
 export default new Vuex.Store({
     state: {
         appMode: 0,                     // either 0 (scale visualiser) or 1 (name my chord)
+        configurationOpened: false,
+        scaleSelectorOpened: false,
         notes: ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"],
         scales: Scales,
         instrumentType: "guitar",       // "guitar", "bass" or "ukelele"
         tuning: standardTuningForInstrument("guitar", 6), // start as six string
         key: "E",                       // none more guitar friendly
-        scale: Object.keys(Scales).find(name => name.includes( "major" )),
+        scale: Object.keys( Scales ).find( name => name.includes( "major" )),
         viewOption: "frets",            // whether to visualise "frets" or "notes",
         chordOptions: {
             power: false,
@@ -166,6 +168,12 @@ export default new Vuex.Store({
             if (/power|basic|extended/.test(option)) {
                 state.chordOptions[option] = value;
             }
+        },
+        setConfigurationOpened( state, opened ) {
+            state.configurationOpened = opened;
+        },
+        setScaleSelectorOpened( state, opened ) {
+            state.scaleSelectorOpened = opened;
         },
     },
     actions: {

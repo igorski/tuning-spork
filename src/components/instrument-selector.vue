@@ -21,40 +21,50 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 <template>
-    <div class="instrument-selector">
-        <h2 class="instrument-selector__title">{{ instrumentName }}</h2>
-        <tuner v-if="tunerOpened" @close="tunerOpened = false" />
-        <div class="instrument-selector__option">
-            <label>Instrument</label>
-            <model-select
-                :options="availableInstruments"
-                v-model="selectedInstrumentType"
-                class="instrument-selector__select medium-list"
-            />
-        </div>
-        <div v-if="availableStringAmountsForCurrentInstrument.length > 1" class="instrument-selector__option">
-            <label>Amount of strings</label>
-            <model-select
-                :options="availableStringAmounts"
-                v-model="selectedStringAmount"
-                class="instrument-selector__select small-list"
-            />
-        </div>
-        <div v-if="availableTunings.length > 1" class="instrument-selector__option">
-            <label>Tuning</label>
-            <model-select
-                :options="availableTunings"
-                v-model="selectedTuning"
-                class="instrument-selector__select large-list"
-            />
-        </div>
+    <div
+        class="instrument-selector"
+        :class="{ 'instrument-selector--collapsed': collapsed }"
+    >
         <button
             type="button"
-            class="instrument-selector__tuner-button"
-            @click="openTuner()"
-        >
-            <img src="@/assets/icons/tuning-fork.svg" />
-        </button>
+            class="instrument-selector__collapse-button"
+            @click="collapsed = !collapsed"
+        >{{ collapsed ? 'expand' : 'collapse' }}</button>
+        <tuner v-if="tunerOpened" @close="tunerOpened = false" />
+        <template v-if="!collapsed">
+            <h2 class="instrument-selector__title">{{ instrumentName }}</h2>
+            <div class="instrument-selector__option">
+                <label>Instrument</label>
+                <model-select
+                    :options="availableInstruments"
+                    v-model="selectedInstrumentType"
+                    class="instrument-selector__select medium-list"
+                />
+            </div>
+            <div v-if="availableStringAmountsForCurrentInstrument.length > 1" class="instrument-selector__option">
+                <label>Amount of strings</label>
+                <model-select
+                    :options="availableStringAmounts"
+                    v-model="selectedStringAmount"
+                    class="instrument-selector__select small-list"
+                />
+            </div>
+            <div v-if="availableTunings.length > 1" class="instrument-selector__option">
+                <label>Tuning</label>
+                <model-select
+                    :options="availableTunings"
+                    v-model="selectedTuning"
+                    class="instrument-selector__select large-list"
+                />
+            </div>
+            <button
+                type="button"
+                class="instrument-selector__tuner-button"
+                @click="openTuner()"
+            >
+                <img src="@/assets/icons/tuning-fork.svg" />
+            </button>
+        </template>
     </div>
 </template>
 
@@ -71,6 +81,7 @@ export default {
     },
     data: () => ({
         tunerOpened: false,
+        collapsed: false
     }),
     computed: {
         ...mapState([
@@ -137,6 +148,7 @@ export default {
 @import "@/styles/ui";
 
 .instrument-selector {
+    position: relative;
     padding: $spacing-large;
     border-bottom: 1px solid $color-5;
     background-color: $color-2;
@@ -146,6 +158,21 @@ export default {
 
     @include large() {
         margin: 0 $spacing-medium $spacing-medium 0;
+    }
+
+    &--collapsed {
+        overflow: hidden;
+    }
+
+    &__collapse-button {
+        @include roundButton();
+        position: absolute;
+        top: $spacing-medium;
+        right: $spacing-medium;
+
+        @include mobile() {
+            display: none;
+        }
     }
 
     &__title {

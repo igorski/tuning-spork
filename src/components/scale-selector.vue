@@ -131,7 +131,7 @@ export default {
 
 .scale-selector {
     border-radius: $spacing-small;
-    padding: $spacing-medium $spacing-large $spacing-large;
+    padding: $spacing-large $spacing-large $spacing-large;
     text-align: left;
     @include boxSize();
     @include noSelect();
@@ -170,7 +170,7 @@ export default {
 }
 
 .scale-list {
-    @include scrollablePanel( 104px );
+    @include scrollablePanel( 118px );
     list-style-type: none;
     margin: 0;
     padding: 0;
