@@ -65,14 +65,6 @@
                         </div>
                         <!-- instrument fretboard -->
                         <fretboard />
-                        <div class="tuning-spork__fretboard-view-option">
-                            <label>View</label>
-                            <model-select
-                                :options="availableViewOptions"
-                                v-model="selectedViewOption"
-                                class="scale-selector__select medium-list"
-                            />
-                        </div>
                         <!-- compatible chords list -->
                         <chord-list v-if="appMode === 0"/>
                         <template v-else>
@@ -107,7 +99,6 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { ModelSelect } from "vue-search-select";
 import { getChordByIntervals } from "@/utils/chord-util";
 import { getCompatibleScalesForIntervals } from "@/utils/interval-util";
 import ApplicationMenu from "@/components/application-menu";
@@ -127,7 +118,6 @@ export default {
         ChordList,
         Fretboard,
         InstrumentSelector,
-        ModelSelect,
         ScaleSelector,
     },
     data: () => ({
@@ -143,23 +133,7 @@ export default {
             "notes",
             "scaleSelectorOpened",
             "tuning",
-            "viewOption",
         ]),
-        availableViewOptions() {
-            return [
-                { value: "frets",   text: "Fret numbers" },
-                { value: "notes",   text: "Note names" },
-                { value: "degrees", text: "Scale degrees" }
-            ];
-        },
-        selectedViewOption: {
-            get() {
-                return this.viewOption;
-            },
-            set( value ) {
-                this.setViewOption( value );
-            }
-        },
     },
     watch: {
         chord() { this.calculateChord() },
@@ -172,7 +146,6 @@ export default {
             "setScale",
             "setConfigurationOpened",
             "setScaleSelectorOpened",
-            "setViewOption",
         ]),
         calculateChord() {
             // chord fingering changed, try to retrieve whether the chord fingering represents a known chord
@@ -186,20 +159,20 @@ export default {
             let rootString = this.chord.length;
             let rootFret;
             while ( typeof rootFret !== "number" && --rootString > 0 ) {
-                rootFret = this.chord[rootString];
+                rootFret = this.chord[ rootString ];
             }
             if ( typeof rootFret !== "number" ) {
                 return; // no notes found
             }
-            let openStringNote = this.tuning.strings[rootString];
-            let rootNoteIndex = this.notes.indexOf(openStringNote);
-            let rootNote = this.notes[(rootNoteIndex + rootFret) % this.notes.length];
-            rootNoteIndex = this.notes.indexOf(rootNote);
+            let openStringNote = this.tuning.strings[ rootString ];
+            let rootNoteIndex = this.notes.indexOf( openStringNote );
+            let rootNote = this.notes[( rootNoteIndex + rootFret ) % this.notes.length ];
+            rootNoteIndex = this.notes.indexOf( rootNote );
 
             // collect all intervals for every note
 
-            let intervals = this.getIntervals(this.chord, rootNoteIndex);
-            let chord = getChordByIntervals(intervals);
+            let intervals = this.getIntervals( this.chord, rootNoteIndex );
+            let chord = getChordByIntervals( intervals );
 
             if ( chord ) {
                 this.foundChord = `${rootNote} ${chord}`;
@@ -207,7 +180,7 @@ export default {
             // in case no chord was found but the amount of fretted notes exceeds that
             // of a triad, assume we are dealing with a slash chord (alternate note in bass)
             // try again with next higher string as assumed rootn ote
-            else if ( this.chord.filter( fret => typeof fret === "number" ).length > 3) {
+            else if ( this.chord.filter( fret => typeof fret === "number" ).length > 3 ) {
                 const bassNote = rootNote;
                 const bassIndex = rootString;
 
@@ -218,15 +191,15 @@ export default {
                     openStringNote = this.tuning.strings[rootString];
                     rootFret = this.chord[rootString];
                 }
-                rootNoteIndex = this.notes.indexOf(openStringNote);
-                rootNote = this.notes[(rootNoteIndex + rootFret) % this.notes.length];
-                rootNoteIndex = this.notes.indexOf(rootNote);
+                rootNoteIndex = this.notes.indexOf( openStringNote);
+                rootNote = this.notes[( rootNoteIndex + rootFret ) % this.notes.length ];
+                rootNoteIndex = this.notes.indexOf( rootNote );
 
                 const filteredChord = this.chord.concat(); // remove slash note
                 filteredChord[bassIndex] = undefined;
 
-                intervals = this.getIntervals(filteredChord, rootNoteIndex);
-                chord = getChordByIntervals(intervals);
+                intervals = this.getIntervals( filteredChord, rootNoteIndex );
+                chord = getChordByIntervals( intervals );
 
                 if ( chord ) {
                     this.foundChord = `${rootNote} ${chord}/${bassNote}`;
@@ -234,7 +207,7 @@ export default {
             }
             if ( this.foundChord ) {
                 this.foundChordRoot = rootNote;
-                this.foundScales = getCompatibleScalesForIntervals(intervals, rootNote);
+                this.foundScales = getCompatibleScalesForIntervals( intervals, rootNote );
             }
         },
         getIntervals( chord, rootNoteIndex ) {
@@ -332,17 +305,6 @@ export default {
 
     &__scale {
         @include button();
-    }
-
-    &__fretboard-view-option {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        max-width: 220px;
-
-        label, .dropdown {
-            flex: 1;
-        }
     }
 
     &__footer {

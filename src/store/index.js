@@ -29,24 +29,24 @@ import Tunings from "@/definitions/tunings.json";
 // reverse the string order
 const TUNINGS = Tunings.filter(t => ({ ...t, strings: t.strings.reverse() }));
 
-Vue.use(Vuex);
+Vue.use( Vuex );
 
 /* internal methods */
 
-const getTunings = (state) => {
-    switch (state.instrumentType) {
+const getTunings = state => {
+    switch ( state.instrumentType ) {
         default:
-            return TUNINGS.filter(t => t.type === "guitar");
+            return TUNINGS.filter( t => t.type === "guitar" );
         case "bass":
-            return TUNINGS.filter(t => t.type === "bass");
+            return TUNINGS.filter( t => t.type === "bass" );
         case "ukelele":
-            return TUNINGS.filter(t => t.type === "ukelele");
+            return TUNINGS.filter( t => t.type === "ukelele" );
     }
 };
 
 const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
-    return cloneTuning(TUNINGS.find(tuning => {
-        if (tuning.type !== instrumentType || tuning.name.trim().slice(0, 8).toLowerCase() !== "standard") {
+    return cloneTuning( TUNINGS.find( tuning => {
+        if ( tuning.type !== instrumentType || tuning.name.trim().slice( 0, 8 ).toLowerCase() !== "standard" ) {
             return false;
         }
         return optStringAmount > 0 ? tuning.strings.length === optStringAmount : tuning;
@@ -65,6 +65,8 @@ export default new Vuex.Store({
         key: "E",                       // none more guitar friendly
         scale: Object.keys( Scales ).find( name => name.includes( "major" )),
         viewOption: "frets",            // whether to visualise "frets" or "notes",
+        fretAmount: 13,
+        startFret: 0,
         chordOptions: {
             power: false,
             basic: true,
@@ -158,8 +160,14 @@ export default new Vuex.Store({
         setStandardTuningForStringAmount(state, amount) {
             state.tuning = standardTuningForInstrument(state.instrumentType, amount);
         },
-        setViewOption(state, type) {
+        setViewOption( state, type ) {
             state.viewOption = type;
+        },
+        setFretAmount( state, amount ) {
+            state.fretAmount = amount;
+        },
+        setStartFret( state, fret ) {
+            state.startFret = fret;
         },
         setChordStringFretIndex(state, { index, value }) {
             Vue.set(state.chord, index, value);
