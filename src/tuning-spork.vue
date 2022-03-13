@@ -115,7 +115,6 @@ import ChordList from "@/components/chord-list";
 import Fretboard from "@/components/fretboard";
 import InstrumentSelector from "@/components/instrument-selector";
 import ScaleSelector from "@/components/scale-selector";
-import { mapSelectOptions } from "@/utils/select-util";
 import store from "@/store";
 
 import "semantic-ui-css/components/dropdown.min.css"
@@ -147,7 +146,11 @@ export default {
             "viewOption",
         ]),
         availableViewOptions() {
-            return mapSelectOptions([ "frets", "notes", "degrees" ]);
+            return [
+                { value: "frets",   text: "Fret numbers" },
+                { value: "notes",   text: "Note names" },
+                { value: "degrees", text: "Scale degrees" }
+            ];
         },
         selectedViewOption: {
             get() {

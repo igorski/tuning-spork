@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -33,31 +33,33 @@
             class="string__wire"
             :style="{ height: `${index}px` }"
         >
+            <div class="string__fret string__fret-first"></div>
             <!-- fret wire -->
             <div
-                v-for="fret in AMOUNT_OF_FRETS"
+                v-for="( fret, fretIndex ) in visibleFretRange"
                 class="string__fret"
-                :key="`fret ${fret}`"
-                :style="{ left: `${(fret + 1 ) * 100 / AMOUNT_OF_FRETS.length}%`}"
+                :class="{ 'string__fret-nut': fret === 0 }"
+                :key="`string ${index} fret ${fretIndex}`"
+                :style="{ left: `${(fretIndex + 1 ) * 100 / fretAmount}%`}"
             ></div>
             <!-- app mode 0 : show scale notes -->
             <template v-if="appMode === 0">
                 <div
                     v-for="fret in fretsInScale"
                     class="string__note"
-                    :key="`string ${index} fret ${fret}`"
-                    :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
-                    :class="{ root: getNoteByFret(fret) === key, decimal: fret > 9 }"
+                    :key="`string ${index} note ${fret}`"
+                    :style="{ left: getNoteOffset( fret )}"
+                    :class="{ root: getNoteByFret( fret ) === key, decimal: fret > 9 }"
                 ><span>{{ getFretNode( fret ) }}</span></div>
             </template>
             <!-- app mode 1 : allow manual fretting of string -->
             <template v-else>
                 <div
-                    v-for="fret in AMOUNT_OF_FRETS"
+                    v-for="fret in visibleFretRange"
                     class="string__note"
-                    :key="`string ${index} fret ${fret}`"
+                    :key="`string ${index} note ${fret}`"
                     :class="{ hidden: fret !== activeFret }"
-                    :style="{ left: `${fret * 100 / AMOUNT_OF_FRETS.length}%`}"
+                    :style="{ left: `${fret * 100 / fretAmount}%`}"
                     @click="activeFret !== fret ? activeFret = fret : activeFret = undefined"
                 >
                     <span>{{ fret }}</span>
@@ -68,15 +70,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
-import { ModelSelect } from 'vue-search-select';
-import { mapSelectOptions } from '@/utils/select-util';
-
-const AMOUNT_OF_FRETS = [];
-// one octave is enough, yo
-for (let i = 0; i < 13; ++i) {
-    AMOUNT_OF_FRETS.push(i);
-}
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { ModelSelect } from "vue-search-select";
+import { mapSelectOptions } from "@/utils/select-util";
 
 export default {
     components: {
@@ -91,29 +87,34 @@ export default {
             type: String,
             required: true
         },
+        fretAmount: {
+            type: Number,
+            default: 13, // full octave plus open string
+        },
+        startFret: {
+            type: Number,
+            default: 0, // open string/nut
+        },
         editable: {
             type: Boolean,
             default: true,
         },
     },
-    data: () => ({
-        AMOUNT_OF_FRETS,
-    }),
     computed: {
         ...mapState([
-            'chord',
-            'appMode',
-            'notes',
-            'tuning',
-            'key',
-            'viewOption',
+            "chord",
+            "appMode",
+            "notes",
+            "tuning",
+            "key",
+            "viewOption",
         ]),
         ...mapGetters([
-            'availableScaleNotes',
+            "availableScaleNotes",
         ]),
         tunedNote: {
             get() {
-                return this.tuning.strings[this.index];
+                return this.tuning.strings[ this.index ];
             },
             set(note) {
                 this.tuneString({ index: this.index, note });
@@ -121,30 +122,40 @@ export default {
         },
         activeFret: {
             get() {
-                return this.chord[this.index];
+                return this.chord[ this.index ];
             },
-            set(value) {
+            set( value ) {
                 this.setChordStringFretIndex({ index: this.index, value });
             }
         },
+        visibleFretRange() {
+            const out = [];
+            for ( let i = this.startFret, l = this.startFret + this.fretAmount; i < l; ++i ) {
+                out.push( i );
+            }
+            return out;
+        },
         fretsInScale() {
-            return AMOUNT_OF_FRETS.filter(fret => this.isNoteInScale(fret));
+            return this.visibleFretRange.filter( fret => this.isNoteInScale( fret ));
         },
     },
     methods: {
         ...mapMutations([
-            'tuneString',
-            'setChordStringFretIndex'
+            "tuneString",
+            "setChordStringFretIndex"
         ]),
-        isNoteInScale(fret) {
-            return this.availableScaleNotes.includes(this.getNoteByFret(fret));
+        isNoteInScale( fret ) {
+            return this.availableScaleNotes.includes( this.getNoteByFret( fret ));
         },
-        getNoteByFret(fret) {
-            const rootNoteIndex = this.notes.indexOf(this.note);
-            return this.notes[(rootNoteIndex + fret) % this.notes.length];
+        getNoteOffset( fret ) {
+            return `${( fret - this.startFret ) * 100 / this.fretAmount}%`;
         },
-        formatOptions(items) {
-            return mapSelectOptions(items);
+        getNoteByFret( fret ) {
+            const rootNoteIndex = this.notes.indexOf( this.note );
+            return this.notes[( rootNoteIndex + fret ) % this.notes.length ];
+        },
+        formatOptions( items ) {
+            return mapSelectOptions( items );
         },
         getFretNode( fret ) {
             switch ( this.viewOption ) {
@@ -197,8 +208,7 @@ $size: 40px;
         top: -($size / 2);
         background-color: grey;
 
-        // nut
-        &:first-child {
+        &-nut {
             width: 6px;
             background-color: #d6d6d6;
         }
@@ -236,13 +246,16 @@ $size: 40px;
     /* mobile view */
 
     @include mobile() {
-        // for now these takes up too much space
+        // (for now) these takes up too much space
         &__tuning,
-        &__fret:first-child {
-            display: none;
+        &__note-name {
+           display: none !important;
         }
-        &__wire {
-            left: -6%; // make up for missing "tuning peg" and nut
+    }
+
+    @include large() {
+        &__fret-first {
+            display: none;
         }
     }
 }
