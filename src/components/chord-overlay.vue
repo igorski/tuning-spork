@@ -105,55 +105,55 @@ export default {
     },
     methods: {
         renderShapes() {
-            STARTING_FRETS.forEach(fret => {
-                const shape = this.frettedNotes(fret);
+            STARTING_FRETS.forEach( fret => {
+                const shape = this.frettedNotes( fret );
                 // do not show if chord could not be resolved
-                if (!shape || shape.frettedNotes.length < this.chord.notes.length) {
+                if ( !shape || shape.frettedNotes.length < this.chord.notes.length ) {
                     return;
                 }
-                // add rendered shape to shapes list (if it hadn"t been resolved yet...)
-                const shapeNotes = JSON.stringify(shape.frettedNotes);
-                if (this.shapes.find(existingShape => shapeNotes === JSON.stringify(existingShape.frettedNotes))) {
+                // add rendered shape to shapes list (if it hadn't been resolved yet...)
+                const shapeNotes = JSON.stringify( shape.frettedNotes );
+                if ( this.shapes.find( existingShape => shapeNotes === JSON.stringify( existingShape.frettedNotes ))) {
                     return;
                 }
-                this.shapes.push(shape);
+                this.shapes.push( shape );
             });
         },
         /**
          * Get all frets used to represent the chord
          * across all strings
          */
-        frettedNotes(requestedFret) {
+        frettedNotes( requestedFret ) {
             // prevent recursing too much when fret start offset is getting ridiculously high
             // (either chord cannot be resolved for tuning or the fret sizes are getting uncomfortable)
-            if (isNaN(requestedFret)) {
+            if ( isNaN( requestedFret )) {
                 return null;
             }
-            const { firstFret, firstString } = this.getRootNoteStartFret(requestedFret);
-            if (firstFret >= OCTAVE) {
+            const { firstFret, firstString } = this.getRootNoteStartFret( requestedFret );
+            if ( firstFret >= OCTAVE ) {
                 return null;
             }
 
-            const frettedNotes = new Array(this.strings.length);
-            const foundNotes = [this.chordRoot];
-            const range = fretRange(firstFret, this.visibleFrets);
-            const lastFret = range[range.length - 1];
-            frettedNotes[firstString] = firstFret;
+            const frettedNotes = new Array( this.strings.length );
+            const foundNotes = [ this.chordRoot ];
+            const range = fretRange(firstFret, this.visibleFrets );
+            const lastFret = range[ range.length - 1 ];
+            frettedNotes[ firstString ] = firstFret;
 
-            for (let string = firstString + 1; string < this.strings.length; ++string) {
-                const frets = this.fretsForString(string, firstFret);
+            for ( let string = firstString + 1; string < this.strings.length; ++string ) {
+                const frets = this.fretsForString( string, firstFret );
                 // reverse loop through the frets
                 let j = frets.length;
                 let fret, note;
 
                 while (j--) {
-                    fret = frets[j];
-                    note = this.getNoteByFret(fret, this.strings[string]);
-                    // if this note hasn"t yet been fretted, make this a candidate for fretting
-                    if (!foundNotes.includes(note)) {
+                    fret = frets[ j ];
+                    note = this.getNoteByFret( fret, this.strings[ string ]);
+                    // if this note hasn't yet been fretted, make this a candidate for fretting
+                    if ( !foundNotes.includes( note )) {
                         // not so fast though, we need to make sure whether we can comfortably fret this puppy!
                         // is a higher string able to fret this note at a lower fret ?
-                        if (!( fret < lastFret && !this.hasLowerFrettedNoteOnHigherString(note, fret, string))) {
+                        if (!( fret < lastFret && !this.hasLowerFrettedNoteOnHigherString( note, fret, string ))) {
                             continue;
                         }
                         foundNotes.push(note);
@@ -252,7 +252,7 @@ export default {
             return { firstFret, fretStartOffset, firstString };
         },
         closeOverlay() {
-            this.$emit("close");
+            this.$emit( "close" );
         },
     }
 };

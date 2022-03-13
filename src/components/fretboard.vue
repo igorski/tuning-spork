@@ -34,30 +34,30 @@
         </div>
         <div class="fretboard-view-options">
             <div class="fretboard-view-options__option">
-                <label>View</label>
+                <label class="small">View</label>
                 <model-select
                     :options="availableViewOptions"
                     v-model="selectedViewOption"
-                    class="fretboard-view-options__option-select medium-list"
+                    class="fretboard-view-options__option-select large"
                 />
             </div>
             <div
                 v-if="!isMobile"
                 class="fretboard-view-options__option"
             >
-                <label>Amount of frets</label>
+                <label class="large">Amount of frets</label>
                 <model-select
                     :options="availableFretAmounts"
                     v-model="selectedFretAmount"
-                    class="fretboard-view-options__option-select medium-list"
+                    class="fretboard-view-options__option-select small-list"
                 />
             </div>
             <div class="fretboard-view-options__option">
-                <label>Start fret</label>
+                <label class="small">Start fret</label>
                 <model-select
                     :options="availableStartFrets"
                     v-model="selectedStartFret"
-                    class="fretboard-view-options__option-select medium-list"
+                    class="fretboard-view-options__option-select small-list"
                 />
             </div>
         </div>
@@ -113,7 +113,7 @@ export default {
         },
         availableStartFrets() {
             const frets = [];
-            for ( let i = 0; i < this.fretAmount; ++i ) {
+            for ( let i = 0; i < Math.max( 13, this.fretAmount ); ++i ) {
                 frets.push( i );
             }
             return mapSelectOptions( frets );
@@ -159,14 +159,23 @@ export default {
     @include noSelect();
 
     &-view-options {
-        &__option {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            max-width: 220px;
+        margin-top: $spacing-medium;
 
-            label, .dropdown {
-                flex: 1;
+        &__option {
+            display: inline;
+            margin-right: $spacing-medium;
+            max-width: 240px;
+
+            label {
+                margin-right: $spacing-medium;
+            }
+
+            .small {
+                width: 100px;
+            }
+
+            .large {
+                max-width: 140px;
             }
 
             &-select {

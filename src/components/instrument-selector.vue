@@ -189,6 +189,8 @@ export default {
     }
 
     &__tuner-button {
+        position: absolute;
+        right: #{$spacing-large - $spacing-small};
         cursor: pointer;
         border-radius: 50%;
         padding: 0 2px;
