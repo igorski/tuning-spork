@@ -133,11 +133,16 @@ export default {
             "notes",
             "scaleSelectorOpened",
             "tuning",
+            "windowSize",
         ]),
     },
     watch: {
         chord() { this.calculateChord() },
         tuning() { this.calculateChord() },
+    },
+    created() {
+        // no need to remove the below as we will require it throughout the application lifetime
+        window.addEventListener( "resize", this.handleResize.bind( this ));
     },
     methods: {
         ...mapMutations([
@@ -146,7 +151,11 @@ export default {
             "setScale",
             "setConfigurationOpened",
             "setScaleSelectorOpened",
+            "setWindowSize",
         ]),
+        handleResize() {
+            this.setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+        },
         calculateChord() {
             // chord fingering changed, try to retrieve whether the chord fingering represents a known chord
             if ( this.appMode !== 1 ) {

@@ -41,7 +41,10 @@
                     class="fretboard-view-options__option-select medium-list"
                 />
             </div>
-            <div class="fretboard-view-options__option">
+            <div
+                v-if="!isMobile"
+                class="fretboard-view-options__option"
+            >
                 <label>Amount of frets</label>
                 <model-select
                     :options="availableFretAmounts"
@@ -62,7 +65,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
 import { mapSelectOptions } from "@/utils/select-util";
 import String from "./string";
@@ -78,6 +81,9 @@ export default {
             "startFret",
             "tuning",
             "viewOption",
+        ]),
+        ...mapGetters([
+            "isMobile",
         ]),
         availableViewOptions() {
             return [
@@ -118,6 +124,16 @@ export default {
             },
             set( value ) {
                 this.setStartFret( value );
+            }
+        },
+    },
+    watch: {
+        isMobile: {
+            immediate: true,
+            handler( value ) {
+                if ( value && this.fretAmount > 5 ) {
+                    this.setFretAmount( 5 );
+                }
             }
         },
     },
