@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
 import { mapSelectOptions } from "@/utils/select-util";
 
@@ -74,6 +74,9 @@ export default {
             "notes",
             "scale",
             "scales",
+        ]),
+        ...mapGetters([
+            "isMobile",
         ]),
         availableNotes() {
             return mapSelectOptions( this.notes );
@@ -98,6 +101,13 @@ export default {
             }
         },
     },
+    watch: {
+        selectedScale() {
+            if ( this.isMobile ) {
+                this.setScaleSelectorOpened( false );
+            }
+        }
+    },
     mounted() {
         this.scrollToSelection();
     },
@@ -105,6 +115,7 @@ export default {
         ...mapMutations([
             "setKey",
             "setScale",
+            "setScaleSelectorOpened",
         ]),
         handleScaleSearch( scale ) {
             this.selectedScale = scale;
