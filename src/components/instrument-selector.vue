@@ -35,7 +35,7 @@
             class="instrument-selector__close-button"
             @click="setConfigurationOpened( false )"
         >&#x2715;</button>
-        <tuner v-if="tunerOpened" @close="tunerOpened = false" />
+        <tuner-window v-if="tunerOpened" @close="tunerOpened = false" />
         <template v-if="!collapsed">
             <h2 class="instrument-selector__title">{{ instrumentName }}</h2>
             <div class="instrument-selector__option">
@@ -82,7 +82,7 @@ import { mapSelectOptions } from "@/utils/select-util";
 export default {
     components: {
         ModelSelect,
-        Tuner: () => import( "@/components/tuner" ),
+        TunerWindow: () => import( "@/components/tuner-window" ),
     },
     data: () => ({
         tunerOpened: false,

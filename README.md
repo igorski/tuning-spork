@@ -42,7 +42,7 @@ npm run lint
 Run unit tests:
 
 ```
-npm run test:unit
+npm run test
 ```
 
 ## Adding new scales / chords

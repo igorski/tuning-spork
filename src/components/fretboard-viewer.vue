@@ -23,7 +23,7 @@
 <template>
     <div>
         <div class="fretboard">
-            <string
+            <string-viewer
                 v-for="( note, index ) in tuning.strings"
                 :key="`string_${index}`"
                 :index="index"
@@ -68,12 +68,12 @@
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
 import { mapSelectOptions } from "@/utils/select-util";
-import String from "./string";
+import StringViewer from "./string-viewer";
 
 export default {
     components: {
         ModelSelect,
-        String,
+        StringViewer,
     },
     computed: {
         ...mapState([

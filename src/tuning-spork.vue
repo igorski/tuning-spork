@@ -64,7 +64,7 @@
                             <instrument-selector @opened="setConfigurationOpened( $event )"/>
                         </div>
                         <!-- instrument fretboard -->
-                        <fretboard />
+                        <fretboard-viewer />
                         <div class="tuning-spork__details">
                             <!-- compatible chords list -->
                             <chord-list v-if="appMode === 0"/>
@@ -105,7 +105,7 @@ import { getChordByIntervals } from "@/utils/chord-util";
 import { getCompatibleScalesForIntervals } from "@/utils/interval-util";
 import ApplicationMenu from "@/components/application-menu";
 import ChordList from "@/components/chord-list";
-import Fretboard from "@/components/fretboard";
+import FretboardViewer from "@/components/fretboard-viewer";
 import ScaleSelector from "@/components/scale-selector";
 import store from "@/store";
 
@@ -117,7 +117,7 @@ export default {
     components: {
         ApplicationMenu,
         ChordList,
-        Fretboard,
+        FretboardViewer,
         InstrumentSelector: () => import( "@/components/instrument-selector" ),
         ScaleSelector,
     },
