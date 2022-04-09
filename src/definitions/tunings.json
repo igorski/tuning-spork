@@ -20,9 +20,17 @@
 
   { "type": "guitar",  "name": "Standard",       "strings": [ "B", "E", "A", "D", "G", "B", "E" ] },
   { "type": "guitar",  "name": "Full step down", "strings": [ "A", "D", "G", "C", "F", "A", "D" ] },
-  { "type": "guitar",  "name": "Standard",       "strings": [ "F#", "B", "E", "A", "D", "G", "B", "E" ] },
-  { "type": "guitar",  "name": "Drop E",         "strings": [ "E", "B", "E", "A", "D", "G", "B", "E" ] },
-  { "type": "guitar",  "name": "Standard",       "strings": [ "C#", "F#", "B", "E", "A", "D", "G", "B", "E" ] },
+  { "type": "guitar",  "name": "Drop A",         "strings": [ "A", "E", "A", "D", "G", "B", "E" ] },
+
+  { "type": "guitar",  "name": "Standard",        "strings": [ "F#", "B", "E", "A", "D", "G", "B", "E" ] },
+  { "type": "guitar",  "name": "Full step down",  "strings": [ "E", "A", "D", "G", "C", "F", "A", "D" ] },
+  { "type": "guitar",  "name": "Half step down",  "strings": [ "F", "A#", "D#", "G#", "C#", "F#", "A#", "D#" ] },
+  { "type": "guitar",  "name": "Drop E",          "strings": [ "E", "B", "E", "A", "D", "G", "B", "E" ] },
+  { "type": "guitar",  "name": "Drop D",          "strings": [ "D", "A", "D", "G", "C", "F", "A", "D" ] },
+  { "type": "guitar",  "name": "A tuning",        "strings": [ "A", "D", "G", "C", "F", "A", "D", "G" ] },
+  { "type": "guitar",  "name": "A tuning (high)", "strings": [ "B", "E", "A", "D", "G", "B", "E", "A" ] },
+  
+  { "type": "guitar",  "name": "Standard",        "strings": [ "C#", "F#", "B", "E", "A", "D", "G", "B", "E" ] },
 
   { "type": "bass",    "name": "Standard",          "strings": [ "E", "A", "D", "G" ] },
   { "type": "bass",    "name": "Drop D",            "strings": [ "D", "A", "D", "G" ] },

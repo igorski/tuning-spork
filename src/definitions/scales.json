@@ -34,6 +34,8 @@
   "phrygian dominant / freygish": [0, 1, 4, 5, 7, 8, 10 ],
   "prometheus": [0, 2, 4, 6, 9, 10],
   "prometheus neapolitan": [0, 1, 4, 6, 9, 10],
+  "ritusen (blues major)": [0, 2, 5, 7, 9],
+  "super locrian / altered scale": [0, 1, 3, 4, 6, 8, 10],
   "romanian / ukranian dorian": [0, 2, 3, 6, 7, 9, 10],
   "whole tone": [0, 2, 4, 6, 8, 10]
 }
