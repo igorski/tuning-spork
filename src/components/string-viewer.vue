@@ -59,7 +59,7 @@
                     class="string__note string__note--selectable"
                     :key="`string ${index} note ${fret}`"
                     :class="{ hidden: fret !== activeFret }"
-                    :style="{ left: `${fret * 100 / fretAmount}%`, width: `${100 / fretAmount}%`}"
+                    :style="{ left: getNoteOffset( fret ), width: `${100 / fretAmount}%`}"
                     @click="handleFretClick( fret )"
                 >
                     <span class="string__note-icon">{{ fret }}</span>
