@@ -23,19 +23,20 @@
 <template>
     <div class="chord-wrapper">
         <div class="fretboard">
-            <div v-for="(note, stringIndex) in strings"
-                 :key="`string_${stringIndex}`"
-                 class="string"
-                 :style="{ left: `${stringIndex / strings.length * 100}%` }"
+            <div
+                v-for="( note, stringIndex ) in strings"
+                :key="`string_${stringIndex}`"
+                :style="{ left: `${stringIndex / strings.length * 100}%` }"
+                class="string"
             >
                 <span class="note-name">{{ note }}</span>
                 <div
-                    v-for="fret in visibleFretRange"
+                    v-for="( fret, fretIndex ) in visibleFretRange"
                     :key="fret"
                     class="fret-marker"
                     :style="{ top: `{fret / frets * 100}%`}"
                 >
-                    {{ stringIndex >= firstString && frettedNotes[stringIndex] === fret ? fret : '' }}
+                    {{ stringIndex >= firstString && frettedNotes[ stringIndex ] === fret ? fret : fretIndex === 0 && typeof frettedNotes[ stringIndex ] !== "number" ? "x" : "" }}
                 </div>
             </div>
         </div>
@@ -85,22 +86,24 @@ export default {
 @import "@/styles/_variables";
 @import "@/styles/_mixins";
 
+$fretMargin: $spacing-small;
+
 .chord-wrapper {
     display: inline-block;
     width: 120px;
     height: 80px;
     vertical-align: top;
     text-align: center;
+    padding-bottom: $spacing-medium;
 }
 
 .fretboard {
     position: relative;
     display: block;
     border-right: 1px solid grey;
-    height: inherit;
+    height: 120px;
     border-radius: $spacing-medium;
     background-color: $color-5;
-    overflow: hidden;
     @include boxSize();
     @include noSelect();
 }
@@ -113,6 +116,10 @@ export default {
     height: 100%;
     top: 0;
     border-left: 1px solid grey;
+
+    &:first-of-type {
+        border: none;
+    }
 }
 
 .note-name {
@@ -127,5 +134,6 @@ export default {
     width: 20px;
     height: 20px;
     font-size: 90%;
+    margin-top: $fretMargin;
 }
 </style>
