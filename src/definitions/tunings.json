@@ -26,11 +26,16 @@
 
   { "type": "bass",    "name": "Standard",          "strings": [ "E", "A", "D", "G" ] },
   { "type": "bass",    "name": "Drop D",            "strings": [ "D", "A", "D", "G" ] },
+  { "type": "bass",    "name": "Drop C#",           "strings": [ "C#", "G#", "C#", "F#" ] },
+  { "type": "bass",    "name": "Drop C",            "strings": [ "C", "G", "C", "F" ] },
+  { "type": "bass",    "name": "Drop B",            "strings": [ "B", "F#", "B", "E" ] },
+  { "type": "bass",    "name": "Drop A",            "strings": [ "A", "E", "A", "D" ] },
   { "type": "bass",    "name": "Standard (low B)",  "strings": [ "B", "E", "A", "D", "G" ] },
   { "type": "bass",    "name": "Standard (high C)", "strings": [ "E", "A", "D", "G", "C" ] },
   { "type": "bass",    "name": "Standard",          "strings": [ "B", "E", "A", "D", "G", "C" ] },
 
   { "type": "ukelele", "name": "Standard",       "strings": [ "G", "C", "E", "A" ] },
   { "type": "ukelele", "name": "Guitar",         "strings": [ "D", "G", "B", "E" ] },
-  { "type": "ukelele", "name": "D tuning",       "strings": [ "A", "D", "F#", "B" ] }
+  { "type": "ukelele", "name": "D tuning",       "strings": [ "A", "D", "F#", "B" ] },
+  { "type": "ukelele", "name": "Slack-Key",      "strings": [ "G", "C", "E", "G" ] }
 ]
