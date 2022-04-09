@@ -158,6 +158,10 @@ export default {
     @include boxSize();
     @include noSelect();
 
+    @include large() {
+        padding-left: $spacing-medium;
+    }
+
     &-view-options {
         margin-top: $spacing-medium;
 

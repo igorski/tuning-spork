@@ -70,7 +70,7 @@
                             <chord-list v-if="appMode === 0"/>
                             <template v-else>
                                 <div v-if="!chord.length" class="explanation">
-                                    Found a sweet soundin' chord and curious what it is called ? Just fret the strings above
+                                    Found a sweet soundin' chord and are curious what it is called ? Just fret the strings above
                                     and we'll tell you what you are playing (and what scales go with it).
                                 </div>
                                 <div v-if="foundChord">
@@ -106,6 +106,7 @@ import { getCompatibleScalesForIntervals } from "@/utils/interval-util";
 import ApplicationMenu from "@/components/application-menu";
 import ChordList from "@/components/chord-list";
 import FretboardViewer from "@/components/fretboard-viewer";
+import InstrumentSelector from "@/components/instrument-selector";
 import ScaleSelector from "@/components/scale-selector";
 import store from "@/store";
 
@@ -118,7 +119,7 @@ export default {
         ApplicationMenu,
         ChordList,
         FretboardViewer,
-        InstrumentSelector: () => import( "@/components/instrument-selector" ),
+        InstrumentSelector,
         ScaleSelector,
     },
     data: () => ({

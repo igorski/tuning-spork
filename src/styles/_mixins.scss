@@ -149,6 +149,9 @@
     box-sizing: border-box;
 
     @include large() {
+        $padding: #{$menu-height + $app-ideal-top-margin + $footer-height + $additionalPadding};
+        height: calc(100vh - #{$padding});
+
         &::-webkit-scrollbar {
             width: 12px;
         }
