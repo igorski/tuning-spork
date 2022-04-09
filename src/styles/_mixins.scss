@@ -124,18 +124,22 @@
     }
 
     .close-button {
-        cursor: pointer;
-        position: absolute;
-        top: $spacing-medium;
-        right: $spacing-medium;
-        border: none;
-        background: none;
-        color: $color-2;
+        @include closeButton();
     }
 
     .content {
         padding-top: $spacing-large + $spacing-medium;
     }
+}
+
+@mixin closeButton() {
+    cursor: pointer;
+    position: absolute;
+    top: $spacing-medium;
+    right: $spacing-medium;
+    border: none;
+    background: none;
+    color: $color-2;
 }
 
 @mixin scrollablePanel( $additionalPadding: 0 ) {

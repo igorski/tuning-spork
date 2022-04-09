@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2021-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,12 +22,17 @@
  */
 <template>
     <div class="tuner">
+        <h2 class="tuner__title">Tuner</h2>
         <button
             type="button"
             class="close-button"
             @click="$emit('close')"
         >&#x2715;</button>
         <div class="content">
+            <p>
+                To tune your instrument, first select an audio input (such as
+                your device's microphone) below:
+            </p>
             <model-select
                 v-model="selectedInput"
                 :options="availableInputs"
@@ -144,8 +149,20 @@ export default {
 @import "@/styles/_mixins";
 
 .tuner {
-    @include overlay( 400px, 300px );
+    @include overlay( 400px, 360px );
     text-align: center;
+
+    &__title {
+        margin: 0;
+    }
+
+    .content {
+        padding-top: 0;
+    }
+
+    .close-button {
+        top: #{$spacing-medium + $spacing-small};
+    }
 
     &__ui {
         padding: $spacing-large 0;

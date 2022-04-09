@@ -30,6 +30,11 @@
             class="instrument-selector__collapse-button"
             @click="collapsed = !collapsed"
         >{{ collapsed ? 'expand' : 'collapse' }}</button>
+        <button
+            type="button"
+            class="instrument-selector__close-button"
+            @click="setConfigurationOpened( false )"
+        >&#x2715;</button>
         <tuner v-if="tunerOpened" @close="tunerOpened = false" />
         <template v-if="!collapsed">
             <h2 class="instrument-selector__title">{{ instrumentName }}</h2>
@@ -131,6 +136,7 @@ export default {
     },
     methods: {
         ...mapMutations([
+            "setConfigurationOpened",
             "setInstrumentType",
             "setStandardTuningForStringAmount",
             "setTuning",
@@ -175,6 +181,15 @@ export default {
         }
     }
 
+    &__close-button {
+        @include closeButton();
+        color: #000;
+
+        @include large() {
+            display: none;
+        }
+    }
+
     &__title {
         margin-top: 0;
     }
@@ -189,14 +204,17 @@ export default {
     }
 
     &__tuner-button {
-        position: absolute;
-        right: #{$spacing-large - $spacing-small};
         cursor: pointer;
         border-radius: 50%;
         padding: 0 2px;
         background: none;
         border: 3px solid $color-1;
         vertical-align: bottom;
+
+        @include large() {
+            position: absolute;
+            right: #{$spacing-large - $spacing-small};
+        }
 
         &:hover {
             background-color: $color-3;

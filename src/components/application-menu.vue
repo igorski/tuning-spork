@@ -23,7 +23,7 @@
 <template>
     <header class="header" :class="{ expanded: menuOpened }">
         <nav class="header__menu">
-            <div class="header__menu-toggle" @click="setMenuOpened(!menuOpened)">
+            <div class="header__menu-toggle" @click="setMenuOpened( !menuOpened )">
                 <span>&#9776;</span>
             </div>
             <div class="header__menu-list">
