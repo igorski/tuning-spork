@@ -106,7 +106,6 @@ import { getCompatibleScalesForIntervals } from "@/utils/interval-util";
 import ApplicationMenu from "@/components/application-menu";
 import ChordList from "@/components/chord-list";
 import Fretboard from "@/components/fretboard";
-import InstrumentSelector from "@/components/instrument-selector";
 import ScaleSelector from "@/components/scale-selector";
 import store from "@/store";
 
@@ -119,7 +118,7 @@ export default {
         ApplicationMenu,
         ChordList,
         Fretboard,
-        InstrumentSelector,
+        InstrumentSelector: () => import( "@/components/instrument-selector" ),
         ScaleSelector,
     },
     data: () => ({
