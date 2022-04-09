@@ -42,6 +42,7 @@
                 <div class="tuner__pitch__note">{{ note }}{{ octave }}</div>
                 <div class="tuner__pitch">
                     <div
+                        v-tooltip="'Pitch accuracy indicator. Green is in tune, red is out of tune.'"
                         class="tuner__pitch__pointer"
                         :style="{ left: pointer.pos }"
                         :class="pointer.class"

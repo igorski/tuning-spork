@@ -60,7 +60,7 @@
         <p class="explanation">
             These chords fit the chosen scale. You can use the above scale to improvise freely
             over a chord progression made of below chords.
-            Hover over the chord to view recommended fingerings for your instrument and its tuning.
+            Hover over or tap the chord to view recommended fingerings for your instrument and its tuning.
         </p>
         <div
             v-for="chordObject in filteredChords"

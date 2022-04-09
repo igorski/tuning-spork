@@ -63,6 +63,7 @@
                 />
             </div>
             <button
+                v-tooltip="'Instrument tuner'"
                 type="button"
                 class="instrument-selector__tuner-button"
                 @click="openTuner()"
