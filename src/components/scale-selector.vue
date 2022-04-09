@@ -26,22 +26,28 @@
         <div class="scale-selector__option scale-selector__key-select">
             <label>Key / <span class="root-note">root note</span></label>
             <model-select
-                :options="availableNotes"
                 v-model="selectedKey"
+                :options="availableNotes"
+                :is-disabled="!enabled"
                 class="scale-selector__select small-list"
             />
         </div>
         <model-select
             :options="availableScales"
             :dropdown-should-open="false"
+            :is-disabled="!enabled"
+            class="scale-selector__select search-only"
             placeholder="Find scale by name"
             @input="handleScaleSearch( $event )"
-            class="scale-selector__select search-only"
         />
         <ul
             ref="scaleList"
             class="scale-list"
         >
+            <div v-if="!enabled" class="explanation">
+                Found a sweet soundin' chord and are you curious what it is called ? Just fret the strings
+                on the fretboard and we'll tell you what you are playing (and what scales go with it).
+            </div>
             <li
                 v-for="{ value, text } in availableScales"
                 :key="value"
@@ -68,6 +74,12 @@ export default {
     components: {
         ModelSelect,
     },
+    props: {
+        enabled: {
+            type: Boolean,
+            default: true,
+        },
+    },
     computed: {
         ...mapState([
             "key",
@@ -82,6 +94,9 @@ export default {
             return mapSelectOptions( this.notes );
         },
         availableScales() {
+            if ( !this.enabled ) {
+                return [];
+            }
             return mapSelectOptions( Object.keys( this.scales ).sort());
         },
         selectedScale: {
@@ -106,10 +121,16 @@ export default {
             if ( this.isMobile ) {
                 this.setScaleSelectorOpened( false );
             }
+        },
+        enabled: {
+            immediate: true,
+            async handler( value ) {
+                if ( value ) {
+                    await this.$nextTick();
+                    this.scrollToSelection();
+                }
+            }
         }
-    },
-    mounted() {
-        this.scrollToSelection();
     },
     methods: {
         ...mapMutations([

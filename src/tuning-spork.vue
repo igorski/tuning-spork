@@ -42,7 +42,7 @@
                     <!-- scale configuration interface -->
                     <div class="tuning-spork__scale-selector">
                         <scale-selector
-                            v-if="appMode === 0"
+                            :enabled="appMode === 0"
                             class="tuning-spork__aside"
                             :class="{ expanded: scaleSelectorOpened }"
                         >
@@ -70,7 +70,8 @@
                             <chord-list v-if="appMode === 0"/>
                             <template v-else>
                                 <div v-if="!chord.length" class="explanation">
-                                    Found a sweet soundin' chord and are curious what it is called ? Just fret the strings above
+                                    <h2>Name my chord!</h2>
+                                    Found a sweet soundin' chord and you're curious what it is called ? Just fret the strings above
                                     and we'll tell you what you are playing (and what scales go with it).
                                 </div>
                                 <div v-if="foundChord">

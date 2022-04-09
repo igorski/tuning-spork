@@ -32,8 +32,8 @@
                     type="button"
                     class="menu-button"
                     :class="{ 'menu-button--active': appMode === 0 }"
-                    @click="scaleGeneratorClick()"
-                >Scale generator</button>
+                    @click="scaleViewerClick()"
+                >Scale viewer</button>
                 <button
                     type="button"
                     class="menu-button"
@@ -70,7 +70,7 @@ export default {
                 this.setScaleSelectorOpened( false );
             }
         },
-        scaleGeneratorClick() {
+        scaleViewerClick() {
             this.setAppMode( 0 );
             this.setMenuOpened( false );
         },
