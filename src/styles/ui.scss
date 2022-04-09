@@ -1,0 +1,41 @@
+@mixin formField() {
+    display: inline;
+
+    label {
+        margin-right: 7px;
+        font-weight: bold;
+    }
+
+    @include mobile() {
+        display: inline-flex;
+        margin-bottom: $spacing-small;
+        width: 100%;
+        text-align: left;
+        padding-left: $spacing-medium;
+        @include boxSize();
+
+        label {
+            margin-top: $spacing-small;
+        }
+    }
+}
+
+@mixin selectField() {
+    display: inline-block !important; // semantic-ui-css override
+
+    &.small-list {
+        max-width: 65px;
+    }
+    &.medium-list {
+        max-width: 100px;
+    }
+    &.large-list {
+        max-width: 200px;
+    }
+    .text {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 100%;
+    }
+}

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -21,9 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 <template>
-    <div class="chord-overlay"
-         :class="{ tall: shapes.length > 3 }"
-    >
+    <div class="chord-overlay">
         <h2 class="chord-name">{{ chord.name }}</h2>
         <div class="close-button"
              @click="closeOverlay()"
@@ -49,10 +47,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { isPowerChord } from '@/utils/chord-util';
-import { fretRange } from '@/utils/interval-util';
-import ChordShape from './chord-shape';
+import { mapState } from "vuex";
+import { isPowerChord } from "@/utils/chord-util";
+import { fretRange } from "@/utils/interval-util";
+import ChordShape from "./chord-shape";
 
 // the frets from which we will start calculating our chords (0 = open chord)
 const STARTING_FRETS = [0, 2, 4, 6, 8, 10];
@@ -77,9 +75,9 @@ export default {
     }),
     computed: {
         ...mapState([
-            'tuning',
-            'notes',
-            'instrumentType',
+            "tuning",
+            "notes",
+            "instrumentType",
         ]),
         strings() {
             return [...this.tuning.strings].reverse();
@@ -105,55 +103,55 @@ export default {
     },
     methods: {
         renderShapes() {
-            STARTING_FRETS.forEach(fret => {
-                const shape = this.frettedNotes(fret);
+            STARTING_FRETS.forEach( fret => {
+                const shape = this.frettedNotes( fret );
                 // do not show if chord could not be resolved
-                if (!shape || shape.frettedNotes.length < this.chord.notes.length) {
+                if ( !shape || shape.frettedNotes.length < this.chord.notes.length ) {
                     return;
                 }
                 // add rendered shape to shapes list (if it hadn't been resolved yet...)
-                const shapeNotes = JSON.stringify(shape.frettedNotes);
-                if (this.shapes.find(existingShape => shapeNotes === JSON.stringify(existingShape.frettedNotes))) {
+                const shapeNotes = JSON.stringify( shape.frettedNotes );
+                if ( this.shapes.find( existingShape => shapeNotes === JSON.stringify( existingShape.frettedNotes ))) {
                     return;
                 }
-                this.shapes.push(shape);
+                this.shapes.push( shape );
             });
         },
         /**
          * Get all frets used to represent the chord
          * across all strings
          */
-        frettedNotes(requestedFret) {
+        frettedNotes( requestedFret ) {
             // prevent recursing too much when fret start offset is getting ridiculously high
             // (either chord cannot be resolved for tuning or the fret sizes are getting uncomfortable)
-            if (isNaN(requestedFret)) {
+            if ( isNaN( requestedFret )) {
                 return null;
             }
-            const { firstFret, firstString } = this.getRootNoteStartFret(requestedFret);
-            if (firstFret >= OCTAVE) {
+            const { firstFret, firstString } = this.getRootNoteStartFret( requestedFret );
+            if ( firstFret >= OCTAVE ) {
                 return null;
             }
 
-            const frettedNotes = new Array(this.strings.length);
-            const foundNotes = [this.chordRoot];
-            const range = fretRange(firstFret, this.visibleFrets);
-            const lastFret = range[range.length - 1];
-            frettedNotes[firstString] = firstFret;
+            const frettedNotes = new Array( this.strings.length );
+            const foundNotes = [ this.chordRoot ];
+            const range = fretRange(firstFret, this.visibleFrets );
+            const lastFret = range[ range.length - 1 ];
+            frettedNotes[ firstString ] = firstFret;
 
-            for (let string = firstString + 1; string < this.strings.length; ++string) {
-                const frets = this.fretsForString(string, firstFret);
+            for ( let string = firstString + 1; string < this.strings.length; ++string ) {
+                const frets = this.fretsForString( string, firstFret );
                 // reverse loop through the frets
                 let j = frets.length;
                 let fret, note;
 
                 while (j--) {
-                    fret = frets[j];
-                    note = this.getNoteByFret(fret, this.strings[string]);
+                    fret = frets[ j ];
+                    note = this.getNoteByFret( fret, this.strings[ string ]);
                     // if this note hasn't yet been fretted, make this a candidate for fretting
-                    if (!foundNotes.includes(note)) {
+                    if ( !foundNotes.includes( note )) {
                         // not so fast though, we need to make sure whether we can comfortably fret this puppy!
                         // is a higher string able to fret this note at a lower fret ?
-                        if (!( fret < lastFret && !this.hasLowerFrettedNoteOnHigherString(note, fret, string))) {
+                        if (!( fret < lastFret && !this.hasLowerFrettedNoteOnHigherString( note, fret, string ))) {
                             continue;
                         }
                         foundNotes.push(note);
@@ -163,20 +161,20 @@ export default {
                 }
                 // in case note had been fretted before, allow the last known fret to duplicate the note
                 if (!frettedNotes[string]) {
-                    // unless this is a large stretch, TODO: only for the lowest frets if we don't expect further notes?
+                    // unless this is a large stretch, TODO: only for the lowest frets if we don"t expect further notes?
                     const stretch = fret - firstFret;
                     if (stretch > 3) {
                         continue;
                     }
                     frettedNotes[string] = frets[0];
                 }
-                // for power chords we allow doubling of the octave note and that's it
-                if (isPowerChord(this.chord) && frettedNotes.filter(n => typeof n === 'number').length > 2) {
+                // for power chords we allow doubling of the octave note and that"s it
+                if (isPowerChord(this.chord) && frettedNotes.filter(n => typeof n === "number").length > 2) {
                     break;
                 }
             }
             // in case not all notes have been mined, the current fret range
-            // won't work for us try again at a higher offset
+            // won"t work for us try again at a higher offset
             if (foundNotes.length < this.chord.notes.length) {
                 return this.frettedNotes(requestedFret + this.visibleFrets);
             }
@@ -185,7 +183,7 @@ export default {
         getNoteByFret(fret, rootNote) {
             const rootNoteIndex = this.notes.indexOf(rootNote);
             const note = this.notes[(rootNoteIndex + fret) % this.notes.length];
-            return this.chord.notes.includes(note) ? note : '';
+            return this.chord.notes.includes(note) ? note : "";
         },
         /**
          * get all the frets on given string that contain a
@@ -252,7 +250,7 @@ export default {
             return { firstFret, fretStartOffset, firstString };
         },
         closeOverlay() {
-            this.$emit('close');
+            this.$emit( "close" );
         },
     }
 };
@@ -267,6 +265,7 @@ export default {
     background-color: rgba(255,255,255,.9);
     color: $color-5;
     z-index: $z-index-overlay;
+    text-align: center;
 }
 
 .chord-name {
@@ -290,20 +289,14 @@ export default {
 
 @include large() {
     .chord-overlay {
+        width: 50%;
+        max-width: 600px;
         top: 50%;
         left: 50%;
+        transform: translate(-50%, -50%);
         border: 3px solid #000;
         border-radius: 7px;
-        width: 50%;
-        height: 250px;
-        margin-top: -125px;
-        margin-left: -25%;
         @include noEvents();
-
-        &.tall {
-            height: 400px;
-            margin-top: -200px;
-        }
     }
 
     .chord-shape {

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -29,10 +29,11 @@
                  :style="{ left: `${stringIndex / strings.length * 100}%` }"
             >
                 <span class="note-name">{{ note }}</span>
-                <div v-for="fret in visibleFretRange"
-                     :key="fret"
-                     class="fret-marker"
-                     :style="{ top: `{fret / frets * 100}%`}"
+                <div
+                    v-for="fret in visibleFretRange"
+                    :key="fret"
+                    class="fret-marker"
+                    :style="{ top: `{fret / frets * 100}%`}"
                 >
                     {{ stringIndex >= firstString && frettedNotes[stringIndex] === fret ? fret : '' }}
                 </div>
@@ -42,8 +43,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { fretRange } from '@/utils/interval-util';
+import { mapState } from "vuex";
+import { fretRange } from "@/utils/interval-util";
 
 export default {
     props: {
@@ -68,13 +69,13 @@ export default {
     },
     computed: {
         ...mapState([
-            'tuning',
+            "tuning",
         ]),
         strings() {
-            return [...this.tuning.strings].reverse();
+            return [ ...this.tuning.strings ].reverse();
         },
         visibleFretRange() {
-            return fretRange(this.firstFret, this.visibleFrets);
+            return fretRange( this.firstFret, this.visibleFrets );
         },
     },
 };
@@ -82,6 +83,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_variables";
+@import "@/styles/_mixins";
 
 .chord-wrapper {
     display: inline-block;
@@ -96,11 +98,16 @@ export default {
     display: block;
     border-right: 1px solid grey;
     height: inherit;
+    border-radius: $spacing-medium;
+    background-color: $color-5;
+    overflow: hidden;
+    @include boxSize();
+    @include noSelect();
 }
 
 .string {
     position: absolute;
-    color: #000;
+    color: $color-text;
     font-weight: bold;
     width: 10px;
     height: 100%;

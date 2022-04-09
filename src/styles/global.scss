@@ -1,0 +1,24 @@
+@import "@/styles/layout";
+
+.ui.search.selection.dropdown {
+    &.search-only {
+        .icon.dropdown {
+            display: none;
+        }
+
+        &.active .icon.dropdown {
+            display: initial;
+        }
+    }
+}
+
+.button {
+    @include button();
+}
+
+.explanation {
+    @include ideal() {
+        max-width: 600px;
+        margin: $spacing-medium 0 $spacing-large;
+    }
+}

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -29,24 +29,24 @@ import Tunings from "@/definitions/tunings.json";
 // reverse the string order
 const TUNINGS = Tunings.filter(t => ({ ...t, strings: t.strings.reverse() }));
 
-Vue.use(Vuex);
+Vue.use( Vuex );
 
 /* internal methods */
 
-const getTunings = (state) => {
-    switch (state.instrumentType) {
+const getTunings = state => {
+    switch ( state.instrumentType ) {
         default:
-            return TUNINGS.filter(t => t.type === "guitar");
+            return TUNINGS.filter( t => t.type === "guitar" );
         case "bass":
-            return TUNINGS.filter(t => t.type === "bass");
+            return TUNINGS.filter( t => t.type === "bass" );
         case "ukelele":
-            return TUNINGS.filter(t => t.type === "ukelele");
+            return TUNINGS.filter( t => t.type === "ukelele" );
     }
 };
 
 const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
-    return cloneTuning(TUNINGS.find(tuning => {
-        if (tuning.type !== instrumentType || tuning.name.trim().slice(0, 8).toLowerCase() !== "standard") {
+    return cloneTuning( TUNINGS.find( tuning => {
+        if ( tuning.type !== instrumentType || tuning.name.trim().slice( 0, 8 ).toLowerCase() !== "standard" ) {
             return false;
         }
         return optStringAmount > 0 ? tuning.strings.length === optStringAmount : tuning;
@@ -56,45 +56,54 @@ const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
 export default new Vuex.Store({
     state: {
         appMode: 0,                     // either 0 (scale visualiser) or 1 (name my chord)
+        configurationOpened: false,
+        scaleSelectorOpened: false,
         notes: ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"],
         scales: Scales,
         instrumentType: "guitar",       // "guitar", "bass" or "ukelele"
         tuning: standardTuningForInstrument("guitar", 6), // start as six string
         key: "E",                       // none more guitar friendly
-        scale: Object.keys(Scales).find(name => name.includes( "major" )),
+        scale: Object.keys( Scales ).find( name => name.includes( "major" )),
         viewOption: "frets",            // whether to visualise "frets" or "notes",
+        fretAmount: 13,
+        startFret: 0,
         chordOptions: {
             power: false,
             basic: true,
             extended: false,
         },
-        chord: []                       // chord visualised by "Name my chord"-mode
+        chord: [],                      // chord visualised by "Name my chord"-mode
+        windowSize: {
+            width: window.innerWidth,
+            height: window.innerHeight
+        },
     },
     getters: {
-        availableStringAmountsForCurrentInstrument(state) {
-            return getTunings(state).reduce((acc, tuning) => {
-                if (!acc.includes(tuning.strings.length)) {
-                    acc.push(tuning.strings.length);
+        isMobile: state => state.windowSize.width <= 685, // see _variables.scss
+        availableStringAmountsForCurrentInstrument( state ) {
+            return getTunings( state ).reduce(( acc, tuning ) => {
+                if ( !acc.includes( tuning.strings.length )) {
+                    acc.push( tuning.strings.length );
                 }
                 return acc;
             }, []);
         },
-        availableTuningsForCurrentStringAmount(state) {
+        availableTuningsForCurrentStringAmount( state ) {
             const currentStringAmount = state.tuning.strings.length;
-            return getTunings(state).filter(tuning => tuning.strings.length === currentStringAmount);
+            return getTunings( state ).filter( tuning => tuning.strings.length === currentStringAmount );
         },
-        availableScaleNotes(state) {
+        availableScaleNotes( state ) {
             // get all notes for the chosen scale in the chosen key
             const notes = [];
-            const scale = Scales[state.scale];
-            const rootNoteIndex = state.notes.indexOf(state.key);
-            scale.forEach(semitone => {
-                notes.push(state.notes[(rootNoteIndex + semitone ) % state.notes.length]);
+            const scale = Scales[ state.scale ];
+            const rootNoteIndex = state.notes.indexOf( state.key );
+            scale.forEach( semitone => {
+                notes.push( state.notes[( rootNoteIndex + semitone ) % state.notes.length ]);
             });
             return notes;
         },
-        availableScaleChords(state, getters) {
-            const scale = Scales[state.scale];
+        availableScaleChords( state, getters ) {
+            const scale = Scales[ state.scale ];
             const out = [];
 
             // compare for each available note in the scale
@@ -102,10 +111,10 @@ export default new Vuex.Store({
 
             const scaleNotes = getters.availableScaleNotes;
 
-            for (let noteIndex = 0; noteIndex < scale.length; ++noteIndex) {
-                const note = scaleNotes[noteIndex];
-                Object.keys(Chords).forEach(chordName => {
-                    const semitones = Chords[chordName];
+            for ( let noteIndex = 0; noteIndex < scale.length; ++noteIndex ) {
+                const note = scaleNotes[ noteIndex ];
+                Object.keys( Chords ).forEach( chordName => {
+                    const semitones = Chords[ chordName ];
 
                     // ignore chords that contain more notes than we can
                     // fret (e.g. when visualizing for ukelele / bass)
@@ -115,14 +124,15 @@ export default new Vuex.Store({
                     const chordNotes = [];
 
                     // collect all notes for the chord
-                    semitones.forEach(semitone => {
-                        const chordNoteIndex = state.notes.indexOf(note);
-                        chordNotes.push(state.notes[(chordNoteIndex + semitone) % state.notes.length])
+                    semitones.forEach( semitone => {
+                        const chordNoteIndex = state.notes.indexOf( note );
+                        chordNotes.push( state.notes[( chordNoteIndex + semitone ) % state.notes.length ])
                     });
 
-                    for (let i = 0; i < chordNotes.length; ++i) {
-                        if (!scaleNotes.includes(chordNotes[i]))
+                    for ( let i = 0; i < chordNotes.length; ++i ) {
+                        if ( !scaleNotes.includes( chordNotes[ i ])) {
                             return;
+                        }
                     }
                     out.push({ name: `${note} ${chordName}`, notes: chordNotes });
                 });
@@ -131,41 +141,56 @@ export default new Vuex.Store({
         },
     },
     mutations: {
-        setAppMode(state, mode) {
+        setAppMode( state, mode ) {
             state.appMode = mode;
         },
-        setInstrumentType(state, type) {
-            if (state.instrumentType !== type) {
+        setInstrumentType( state, type ) {
+            if ( state.instrumentType !== type ) {
                 state.instrumentType = type;
-                state.tuning = standardTuningForInstrument(type);
+                state.tuning = standardTuningForInstrument( type );
                 state.chord = [];
             }
         },
-        setKey(state, key) {
+        setKey( state, key ) {
             state.key = key;
         },
-        setScale(state, scale) {
+        setScale( state, scale ) {
             state.scale = scale;
         },
-        tuneString(state, { index, note }) {
-            Vue.set(state.tuning.strings, index, note);
+        tuneString( state, { index, note }) {
+            Vue.set( state.tuning.strings, index, note );
         },
-        setTuning(state, tuning) {
-            state.tuning = cloneTuning(tuning);
+        setTuning( state, tuning ) {
+            state.tuning = cloneTuning( tuning );
         },
-        setStandardTuningForStringAmount(state, amount) {
-            state.tuning = standardTuningForInstrument(state.instrumentType, amount);
+        setStandardTuningForStringAmount( state, amount ) {
+            state.tuning = standardTuningForInstrument( state.instrumentType, amount );
         },
-        setViewOption(state, type) {
+        setViewOption( state, type ) {
             state.viewOption = type;
         },
-        setChordStringFretIndex(state, { index, value }) {
-            Vue.set(state.chord, index, value);
+        setFretAmount( state, amount ) {
+            state.fretAmount = amount;
         },
-        setChordOption(state, { option, value}) {
-            if (/power|basic|extended/.test(option)) {
-                state.chordOptions[option] = value;
+        setStartFret( state, fret ) {
+            state.startFret = fret;
+        },
+        setChordStringFretIndex(state, { index, value }) {
+            Vue.set( state.chord, index, value );
+        },
+        setChordOption( state, { option, value }) {
+            if ( /power|basic|extended/.test( option )) {
+                state.chordOptions[ option ] = value;
             }
+        },
+        setConfigurationOpened( state, opened ) {
+            state.configurationOpened = opened;
+        },
+        setScaleSelectorOpened( state, opened ) {
+            state.scaleSelectorOpened = opened;
+        },
+        setWindowSize( state, { width, height }) {
+            state.windowSize = { width, height };
         },
     },
     actions: {

@@ -7,21 +7,21 @@
 
 // phones
 @mixin mobile {
-    @media (max-width: #{$mobile-width}) {
+    @media (max-width: #{$app-width}) {
         @content;
     }
 }
 
 // anything above phone resolution (e.g. tablet/laptop/desktop)
 @mixin large {
-    @media (min-width: #{$mobile-width}) {
+    @media (min-width: #{$app-width}) {
         @content;
     }
 }
 
-// anything that matches the app width
+// anything that matches the ideal app width
 @mixin ideal {
-    @media (min-width: #{$app-width}) {
+    @media (min-width: #{$ideal-width}) {
         @content;
     }
 }
@@ -85,7 +85,17 @@
     @include noSelect();
 
     &:hover {
-        background-color: $color-4;
+        background-color: $color-3;
+        color: $color-1;
+    }
+}
+
+@mixin roundButton() {
+    @include button();
+    border: 2px solid $color-1;
+
+    &:hover {
+        background-color: $color-1;
         color: $color-2;
     }
 }
@@ -98,6 +108,7 @@
     width: 100%;
     height: 100%;
     background-color: $color-5;
+    color: $color-text;
     padding: $spacing-medium;
     @include boxSize();
 
@@ -124,5 +135,68 @@
 
     .content {
         padding-top: $spacing-large + $spacing-medium;
+    }
+}
+
+@mixin scrollablePanel( $additionalPadding: 0 ) {
+    $padding: #{$menu-height + $footer-height + $additionalPadding};
+    height: calc(100vh - #{$padding});
+    overflow-y: auto;
+    box-sizing: border-box;
+
+    @include large() {
+        &::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        &::-webkit-scrollbar-corner {
+            background-color: $color-1;
+        }
+
+        &::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: $spacing-medium;
+            background-color: $color-1;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: $spacing-medium;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+            background-color: $color-2;
+        }
+    }
+
+    @include mobile() {
+        $mobilePadding: #{$menu-height + $additionalPadding}; // there's no footer on mobile
+        height: calc(100vh - #{$mobilePadding});
+    }
+}
+
+@mixin hiddenOnMobile() {
+    .close-button {
+        display: none; // mobile view only
+    }
+
+    @include mobile() {
+        display: none;
+
+        &.expanded {
+            @include overlay( $mobile-width, $mobile-width );
+            margin-top: #{$menu-height};
+            display: block;
+
+            .close-button {
+                display: block;
+                top: $spacing-large;
+                right: #{$spacing-medium + $spacing-small};
+                color: $color-1;
+
+                &.secondary {
+                    color: $color-2;
+                    top: #{$spacing-medium + $spacing-small};
+                    right: $spacing-medium;
+                }
+            }
+        }
     }
 }

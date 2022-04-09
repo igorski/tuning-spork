@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,104 +23,75 @@
 <template>
     <div class="tuning-spork">
         <application-menu />
-        <tuner v-if="tunerOpened" @close="tunerOpened = false" />
         <div class="tuning-spork__app">
-            <!-- configuration menu toggle (mobile only) -->
-            <button
-                type="button"
-                class="tuning-spork__configuration-toggle"
-                @click="setConfigurationOpened(!configurationOpened)"
-            >Configure instrument</button>
-            <!-- instrument and scale configuration -->
-            <div class="tuning-spork__configuration" :class="{ expanded: configurationOpened }">
+            <!-- scale/configuration menu toggle (mobile only) -->
+            <div class="tuning-spork__configuration-buttons">
                 <button
                     type="button"
-                    class="close-button"
-                    @click="setConfigurationOpened( false )"
-                >&#x2715;</button>
-                <div class="tuning-spork__configuration-interface">
-                    <div class="option">
-                        <label>Instrument</label>
-                        <model-select :options="formatOptions(['guitar', 'bass', 'ukelele'])"
-                                      v-model="selectedInstrumentType"
-                                      class="select medium-list"
-                        />
-                    </div>
-                    <div v-if="availableStringAmountsForCurrentInstrument.length > 1" class="option">
-                        <label>Amount of strings</label>
-                        <model-select :options="formatOptions(availableStringAmountsForCurrentInstrument)"
-                                      v-model="selectedStringAmount"
-                                      class="select small-list"
-                        />
-                    </div>
-                    <div v-if="availableTunings.length > 1" class="option">
-                        <label>Tuning</label>
-                        <model-select :options="availableTunings"
-                                      v-model="selectedTuning"
-                                      class="select large-list"
-                        />
-                    </div>
-                    <button
-                        type="button"
-                        class="button"
-                        @click="openTuner()"
-                    >Tuner</button>
-                </div>
-                <!-- scale configuration interface -->
-                <template v-if="appMode === 0">
-                    <div class="tuning-spork__configuration-interface">
-                        <div class="option">
-                            <label>Key / <span class="root-note">root note</span></label>
-                            <model-select :options="availableNotes"
-                                          v-model="selectedKey"
-                                          class="select small-list"
-                            />
-                        </div>
-                        <div class="option">
-                            <label>Scale</label>
-                            <model-select
-                                :options="availableScales"
-                                v-model="selectedScale"
-                                placeholder="Find scale by name"
-                                class="select large-list"
-                            />
-                        </div>
-                        <div class="option">
-                            <label>View</label>
-                            <model-select :options="availableViewOptions"
-                                          v-model="selectedViewOption"
-                                          class="select medium-list"
-                            />
-                        </div>
-                    </div>
-                </template>
+                    class="tuning-spork__configuration-toggle"
+                    @click="setScaleSelectorOpened( !scaleSelectorOpened )"
+                >Select scale</button>
+                <button
+                    type="button"
+                    class="tuning-spork__configuration-toggle"
+                    @click="setConfigurationOpened( !configurationOpened )"
+                >Configure instrument</button>
             </div>
-            <!-- instrument fretboard -->
-            <fretboard />
-            <!-- compatible chords list -->
-            <template v-if="appMode === 0">
-                <chord-list />
-            </template>
-            <template v-else>
-                <div v-if="!chord.length" class="explanation">
-                    Found a sweet soundin' chord and curious what it is called ? Just fret the strings above
-                    and we'll tell you what you are playing (and what scales go with it).
-                </div>
-                <div v-if="foundChord">
-                    <h2>{{ foundChord }}</h2>
-                </div>
-                <div v-if="foundScales.length">
-                    <p>The following scales are in key with this chord:</p>
-                    <div
-                        v-for="scale in foundScales"
-                        class="tuning-spork__scale"
-                        :key="scale"
-                        @click="showScale(foundChordRoot, scale)"
-                    >
-                        {{ foundChordRoot }} {{ scale }}
+            <div class="tuning-spork__wrapper">
+                <div class="tuning-spork__container">
+                    <!-- scale configuration interface -->
+                    <div class="tuning-spork__scale-selector">
+                        <scale-selector
+                            v-if="appMode === 0"
+                            class="tuning-spork__aside"
+                            :class="{ expanded: scaleSelectorOpened }"
+                        >
+                            <button
+                                type="button"
+                                class="close-button secondary"
+                                @click="setScaleSelectorOpened( false )"
+                            >&#x2715;</button>
+                        </scale-selector>
+                    </div>
+                    <div class="tuning-spork__content">
+                        <!-- instrument configuration -->
+                        <div class="tuning-spork__configuration" :class="{ expanded: configurationOpened }">
+                            <button
+                                type="button"
+                                class="close-button"
+                                @click="setConfigurationOpened( false )"
+                            >&#x2715;</button>
+                            <instrument-selector @opened="setConfigurationOpened( $event )"/>
+                        </div>
+                        <!-- instrument fretboard -->
+                        <fretboard />
+                        <div class="tuning-spork__details">
+                            <!-- compatible chords list -->
+                            <chord-list v-if="appMode === 0"/>
+                            <template v-else>
+                                <div v-if="!chord.length" class="explanation">
+                                    Found a sweet soundin' chord and curious what it is called ? Just fret the strings above
+                                    and we'll tell you what you are playing (and what scales go with it).
+                                </div>
+                                <div v-if="foundChord">
+                                    <h2>{{ foundChord }}</h2>
+                                </div>
+                                <div v-if="foundScales.length">
+                                    <p>The following scales are in key with this chord:</p>
+                                    <div
+                                        v-for="scale in foundScales"
+                                        class="tuning-spork__scale"
+                                        :key="scale"
+                                        @click="showScale(foundChordRoot, scale)"
+                                    >
+                                        {{ foundChordRoot }} {{ scale }}
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-            </template>
+            </div>
         </div>
         <footer class="tuning-spork__footer">
             <p>This trinket is <a href="https://www.github.com/igorski/tuning-spork" target="_blank">open source</a>. Contributions welcome!</p>
@@ -129,15 +100,14 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from "vuex";
-import { ModelSelect } from "vue-search-select";
+import { mapState, mapMutations } from "vuex";
 import { getChordByIntervals } from "@/utils/chord-util";
 import { getCompatibleScalesForIntervals } from "@/utils/interval-util";
-import { mapSelectOptions } from "@/utils/select-util";
 import ApplicationMenu from "@/components/application-menu";
-import Fretboard from "@/components/fretboard";
 import ChordList from "@/components/chord-list";
-import { initAudioContext } from "@/utils/audio-util";
+import Fretboard from "@/components/fretboard";
+import InstrumentSelector from "@/components/instrument-selector";
+import ScaleSelector from "@/components/scale-selector";
 import store from "@/store";
 
 import "semantic-ui-css/components/dropdown.min.css"
@@ -147,85 +117,47 @@ export default {
     store,
     components: {
         ApplicationMenu,
-        ModelSelect,
-        Fretboard,
         ChordList,
-        Tuner: () => import( "@/components/tuner" )
+        Fretboard,
+        InstrumentSelector,
+        ScaleSelector,
     },
     data: () => ({
         foundChord: null,
         foundChordRoot: null,
         foundScales: [],
-        configurationOpened: false,
-        tunerOpened: false,
     }),
     computed: {
         ...mapState([
             "appMode",
             "chord",
+            "configurationOpened",
             "notes",
-            "scales",
-            "instrumentType",
+            "scaleSelectorOpened",
             "tuning",
-            "key",
-            "scale",
-            "viewOption",
+            "windowSize",
         ]),
-        ...mapGetters([
-            "availableStringAmountsForCurrentInstrument",
-            "availableTuningsForCurrentStringAmount",
-        ]),
-        selectedInstrumentType: {
-            get() { return this.instrumentType; },
-            set(value) { this.setInstrumentType(value); }
-        },
-        selectedStringAmount: {
-            get() { return this.tuning.strings.length; },
-            set(value) { this.setStandardTuningForStringAmount(value); }
-        },
-        selectedTuning: {
-            get() { return this.tuning.name; },
-            set(value) { this.setTuning(this.availableTuningsForCurrentStringAmount.find(t => t.name === value)); }
-        },
-        selectedScale: {
-            get() { return this.scale; },
-            set(value) { this.setScale(value); }
-        },
-        selectedKey: {
-            get() { return this.key; },
-            set(value) { this.setKey(value); }
-        },
-        selectedViewOption: {
-            get() { return this.viewOption; },
-            set(value) { this.setViewOption(value); }
-        },
-        availableNotes() {
-            return this.formatOptions(this.notes);
-        },
-        availableTunings() {
-            return this.formatOptions(this.availableTuningsForCurrentStringAmount.map(t => t.name));
-        },
-        availableScales() {
-            return this.formatOptions(Object.keys(this.scales).sort());
-        },
-        availableViewOptions() {
-            return this.formatOptions(["frets", "notes", "degrees"]);
-        }
     },
     watch: {
         chord() { this.calculateChord() },
         tuning() { this.calculateChord() },
     },
+    created() {
+        // no need to remove the below as we will require it throughout the application lifetime
+        window.addEventListener( "resize", this.handleResize.bind( this ));
+    },
     methods: {
         ...mapMutations([
             "setAppMode",
-            "setInstrumentType",
             "setKey",
             "setScale",
-            "setTuning",
-            "setStandardTuningForStringAmount",
-            "setViewOption",
+            "setConfigurationOpened",
+            "setScaleSelectorOpened",
+            "setWindowSize",
         ]),
+        handleResize() {
+            this.setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+        },
         calculateChord() {
             // chord fingering changed, try to retrieve whether the chord fingering represents a known chord
             if ( this.appMode !== 1 ) {
@@ -238,20 +170,20 @@ export default {
             let rootString = this.chord.length;
             let rootFret;
             while ( typeof rootFret !== "number" && --rootString > 0 ) {
-                rootFret = this.chord[rootString];
+                rootFret = this.chord[ rootString ];
             }
             if ( typeof rootFret !== "number" ) {
                 return; // no notes found
             }
-            let openStringNote = this.tuning.strings[rootString];
-            let rootNoteIndex = this.notes.indexOf(openStringNote);
-            let rootNote = this.notes[(rootNoteIndex + rootFret) % this.notes.length];
-            rootNoteIndex = this.notes.indexOf(rootNote);
+            let openStringNote = this.tuning.strings[ rootString ];
+            let rootNoteIndex = this.notes.indexOf( openStringNote );
+            let rootNote = this.notes[( rootNoteIndex + rootFret ) % this.notes.length ];
+            rootNoteIndex = this.notes.indexOf( rootNote );
 
             // collect all intervals for every note
 
-            let intervals = this.getIntervals(this.chord, rootNoteIndex);
-            let chord = getChordByIntervals(intervals);
+            let intervals = this.getIntervals( this.chord, rootNoteIndex );
+            let chord = getChordByIntervals( intervals );
 
             if ( chord ) {
                 this.foundChord = `${rootNote} ${chord}`;
@@ -259,38 +191,39 @@ export default {
             // in case no chord was found but the amount of fretted notes exceeds that
             // of a triad, assume we are dealing with a slash chord (alternate note in bass)
             // try again with next higher string as assumed rootn ote
-            else if ( this.chord.filter( fret => typeof fret === "number" ).length > 3) {
+            else if ( this.chord.filter( fret => typeof fret === "number" ).length > 3 ) {
                 const bassNote = rootNote;
                 const bassIndex = rootString;
 
                 openStringNote = null;
                 rootFret = null;
-                while (!rootFret && --rootString > 0) {
+
+                while ( !rootFret && --rootString > 0 ) {
                     openStringNote = this.tuning.strings[rootString];
                     rootFret = this.chord[rootString];
                 }
-                rootNoteIndex = this.notes.indexOf(openStringNote);
-                rootNote = this.notes[(rootNoteIndex + rootFret) % this.notes.length];
-                rootNoteIndex = this.notes.indexOf(rootNote);
+                rootNoteIndex = this.notes.indexOf( openStringNote);
+                rootNote = this.notes[( rootNoteIndex + rootFret ) % this.notes.length ];
+                rootNoteIndex = this.notes.indexOf( rootNote );
 
                 const filteredChord = this.chord.concat(); // remove slash note
                 filteredChord[bassIndex] = undefined;
 
-                intervals = this.getIntervals(filteredChord, rootNoteIndex);
-                chord = getChordByIntervals(intervals);
+                intervals = this.getIntervals( filteredChord, rootNoteIndex );
+                chord = getChordByIntervals( intervals );
 
-                if (chord) {
+                if ( chord ) {
                     this.foundChord = `${rootNote} ${chord}/${bassNote}`;
                 }
             }
-            if (this.foundChord) {
+            if ( this.foundChord ) {
                 this.foundChordRoot = rootNote;
-                this.foundScales = getCompatibleScalesForIntervals(intervals, rootNote);
+                this.foundScales = getCompatibleScalesForIntervals( intervals, rootNote );
             }
         },
         getIntervals( chord, rootNoteIndex ) {
             const intervals = [];
-            let stringIndex = this.selectedStringAmount;
+            let stringIndex = this.tuning.strings.length;
             while ( stringIndex-- ) {
                 const stringFret = chord[ stringIndex ];
                 if ( typeof stringFret !== "number" ) {
@@ -315,107 +248,74 @@ export default {
             this.setKey( key );
             this.setScale( scale );
         },
-        formatOptions( items ) {
-            return mapSelectOptions( items );
-        },
-        setConfigurationOpened( opened ) {
-            this.configurationOpened = opened;
-        },
-        openTuner() {
-            initAudioContext();
-            this.configurationOpened = false;
-            this.tunerOpened = true;
-        }
     }
 };
 </script>
 
 <style lang="scss">
 /* global styles */
-@import "@/styles/layout";
-
-.ui.search.selection.dropdown>input.search {
-    @include boxSize(); // fixes issue in vue-search-select
-}
-
-.button {
-    @include button();
-}
-
-.option {
-    display: inline;
-    margin-right: 12px;
-
-    label {
-        margin-right: 7px;
-    }
-
-    .root-note {
-        color: $color-2;
-    }
-
-    @include mobile() {
-        display: inline-flex;
-        margin-bottom: $spacing-small;
-        width: 100%;
-        text-align: left;
-        padding-left: $spacing-medium;
-        @include boxSize();
-
-        label {
-            width: 30%;
-            margin-top: $spacing-small;
-        }
-        .select {
-            width: 70%;
-        }
-    }
-}
-
-.select {
-    display: inline-block !important; // semantic-ui-css override
-
-    &.small-list {
-        max-width: 65px;
-    }
-    &.medium-list {
-        max-width: 100px;
-    }
-    &.large-list {
-        max-width: 200px;
-    }
-    .text {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        width: 100%;
-    }
-}
-
-.explanation {
-    @include ideal() {
-        max-width: 600px;
-        margin: $spacing-medium auto $spacing-large;
-    }
-}
+@import "@/styles/global";
 </style>
 
 <style lang="scss" scoped>
+/* scoped styles */
 @import "@/styles/_variables";
 @import "@/styles/_mixins";
 @import "@/styles/_typography";
 
-/* scoped styles */
-
 .tuning-spork {
     &__app {
         @include boxSize();
-        $topPadding: #{$menu-height + $spacing-medium};
+        padding-top: #{$menu-height};
+        width: 100%;
+        height: calc(100% - #{$footer-height});
+
+        @include ideal() {
+            padding-top: #{$menu-height + $app-ideal-top-margin};
+        }
+    }
+
+    &__configuration-buttons {
+        display: flex;
+        margin: 0 $spacing-large $spacing-medium;
+
+        @include large() {
+            display: none;
+        }
+    }
+
+    &__wrapper {
+        // max-width: $app-width;
+        height: 100%;
         margin: 0 auto;
-        padding-top: $topPadding;
+    }
+
+    &__container {
+        flex: 1;
+
+        @include large() {
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        @include mobile() {
+            padding: 0 $spacing-medium 0;
+        }
+    }
+
+    &__content,
+    &__aside {
+        flex: 1;
+    }
+
+    &__content {
+        @include scrollablePanel();
         max-width: $app-width;
-        min-height: calc(100% - #{$topPadding});
-        text-align: center;
+
+        @include mobile() {
+            @include scrollablePanel( 58px ); // 44px (button container) + $spacing-medium
+        }
     }
 
     &__scale {
@@ -423,42 +323,36 @@ export default {
     }
 
     &__footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         height: $footer-height;
         width: 100%;
-        text-align: center;
-    }
-
-    &__configuration {
-        padding: $spacing-small $spacing-small $spacing-medium;
-        border: 1px solid $color-2;
-
-        &-toggle,
-        .close-button {
-            display: none; // mobile view only
-        }
-
-        &-interface {
-            padding: $spacing-medium 0 0;
-            @include boxSize();
-            @include noSelect();
-        }
 
         @include mobile() {
             display: none;
-            &.expanded {
-                @include overlay( $mobile-width, $mobile-width );
-                display: block;
+        }
+    }
 
-                .close-button {
-                    display: block;
-                }
-            }
+    &__configuration {
+        @include hiddenOnMobile();
 
+        &-toggle {
+            display: none; // mobile view only
+        }
+
+        @include mobile() {
             &-toggle {
                 @include button();
                 display: inline-block;
                 margin: $spacing-medium auto 0;
             }
+        }
+    }
+
+    &__details {
+        @include large() {
+            padding-left: $spacing-large;
         }
     }
 }

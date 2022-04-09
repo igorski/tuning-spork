@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from "vuex";
 
 export default {
     data: () => ({
@@ -54,23 +54,29 @@ export default {
     }),
     computed: {
         ...mapState([
-            'appMode',
+            "appMode",
         ]),
     },
     methods: {
         ...mapMutations([
-            'setAppMode',
+            "setAppMode",
+            "setConfigurationOpened",
+            "setScaleSelectorOpened",
         ]),
-        setMenuOpened(opened) {
+        setMenuOpened( opened ) {
             this.menuOpened = opened;
+            if ( opened ) {
+                this.setConfigurationOpened( false );
+                this.setScaleSelectorOpened( false );
+            }
         },
         scaleGeneratorClick() {
-            this.setAppMode(0);
-            this.setMenuOpened(false);
+            this.setAppMode( 0 );
+            this.setMenuOpened( false );
         },
         nameMyChordClick() {
-            this.setAppMode(1);
-            this.setMenuOpened(false);
+            this.setAppMode( 1 );
+            this.setMenuOpened( false );
         },
     }
 };
@@ -88,74 +94,111 @@ export default {
     left: 0;
     z-index: $z-index-header;
 
+    @include ideal() {
+        border-top-left-radius: $spacing-medium;
+        border-top-right-radius: $spacing-medium;
+        width: $ideal-width;
+        left: calc(50% - #{$ideal-width / 2});
+        top: $app-ideal-top-margin;
+    }
+
     &__title {
         display: inline;
         color: #FFF;
-        margin: 0 $spacing-medium 0 $spacing-small;
+        margin: 0 #{(($spacing-xlarge) * 2) + $spacing-large} 0 $spacing-medium;
 
         @include mobile() {
             display: none;
         }
     }
-}
 
-.header__menu {
-    height: $menu-height;
-
-    @include ideal() {
-        max-width: $app-width;
-        margin: 0 auto;
-    }
-
-    &-toggle {
-        position: absolute;
-        display: none;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        width: $toggle-width;
+    &__menu {
         height: $menu-height;
-        background-color: $color-3;
-        color: $color-1;
 
-        span {
-            position: absolute;
-            font-size: $spacing-large;
-            top: 50%;
-            left: 50%;
-            margin-top: -($spacing-medium * 1.5);
-            margin-left: -$spacing-medium;
+        @include ideal() {
+            max-width: $ideal-width;
+            margin: 0 auto;
         }
-    }
 
-    &-list {
-        @include large() {
-            padding-left: $spacing-medium;
-            height: inherit;
+        &-toggle {
+            position: absolute;
+            display: none;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            width: $toggle-width;
+            height: $menu-height;
+            background-color: $color-3;
+            color: $color-1;
 
-            h1, button {
-                display: inline-block;
+            span {
+                position: absolute;
+                font-size: $spacing-large;
+                top: 50%;
+                left: 50%;
+                margin-top: -($spacing-medium * 1.5);
+                margin-left: -$spacing-medium;
+            }
+        }
+
+        &-list {
+            @include large() {
+                padding-left: $spacing-medium;
                 height: inherit;
+
+                h1, button {
+                    display: inline-block;
+                    height: inherit;
+                }
+            }
+
+            @include mobile() {
+                position: absolute;
+                top: $menu-height;
+                display: none;
             }
         }
 
         @include mobile() {
-            position: absolute;
-            top: $menu-height;
-            display: none;
+            position: fixed;
+            z-index: $z-index-menu;
+            overflow: hidden;
+            width: 100%;
+            top: 0;
+            left: 0;
+
+            &-toggle {
+                display: block;
+            }
         }
     }
 
     @include mobile() {
-        position: fixed;
-        z-index: $z-index-menu;
-        overflow: hidden;
-        width: 100%;
-        top: 0;
-        left: 0;
+        &.expanded {
+            height: 100%;
 
-        &-toggle {
-            display: block;
+            .header__menu {
+                position: absolute;
+                overflow-y: auto;
+                height: 100%;
+
+                &-list {
+                    left: 0;
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+
+                    button {
+                        width: 100%;
+                        border: none;
+                        border-bottom: 1px solid $color-1;
+                        background-color: transparent;
+                        padding: $spacing-large;
+                        font-size: .85em;
+                        @include boxSize();
+                    }
+                }
+            }
         }
     }
 }
@@ -173,37 +216,6 @@ export default {
 
     &--active {
         color: $color-2;
-    }
-}
-
-/* mobile view */
-
-@include mobile() {
-    .header.expanded {
-        height: 100%;
-
-        .header__menu {
-            position: absolute;
-            overflow-y: auto;
-            height: 100%;
-
-            &-list {
-                left: 0;
-                display: block;
-                width: 100%;
-                height: 100%;
-
-                button {
-                    width: 100%;
-                    border: none;
-                    border-bottom: 1px solid $color-1;
-                    background-color: transparent;
-                    padding: $spacing-large;
-                    font-size: .85em;
-                    @include boxSize();
-                }
-            }
-        }
     }
 }
 </style>
