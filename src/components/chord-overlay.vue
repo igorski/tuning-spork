@@ -21,9 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 <template>
-    <div class="chord-overlay"
-         :class="{ tall: shapes.length > 3 }"
-    >
+    <div class="chord-overlay">
         <h2 class="chord-name">{{ chord.name }}</h2>
         <div class="close-button"
              @click="closeOverlay()"
@@ -291,20 +289,14 @@ export default {
 
 @include large() {
     .chord-overlay {
+        width: 50%;
+        max-width: 600px;
         top: 50%;
         left: 50%;
+        transform: translate(-50%, -50%);
         border: 3px solid #000;
         border-radius: 7px;
-        width: 50%;
-        height: 250px;
-        margin-top: -125px;
-        margin-left: -25%;
         @include noEvents();
-
-        &.tall {
-            height: 400px;
-            margin-top: -200px;
-        }
     }
 
     .chord-shape {

@@ -94,10 +94,18 @@ export default {
     left: 0;
     z-index: $z-index-header;
 
+    @include ideal() {
+        border-top-left-radius: $spacing-medium;
+        border-top-right-radius: $spacing-medium;
+        width: $ideal-width;
+        left: calc(50% - #{$ideal-width / 2});
+        top: $app-ideal-top-margin;
+    }
+
     &__title {
         display: inline;
         color: #FFF;
-        margin: 0 #{($spacing-xlarge - $spacing-small) * 2} 0 $spacing-small;
+        margin: 0 #{(($spacing-xlarge) * 2) + $spacing-large} 0 $spacing-medium;
 
         @include mobile() {
             display: none;

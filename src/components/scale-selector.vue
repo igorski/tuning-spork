@@ -130,8 +130,8 @@ export default {
 @import "@/styles/ui";
 
 .scale-selector {
-    border-radius: $spacing-small;
-    padding: $spacing-large $spacing-large $spacing-large;
+    background-color: $color-5;
+    padding: $spacing-large;
     text-align: left;
     @include boxSize();
     @include noSelect();
@@ -172,11 +172,11 @@ export default {
 .scale-list {
     @include scrollablePanel( 118px );
     list-style-type: none;
-    margin: 0;
+    margin: $spacing-medium 0;
     padding: 0;
 
     &__entry {
-        border-bottom: 1px solid $color-3;
+        border-bottom: 1px solid $color-5;
 
         &-button {
             width: 100%;
@@ -190,18 +190,16 @@ export default {
             cursor: pointer;
 
             &:hover {
-                color: $color-2;
-                text-indent: $spacing-small;
+                color: $color-3;
+                text-indent: $spacing-xsmall;
             }
         }
 
         &.selected {
-            background-color: $color-3;
+            // background-color: $color-3;
 
             .scale-list__entry-button {
-                color: #FFF;
-                font-weight: bold;
-                text-indent: $spacing-small;
+                color: $color-2;
             }
         }
     }

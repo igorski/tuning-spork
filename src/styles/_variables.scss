@@ -15,16 +15,18 @@ $spacing-xlarge: 56px;
 $menu-height: 70px;
 $toggle-width: 55px;
 $footer-height: 55px;
-$scale-selector-width: 280px;
+$scale-selector-width: 325px;
 
 $ideal-width: #{$app-width + $scale-selector-width};
+$app-ideal-top-margin: $spacing-medium;
 
 // colors
-$color-1: #161925;//#FFFCF9; // background
-$color-2: #FF6978; // root notes / menu active states
-$color-3: #1768AC; // notes
+$color-1: #192132;//#FFFCF9; // background
+$color-2: #f6c43f; // root notes / menu active states
+$color-3: #5dbcef; // notes
 $color-4: #433E0E; // active state buttons
-$color-5: #061121; // header / dark colours
+$color-5: #232b3c; // header / dark colours
+$color-6: #dc607d;
 $color-text: #63768D;
 $color-strings: #F4D06F;
 

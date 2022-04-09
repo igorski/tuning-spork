@@ -65,28 +65,30 @@
                         </div>
                         <!-- instrument fretboard -->
                         <fretboard />
-                        <!-- compatible chords list -->
-                        <chord-list v-if="appMode === 0"/>
-                        <template v-else>
-                            <div v-if="!chord.length" class="explanation">
-                                Found a sweet soundin' chord and curious what it is called ? Just fret the strings above
-                                and we'll tell you what you are playing (and what scales go with it).
-                            </div>
-                            <div v-if="foundChord">
-                                <h2>{{ foundChord }}</h2>
-                            </div>
-                            <div v-if="foundScales.length">
-                                <p>The following scales are in key with this chord:</p>
-                                <div
-                                    v-for="scale in foundScales"
-                                    class="tuning-spork__scale"
-                                    :key="scale"
-                                    @click="showScale(foundChordRoot, scale)"
-                                >
-                                    {{ foundChordRoot }} {{ scale }}
+                        <div class="tuning-spork__details">
+                            <!-- compatible chords list -->
+                            <chord-list v-if="appMode === 0"/>
+                            <template v-else>
+                                <div v-if="!chord.length" class="explanation">
+                                    Found a sweet soundin' chord and curious what it is called ? Just fret the strings above
+                                    and we'll tell you what you are playing (and what scales go with it).
                                 </div>
-                            </div>
-                        </template>
+                                <div v-if="foundChord">
+                                    <h2>{{ foundChord }}</h2>
+                                </div>
+                                <div v-if="foundScales.length">
+                                    <p>The following scales are in key with this chord:</p>
+                                    <div
+                                        v-for="scale in foundScales"
+                                        class="tuning-spork__scale"
+                                        :key="scale"
+                                        @click="showScale(foundChordRoot, scale)"
+                                    >
+                                        {{ foundChordRoot }} {{ scale }}
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -267,6 +269,10 @@ export default {
         padding-top: #{$menu-height};
         width: 100%;
         height: calc(100% - #{$footer-height});
+
+        @include ideal() {
+            padding-top: #{$menu-height + $app-ideal-top-margin};
+        }
     }
 
     &__configuration-buttons {
@@ -341,6 +347,12 @@ export default {
                 display: inline-block;
                 margin: $spacing-medium auto 0;
             }
+        }
+    }
+
+    &__details {
+        @include large() {
+            padding-left: $spacing-large;
         }
     }
 }
