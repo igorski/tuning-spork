@@ -48,21 +48,21 @@
                     v-for="fret in fretsInScale"
                     class="string__note"
                     :key="`string ${index} note ${fret}`"
-                    :style="{ left: getNoteOffset( fret )}"
+                    :style="{ left: getNoteOffset( fret ), width: `${100 / fretAmount}%`}"
                     :class="{ root: getNoteByFret( fret ) === key, decimal: fret > 9 }"
-                ><span>{{ getFretNode( fret ) }}</span></div>
+                ><span class="string__note-icon">{{ getFretNode( fret ) }}</span></div>
             </template>
             <!-- app mode 1 : allow manual fretting of string -->
             <template v-else>
                 <div
                     v-for="fret in visibleFretRange"
-                    class="string__note"
+                    class="string__note string__note--selectable"
                     :key="`string ${index} note ${fret}`"
                     :class="{ hidden: fret !== activeFret }"
-                    :style="{ left: `${fret * 100 / fretAmount}%`}"
-                    @click="activeFret !== fret ? activeFret = fret : activeFret = undefined"
+                    :style="{ left: `${fret * 100 / fretAmount}%`, width: `${100 / fretAmount}%`}"
+                    @click="handleFretClick( fret )"
                 >
-                    <span>{{ fret }}</span>
+                    <span class="string__note-icon">{{ fret }}</span>
                 </div>
             </template>
         </div>
@@ -116,7 +116,7 @@ export default {
             get() {
                 return this.tuning.strings[ this.index ];
             },
-            set(note) {
+            set( note ) {
                 this.tuneString({ index: this.index, note });
             },
         },
@@ -167,6 +167,9 @@ export default {
                     return this.availableScaleNotes.indexOf( this.getNoteByFret( fret )) + 1;
             }
         },
+        handleFretClick( fret ) {
+            this.activeFret = this.activeFret !== fret ? fret : undefined;
+        }
     }
 };
 </script>
@@ -215,27 +218,31 @@ $size: 40px;
     }
 
     &__note {
+        $iconSize: $size / 2;
         position: absolute;
         top: -15px;
-        width: $size / 2;
-        height: $size / 2;
-        margin-left: ($size / 2);
-        background-color: $color-3;
-        border-radius: 50%;
-        padding: 5px;
-        font-weight: bold;
-        color: $color-5;
-        text-align: center;
+        height: $iconSize;
 
-        &.root {
-            background-color: $color-2;
-            color: $color-1;
+        &--selectable {
+            cursor: pointer;
         }
 
-        span {
+        &-icon {
             position: absolute;
-            left: 0;
-            width: 100%;
+            width: $iconSize;
+            left: 50%;
+            margin-left: -( $iconSize / 2 );
+            background-color: $color-3;
+            border-radius: 50%;
+            padding: 5px;
+            font-weight: bold;
+            color: $color-5;
+            text-align: center;
+        }
+
+        &.root .string__note-icon {
+            background-color: $color-2;
+            color: $color-1;
         }
 
         &.hidden {
