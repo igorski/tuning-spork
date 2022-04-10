@@ -316,6 +316,7 @@ export default {
 
         @include mobile() {
             @include scrollablePanel( 58px ); // 44px (button container) + $spacing-medium
+            overflow-x: hidden;
         }
     }
 

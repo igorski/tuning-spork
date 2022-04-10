@@ -45,7 +45,7 @@
             class="scale-list"
         >
             <div v-if="!enabled" class="explanation">
-                Found a sweet soundin' chord and are you curious what it is called ? Just fret the strings
+                Found a sweet soundin' chord and you're curious what it is called ? Just fret the strings
                 on the fretboard and we'll tell you what you are playing (and what scales go with it).
             </div>
             <li

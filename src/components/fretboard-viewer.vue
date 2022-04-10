@@ -153,13 +153,13 @@ export default {
 
 .fretboard {
     width: 100%;
-    padding: $spacing-medium $spacing-medium 0 0;
+    padding: $spacing-medium $spacing-small 0 0;
     // background-color: $color-5;
     @include boxSize();
     @include noSelect();
 
     @include large() {
-        padding-left: $spacing-medium;
+        padding: $spacing-medium $spacing-medium 0 $spacing-medium;
     }
 
     &-view-options {
