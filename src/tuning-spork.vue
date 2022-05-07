@@ -67,7 +67,7 @@
                         <fretboard-viewer />
                         <div class="tuning-spork__details">
                             <!-- compatible chords list -->
-                            <chord-list v-if="appMode === 0"/>
+                            <chord-list v-if="appMode === 0" />
                             <template v-else>
                                 <div v-if="!chord.length" class="explanation">
                                     <h2>Name my chord!</h2>
@@ -83,7 +83,7 @@
                                         v-for="scale in foundScales"
                                         class="tuning-spork__scale"
                                         :key="scale"
-                                        @click="showScale(foundChordRoot, scale)"
+                                        @click="showScale( foundChordRoot, scale )"
                                     >
                                         {{ foundChordRoot }} {{ scale }}
                                     </div>
@@ -200,15 +200,15 @@ export default {
                 rootFret = null;
 
                 while ( !rootFret && --rootString > 0 ) {
-                    openStringNote = this.tuning.strings[rootString];
-                    rootFret = this.chord[rootString];
+                    openStringNote = this.tuning.strings[ rootString ];
+                    rootFret = this.chord[ rootString ];
                 }
                 rootNoteIndex = this.notes.indexOf( openStringNote);
                 rootNote = this.notes[( rootNoteIndex + rootFret ) % this.notes.length ];
                 rootNoteIndex = this.notes.indexOf( rootNote );
 
                 const filteredChord = this.chord.concat(); // remove slash note
-                filteredChord[bassIndex] = undefined;
+                filteredChord[ bassIndex ] = undefined;
 
                 intervals = this.getIntervals( filteredChord, rootNoteIndex );
                 chord = getChordByIntervals( intervals );
@@ -217,9 +217,10 @@ export default {
                     this.foundChord = `${rootNote} ${chord}/${bassNote}`;
                 }
             }
+
             if ( this.foundChord ) {
                 this.foundChordRoot = rootNote;
-                this.foundScales = getCompatibleScalesForIntervals( intervals, rootNote );
+                this.foundScales = getCompatibleScalesForIntervals( intervals );
             }
         },
         getIntervals( chord, rootNoteIndex ) {

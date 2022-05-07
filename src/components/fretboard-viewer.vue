@@ -32,6 +32,14 @@
                 :start-fret="startFret"
             />
         </div>
+        <div class="fretboard-info">
+        <div
+            v-if="appMode === 0"
+            class="fretboard-scale-info"
+        >
+            <h2 class="fretboard-scale-info__title">{{ scaleName }}</h2>
+            <h3 v-if="scaleAltNames" class="fretboard-scale-info__alt-title">Also known as: <span class="fretboard-scale-info__alt-names">{{ scaleAltNames }}</span></h3>
+        </div>
         <div class="fretboard-view-options">
             <div class="fretboard-view-options__option">
                 <label class="small">View</label>
@@ -62,6 +70,7 @@
             </div>
         </div>
     </div>
+    </div>
 </template>
 
 <script>
@@ -77,6 +86,7 @@ export default {
     },
     computed: {
         ...mapState([
+            "appMode",
             "fretAmount",
             "startFret",
             "tuning",
@@ -84,6 +94,8 @@ export default {
         ]),
         ...mapGetters([
             "isMobile",
+            "scaleName",
+            "scaleAltNames",
         ]),
         availableViewOptions() {
             return [
@@ -160,6 +172,28 @@ export default {
 
     @include large() {
         padding: $spacing-medium $spacing-medium 0 $spacing-medium;
+    }
+
+    &-scale-info {
+        padding: $spacing-small 0;
+
+        &__title {
+            margin: 0;
+            color: $color-2;
+        }
+
+        &__alt-title {
+            margin: 0;
+        }
+
+        &__alt-names {
+            font-style: italic;
+            color: $color-3;
+        }
+
+        @include large() {
+            padding-left: $spacing-large;
+        }
     }
 
     &-view-options {

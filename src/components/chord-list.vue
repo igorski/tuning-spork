@@ -25,7 +25,7 @@
         <chord-overlay
             v-if="selectedChord !== null"
             :chord="selectedChord"
-            @close="setSelectedChord(null)"
+            @close="setSelectedChord( null )"
         />
         <h2>Available chords</h2>
         <fieldset class="chord-types">

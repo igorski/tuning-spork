@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -20,22 +20,30 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Scales from '@/definitions/scales.json';
+import Scales from "@/definitions/scales.json";
 
 export const getCompatibleScalesForIntervals = intervals => {
     const out = [];
-    Object.keys(Scales).forEach(scaleName => {
-        if (intervals.every(interval => Scales[scaleName].indexOf(interval) > -1 )) {
-            out.push(scaleName);
+
+    const sanitizedIntervals = intervals.map( interval => {
+        while ( interval >= 12 ) {
+            interval -= 12;
+        }
+        return interval;
+    });
+
+    Object.keys( Scales ).forEach( scaleName => {
+        if ( sanitizedIntervals.every( interval => Scales[ scaleName ].intervals.includes( interval ))) {
+            out.push( scaleName );
         }
     });
     return out;
 };
 
-export const fretRange = (startFret = 0, visibleFrets = 4) => {
+export const fretRange = ( startFret = 0, visibleFrets = 4 ) => {
     const out = [];
-    for (let i = 0; i <= visibleFrets; ++i) {
-        out[i] = startFret + i;
+    for ( let i = 0; i <= visibleFrets; ++i ) {
+        out[ i ] = startFret + i;
     }
     return out;
 };

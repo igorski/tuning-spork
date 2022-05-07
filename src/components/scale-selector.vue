@@ -49,7 +49,7 @@
                 on the fretboard and we'll tell you what you are playing (and what scales go with it).
             </div>
             <li
-                v-for="{ value, text } in availableScales"
+                v-for="{ value, shortName } in availableScales"
                 :key="value"
                 class="scale-list__entry"
                 :data-value="value"
@@ -59,7 +59,7 @@
                     type="button"
                     class="scale-list__entry-button"
                     @click="selectedScale = value"
-                >{{ text }}</button>
+                >{{ shortName }}</button>
             </li>
         </ul>
     </div>
@@ -69,6 +69,7 @@
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
 import { mapSelectOptions } from "@/utils/select-util";
+import { ucFirst } from '@/utils/string-util';
 
 export default {
     components: {
@@ -97,7 +98,13 @@ export default {
             if ( !this.enabled ) {
                 return [];
             }
-            return mapSelectOptions( Object.keys( this.scales ).sort());
+            return Object.entries( this.scales ).map(([ value, data ]) => {
+                let text = value;
+                if ( Array.isArray( data.names )) {
+                    text = `${value} / ${data.names.join( " / ")}`;
+                }
+                return { text: ucFirst( text ), value, shortName: ucFirst( value ) };
+            }).sort(( a, b ) => a.text > b.text ? 1 : -1 );
         },
         selectedScale: {
             get() {

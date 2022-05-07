@@ -25,6 +25,7 @@ import Vuex from "vuex";
 import Chords from "@/definitions/chords.json";
 import Scales from "@/definitions/scales.json";
 import Tunings from "@/definitions/tunings.json";
+import { ucFirst } from "@/utils/string-util";
 
 // reverse the string order
 const TUNINGS = Tunings.filter(t => ({ ...t, strings: t.strings.reverse() }));
@@ -58,10 +59,10 @@ export default new Vuex.Store({
         appMode: 0,                     // either 0 (scale visualiser) or 1 (name my chord)
         configurationOpened: false,
         scaleSelectorOpened: false,
-        notes: ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"],
+        notes: [ "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" ],
         scales: Scales,
         instrumentType: "guitar",       // "guitar", "bass" or "ukelele"
-        tuning: standardTuningForInstrument("guitar", 6), // start as six string
+        tuning: standardTuningForInstrument( "guitar", 6 ), // start as six string
         key: "E",                       // none more guitar friendly
         scale: Object.keys( Scales ).find( name => name.includes( "major" )),
         viewOption: "frets",            // whether to visualise "frets" or "notes",
@@ -97,13 +98,13 @@ export default new Vuex.Store({
             const notes = [];
             const scale = Scales[ state.scale ];
             const rootNoteIndex = state.notes.indexOf( state.key );
-            scale.forEach( semitone => {
+            scale.intervals.forEach( semitone => {
                 notes.push( state.notes[( rootNoteIndex + semitone ) % state.notes.length ]);
             });
             return notes;
         },
         availableScaleChords( state, getters ) {
-            const scale = Scales[ state.scale ];
+            const { intervals } = Scales[ state.scale ];
             const out = [];
 
             // compare for each available note in the scale
@@ -111,14 +112,14 @@ export default new Vuex.Store({
 
             const scaleNotes = getters.availableScaleNotes;
 
-            for ( let noteIndex = 0; noteIndex < scale.length; ++noteIndex ) {
+            for ( let noteIndex = 0; noteIndex < intervals.length; ++noteIndex ) {
                 const note = scaleNotes[ noteIndex ];
                 Object.keys( Chords ).forEach( chordName => {
                     const semitones = Chords[ chordName ];
 
                     // ignore chords that contain more notes than we can
                     // fret (e.g. when visualizing for ukelele / bass)
-                    if (semitones.length > getters.availableStringAmountsForCurrentInstrument) {
+                    if ( semitones.length > getters.availableStringAmountsForCurrentInstrument ) {
                         return;
                     }
                     const chordNotes = [];
@@ -138,6 +139,16 @@ export default new Vuex.Store({
                 });
             }
             return out;
+        },
+        scaleName( state ) {
+            return `${state.key} ${ucFirst( state.scale )}`;
+        },
+        scaleAltNames( state ) {
+            const scale = Scales[ state.scale ];
+            if ( !Array.isArray( scale.names )) {
+                return null;
+            }
+            return scale.names.map( ucFirst ).join( " / " );
         },
     },
     mutations: {
