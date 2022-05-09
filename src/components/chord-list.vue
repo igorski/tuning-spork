@@ -29,32 +29,32 @@
         />
         <h2>Available chords</h2>
         <fieldset class="chord-types">
-            <div class="ui checkbox chord-type-checkbox">
+            <div class="ui checkbox tuning-spork-checkbox">
                 <input
                     type="checkbox"
                     v-model="powerChords"
                     id="powerChords"
                     name="powerChords"
                 />
-                <label for="powerChords" class="chord-type-label">Power chords</label>
+                <label for="powerChords" class="tuning-spork-label">Power chords</label>
             </div>
-            <div class="ui checkbox chord-type-checkbox">
+            <div class="ui checkbox tuning-spork-checkbox">
                 <input
                     type="checkbox"
                     v-model="basicChords"
                     id="basicChords"
                     name="basicChords"
                 />
-                <label for="basicChords" class="chord-type-label">Basic chords</label>
+                <label for="basicChords" class="tuning-spork-label">Basic chords</label>
             </div>
-            <div class="ui checkbox chord-type-checkbox">
+            <div class="ui checkbox tuning-spork-checkbox">
                 <input
                     type="checkbox"
                     v-model="extendedChords"
                     id="extendedChords"
                     name="extendedChords"
                 />
-                <label for="extendedChords" class="chord-type-label">Extended chords</label>
+                <label for="extendedChords" class="tuning-spork-label">Extended chords</label>
             </div>
         </fieldset>
         <p class="explanation">
@@ -156,15 +156,6 @@ export default {
     border: none;
     padding: 0 0 $spacing-small;
     margin: 0;
-}
-
-.chord-type-checkbox {
-    margin-right: $spacing-medium;
-}
-
-.chord-type-label {
-    cursor: pointer;
-    color: $color-text !important;
 }
 
 .chord-button {

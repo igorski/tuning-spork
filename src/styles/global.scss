@@ -12,6 +12,15 @@
     }
 }
 
+.tuning-spork-checkbox {
+    margin-right: $spacing-medium;
+}
+
+.tuning-spork-label {
+    cursor: pointer !important;
+    color: $color-text !important;
+}
+
 .button {
     @include button();
 }

@@ -21,6 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import Scales from "@/definitions/scales.json";
+import Pitch from "@/utils/pitch-util";
+
+const NOTES_IN_OCTAVE = Pitch.OCTAVE_SCALE.length;
 
 export const getCompatibleScalesForIntervals = intervals => {
     const out = [];
@@ -38,6 +41,43 @@ export const getCompatibleScalesForIntervals = intervals => {
         }
     });
     return out;
+};
+
+export const getCompatibleScalesForNotes = ( notes, optNoteToExclude ) => {
+    const out = {};
+
+    Object.keys( Scales ).forEach( scaleName => {
+        Pitch.OCTAVE_SCALE.forEach( rootNote => {
+            if ( optNoteToExclude === rootNote ) {
+                return;
+            }
+            const scale = intervalsToNotes( Scales[ scaleName ].intervals, rootNote );
+            if ( notes.every( note => scale.includes( note )) ) {
+                if ( !out[ rootNote ]) {
+                    out[ rootNote ] = [];
+                }
+                out[ rootNote ].push( scaleName );
+            }
+        });
+    });
+    return Object.entries( out )
+        .map(([ key, scales ]) => ({ root: key, scales }))
+        .sort(( a, b ) => a.root > b.root ? 1 : - 1 );
+};
+
+export const intervalsToNotes = ( intervals, rootNote = "C" ) => {
+    const rootIndex = Pitch.OCTAVE_SCALE.indexOf( rootNote );
+    return intervals.map( interval => {
+        return Pitch.OCTAVE_SCALE[( rootIndex + interval ) % NOTES_IN_OCTAVE ]
+    });
+};
+
+export const notesToIntervals = notes => {
+    const rootIndex = Pitch.OCTAVE_SCALE.indexOf( notes[ 0 ]);
+    return notes.map( note => {
+        const noteIndex = Pitch.OCTAVE_SCALE.indexOf( note );
+        return ( noteIndex < rootIndex ? noteIndex + NOTES_IN_OCTAVE : noteIndex ) - rootIndex;
+    });
 };
 
 export const fretRange = ( startFret = 0, visibleFrets = 4 ) => {
