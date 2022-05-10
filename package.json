@@ -31,8 +31,8 @@
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "jest": "^27.1.0",
-    "node-sass": "^4.12.0",
-    "sass-loader": "^8.0.2",
+    "sass": "^1.51.0",
+    "sass-loader": "^12.6.0",
     "vue-jest": "^3.0.7",
     "vue-search-select": "^2.9.3",
     "vue-template-compiler": "^2.6.14"

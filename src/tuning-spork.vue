@@ -68,6 +68,7 @@
                         <div class="tuning-spork__details">
                             <!-- compatible chords list -->
                             <chord-list v-if="appMode === 0" />
+                            <!-- "name my chord" mode -->
                             <name-my-chord v-else />
                         </div>
                     </div>
