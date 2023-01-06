@@ -33,7 +33,7 @@
     "jest": "^27.1.0",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
-    "vue-jest": "^3.0.7",
+    "vue-jest": "^4.0.1",
     "vue-search-select": "^2.9.3",
     "vue-template-compiler": "^2.6.14"
   }
