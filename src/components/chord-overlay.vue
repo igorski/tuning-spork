@@ -51,7 +51,7 @@
 import { mapState } from "vuex";
 import { isPowerChord } from "@/utils/chord-util";
 import { fretRange } from "@/utils/interval-util";
-import ChordShape from "./chord-shape";
+import ChordShape from "./chord-shape.vue";
 
 // the frets from which we will start calculating our chords (0 = open chord)
 const STARTING_FRETS = [ 0, 2, 4, 6, 8, 10 ];

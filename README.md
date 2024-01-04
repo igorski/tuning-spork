@@ -8,23 +8,19 @@ by allowing you to draw a chord for any given tuning.
 
 The project was created using [Vue](https://vuejs.org) with the following tools/plugins:
 
-* Webpack
-* Babel transpiler
+* Vite
 * Vuex
-* PWA support
 * ESLint
-* Jest unit testing
+* Vitest unit testing
 
 ## Development
-
-Configuration boilerplate generated with [Vue-CLI 3](https://cli.vuejs.org/config/). Resolve dependencies using _npm install_.
 
 ### Commands
 
 Launches a local web server (available at _localhost:8080_) serving the application with live compilation and hot reload for development:
 
 ```
-npm run serve
+npm run dev
 ```
 
 Compile and minify application for production deployment (output wil be written to _./dist/_-folder):

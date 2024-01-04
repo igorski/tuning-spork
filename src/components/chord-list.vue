@@ -78,7 +78,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { isPowerChord } from "@/utils/chord-util";
-import ChordOverlay from "./chord-overlay";
+import ChordOverlay from "./chord-overlay.vue";
 
 import "semantic-ui-css/components/checkbox.min.css";
 

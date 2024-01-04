@@ -83,7 +83,7 @@ import { mapSelectOptions } from "@/utils/select-util";
 export default {
     components: {
         ModelSelect,
-        TunerWindow: () => import( "@/components/tuner-window" ),
+        TunerWindow: () => import( "@/components/tuner-window.vue" ),
     },
     data: () => ({
         tunerOpened: false,

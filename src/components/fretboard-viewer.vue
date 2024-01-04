@@ -77,7 +77,7 @@
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
 import { mapSelectOptions } from "@/utils/select-util";
-import StringViewer from "./string-viewer";
+import StringViewer from "./string-viewer.vue";
 
 export default {
     components: {

@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { intervalsToNotes, notesToIntervals } from "@/utils/interval-util";
 
 describe( "Interval utility", () => {

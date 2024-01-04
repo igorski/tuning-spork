@@ -83,12 +83,12 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import ApplicationMenu from "@/components/application-menu";
-import ChordList from "@/components/chord-list";
-import FretboardViewer from "@/components/fretboard-viewer";
-import InstrumentSelector from "@/components/instrument-selector";
-import NameMyChord from "@/components/name-my-chord";
-import ScaleSelector from "@/components/scale-selector";
+import ApplicationMenu from "@/components/application-menu.vue";
+import ChordList from "@/components/chord-list.vue";
+import FretboardViewer from "@/components/fretboard-viewer.vue";
+import InstrumentSelector from "@/components/instrument-selector.vue";
+import NameMyChord from "@/components/name-my-chord.vue";
+import ScaleSelector from "@/components/scale-selector.vue";
 import store from "@/store";
 
 import "semantic-ui-css/components/dropdown.min.css"
