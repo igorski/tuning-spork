@@ -45,5 +45,15 @@
   { "type": "ukelele", "name": "Standard",       "strings": [ "G", "C", "E", "A" ] },
   { "type": "ukelele", "name": "Guitar",         "strings": [ "D", "G", "B", "E" ] },
   { "type": "ukelele", "name": "D tuning",       "strings": [ "A", "D", "F#", "B" ] },
-  { "type": "ukelele", "name": "Slack-Key",      "strings": [ "G", "C", "E", "G" ] }
+  { "type": "ukelele", "name": "Slack-Key",      "strings": [ "G", "C", "E", "G" ] },
+
+  { "type": "mandolin", "name": "Standard",                 "strings": [ "G", "D", "A", "E" ] },
+  { "type": "mandolin", "name": "Cajun",                    "strings": [ "F", "C", "G", "D" ] },
+  { "type": "mandolin", "name": "Open A",                   "strings": [ "A", "E", "A", "C#" ] },
+  { "type": "mandolin", "name": "Open D",                   "strings": [ "D", "D", "A", "D" ] },
+  { "type": "mandolin", "name": "Open G",                   "strings": [ "G", "D", "G", "B" ] },
+  { "type": "mandolin", "name": "Sawmill / Cross G",        "strings": [ "G", "D", "G", "D" ] },
+  { "type": "mandolin", "name": "Gee-Dad",                  "strings": [ "G", "D", "A", "D" ] },
+  { "type": "mandolin", "name": "High Bass / Old Timey D",  "strings": [ "A", "D", "A", "E" ] },
+  { "type": "mandolin", "name": "Cross",                    "strings": [ "A", "E", "A", "E" ] }
 ]

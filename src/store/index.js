@@ -42,6 +42,8 @@ const getTunings = state => {
             return TUNINGS.filter( t => t.type === "bass" );
         case "ukelele":
             return TUNINGS.filter( t => t.type === "ukelele" );
+        case "mandolin":
+            return TUNINGS.filter( t => t.type === "mandolin" );
     }
 };
 

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2024 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -102,7 +102,7 @@ export default {
             return `${this.selectedStringAmount} string ${this.selectedInstrumentType} in ${this.selectedTuning} tuning`;
         },
         availableInstruments() {
-            return mapSelectOptions([ "guitar", "bass", "ukelele" ]);
+            return mapSelectOptions([ "guitar", "bass", "ukelele", "mandolin" ]);
         },
         availableStringAmounts() {
             return mapSelectOptions( this.availableStringAmountsForCurrentInstrument );
