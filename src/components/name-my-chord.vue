@@ -95,8 +95,12 @@ export default {
         ]),
     },
     watch: {
-        chord() { this.calculateChord() },
-        tuning() { this.calculateChord() },
+        chord() {
+            this.calculateChord();
+        },
+        tuning() {
+            this.calculateChord();
+        },
     },
     created() {
         this.calculateChord();
@@ -108,6 +112,7 @@ export default {
             "setScale",
         ]),
         calculateChord() {
+            console.info('calculagte chord at appmode', this.appMode)
             // chord fingering changed, try to retrieve whether the chord fingering represents a known chord
             if ( this.appMode !== 1 ) {
                 return;

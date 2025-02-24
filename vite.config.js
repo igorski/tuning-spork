@@ -1,11 +1,11 @@
 import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import path from "path";
 
 const dirSrc    = `./src`;
-const dirPublic = `${dirSrc}/public`;
-const dirAssets = `${dirSrc}/img`;
+const dirPublic = `./public`;
+const dirAssets = `${dirPublic}/img`;
 const dest      = `${__dirname}/dist`;
 
 // https://vitejs.dev/config/

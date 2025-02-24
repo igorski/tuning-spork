@@ -20,8 +20,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Vue from "vue";
 import FloatingVue, { vTooltip } from "floating-vue";
+import * as Vue from "vue";
+import { createStore } from "vuex";
 import TuningSpork from "./tuning-spork.vue";
 import store from "./store";
 

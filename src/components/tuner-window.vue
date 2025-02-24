@@ -94,8 +94,8 @@ export default {
             // once we have permission, we immediately request the available audio inputs
             const devices = await navigator.mediaDevices.enumerateDevices();
             this.inputs = devices.filter(({ kind }) => kind === "audioinput" );
-        } catch {
-            this.handleError();
+        } catch ( error ) {
+            this.handleError( error );
         }
     },
     beforeUnmount() {
@@ -141,7 +141,10 @@ export default {
                 this.pointer.class = pitch.cents <= THRESHOLD && pitch.cents >= -THRESHOLD ? "tuned" : "off";
             }
             this.raf = window.requestAnimationFrame( this.updateFn );
-        }
+        },
+        handleError( error ) {
+            console.error( error );
+        },
     },
 };
 </script>

@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
 import { initAudioContext } from "@/utils/audio-util";
@@ -83,7 +84,9 @@ import { mapSelectOptions } from "@/utils/select-util";
 export default {
     components: {
         ModelSelect,
-        TunerWindow: () => import( "@/components/tuner-window.vue" ),
+        TunerWindow: defineAsyncComponent({
+            loader: () => import( "@/components/tuner-window.vue" ),
+        }),
     },
     data: () => ({
         tunerOpened: false,
