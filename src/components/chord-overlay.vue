@@ -59,6 +59,7 @@ const STARTING_FRETS = [ 0, 2, 4, 6, 8, 10 ];
 const OCTAVE = 12;
 
 export default {
+    emits: [ "close" ],
     components: {
         ChordShape
     },

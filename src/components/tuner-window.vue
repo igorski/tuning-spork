@@ -66,6 +66,7 @@ import { detectPitch, getPitchByFrequency } from "@/utils/pitch-util";
 const THRESHOLD = 5; // threshold in cents a note can be sharp/flat but considered "in tune"
 
 export default {
+    emits: [ "close" ],
     components: {
         ModelSelect
     },
@@ -97,7 +98,7 @@ export default {
             this.handleError();
         }
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.unlisten();
     },
     methods: {
