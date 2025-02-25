@@ -3,6 +3,10 @@
 @use "@/styles/_typography";
 @use "@/styles/layout";
 
+#app {
+    display: initial;
+}
+
 .ui.search.selection.dropdown {
     &.search-only {
         .icon.dropdown {

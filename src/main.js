@@ -32,4 +32,4 @@ import "floating-vue/dist/style.css"; // required for tooltips
 const app = Vue.createApp( TuningSpork );
 app.use( createStore( store ));
 app.directive( "tooltip", vTooltip );
-app.mount( document.body );
+app.mount( "#app" );
