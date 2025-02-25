@@ -45,13 +45,8 @@
                             :enabled="appMode === 0"
                             class="tuning-spork__aside"
                             :class="{ expanded: scaleSelectorOpened }"
-                        >
-                            <button
-                                type="button"
-                                class="close-button secondary"
-                                @click="setScaleSelectorOpened( false )"
-                            >&#x2715;</button>
-                        </scale-selector>
+                            @close="setScaleSelectorOpened( false )"
+                        />
                     </div>
                     <div class="tuning-spork__content">
                         <!-- instrument configuration -->
@@ -131,38 +126,38 @@ export default {
 
 <style lang="scss">
 /* global styles */
-@import "@/styles/global";
+@use "@/styles/global";
 </style>
 
 <style lang="scss" scoped>
 /* scoped styles */
-@import "@/styles/_variables";
-@import "@/styles/_mixins";
-@import "@/styles/_typography";
+@use "@/styles/_variables";
+@use "@/styles/_mixins";
+@use "@/styles/_typography";
 
 .tuning-spork {
     &__app {
-        @include boxSize();
-        padding-top: #{$menu-height};
+        @include mixins.boxSize();
+        padding-top: #{variables.$menu-height};
         width: 100%;
-        height: calc(100% - #{$footer-height});
+        height: calc(100% - #{variables.$footer-height});
 
-        @include ideal() {
-            padding-top: #{$menu-height + $app-ideal-top-margin};
+        @include mixins.ideal() {
+            padding-top: #{variables.$menu-height + variables.$app-ideal-top-margin};
         }
     }
 
     &__configuration-buttons {
         display: flex;
-        margin: 0 $spacing-large $spacing-medium;
+        margin: 0 variables.$spacing-large variables.$spacing-medium;
 
-        @include large() {
+        @include mixins.large() {
             display: none;
         }
     }
 
     &__wrapper {
-        // max-width: $app-width;
+        // max-width: variables.$app-width;
         height: 100%;
         margin: 0 auto;
     }
@@ -170,14 +165,14 @@ export default {
     &__container {
         flex: 1;
 
-        @include large() {
+        @include mixins.large() {
             display: flex;
             justify-content: center;
             margin: 0 auto;
         }
 
-        @include mobile() {
-            padding: 0 $spacing-medium 0;
+        @include mixins.mobile() {
+            padding: 0 variables.$spacing-medium 0;
         }
     }
 
@@ -187,12 +182,15 @@ export default {
     }
 
     &__content {
-        @include scrollablePanel();
-        max-width: $app-width;
+        @include mixins.scrollablePanel();
 
-        @include mobile() {
-            @include scrollablePanel( 58px ); // 44px (button container) + $spacing-medium
-            overflow-x: hidden;
+        & {
+            max-width: variables.$app-width;
+
+            @include mixins.mobile() {
+                @include mixins.scrollablePanel( 58px ); // 44px (button container) + variables.$spacing-medium
+                overflow-x: hidden;
+            }
         }
     }
 
@@ -200,33 +198,33 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: $footer-height;
+        height: variables.$footer-height;
         width: 100%;
 
-        @include mobile() {
+        @include mixins.mobile() {
             display: none;
         }
     }
 
     &__configuration {
-        @include hiddenOnMobile();
+        @include mixins.hiddenOnMobile();
 
         &-toggle {
             display: none; // mobile view only
         }
 
-        @include mobile() {
+        @include mixins.mobile() {
             &-toggle {
-                @include button();
+                @include mixins.button();
                 display: inline-block;
-                margin: $spacing-medium auto 0;
+                margin: variables.$spacing-medium auto 0;
             }
         }
     }
 
     &__details {
-        @include large() {
-            padding-left: $spacing-large;
+        @include mixins.large() {
+            padding-left: variables.$spacing-large;
         }
     }
 }

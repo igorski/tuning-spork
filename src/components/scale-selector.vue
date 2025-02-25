@@ -22,7 +22,11 @@
  */
 <template>
     <div class="scale-selector">
-        <slot name="default"></slot>
+        <button
+            type="button"
+            class="close-button secondary"
+            @click="handleClose()"
+        >&#x2715;</button>
         <div class="scale-selector__option scale-selector__key-select">
             <label>Key / <span class="root-note">root note</span></label>
             <model-select
@@ -38,7 +42,7 @@
             :is-disabled="!enabled"
             class="scale-selector__select search-only"
             placeholder="Find scale by name"
-            @input="handleScaleSearch( $event )"
+            @update:modelValue="handleScaleSearch( $event )"
         />
         <ul
             ref="scaleList"
@@ -72,6 +76,7 @@ import { mapSelectOptions } from "@/utils/select-util";
 import { ucFirst } from '@/utils/string-util';
 
 export default {
+    emits: [ "close" ],
     components: {
         ModelSelect,
     },
@@ -145,6 +150,9 @@ export default {
             "setScale",
             "setScaleSelectorOpened",
         ]),
+        handleClose() {
+            this.$emit( "close" );
+        },
         handleScaleSearch( scale ) {
             this.selectedScale = scale;
             this.scrollToSelection();
@@ -165,80 +173,87 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/_mixins";
-@import "@/styles/ui";
+@use "@/styles/_mixins";
+@use "@/styles/_variables";
+@use "@/styles/ui";
 
 .scale-selector {
-    background-color: $color-5;
-    padding: $spacing-large;
+    @include mixins.boxSize();
+    @include mixins.noSelect();
+    background-color: variables.$color-5;
+    padding: variables.$spacing-large;
     text-align: left;
-    @include boxSize();
-    @include noSelect();
-
-    @include large() {
-        min-width: $scale-selector-width;
-        max-width: $scale-selector-width;
+ 
+    @include mixins.large() {
+        min-width: variables.$scale-selector-width;
+        max-width: variables.$scale-selector-width;
     }
 
-    @include mobile() {
+    @include mixins.mobile() {
         &__key-select {
             display: initial !important;
         }
     }
 
-    @include hiddenOnMobile();
+    @include mixins.hiddenOnMobile();
 
     &__option {
-        @include formField();
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
+        @include ui.formField();
+
+        & {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
     }
 
     &__select {
-        @include selectField();
+        @include ui.selectField();
 
         &.search-only {
-            margin: $spacing-small 0;
+            margin: variables.$spacing-small 0;
         }
     }
 
     .root-note {
-        color: $color-2;
+        color: variables.$color-2;
     }
 }
 
 .scale-list {
-    @include scrollablePanel( 118px );
-    list-style-type: none;
-    margin: $spacing-medium 0;
-    padding: 0;
+    @include mixins.scrollablePanel( 118px );
 
-    &__entry {
-        border-bottom: 1px solid $color-5;
+    & {
+        list-style-type: none;
+        margin: variables.$spacing-medium 0;
+        padding: 0;
 
-        &-button {
-            width: 100%;
-            height: 100%;
-            font-size: 0.9em;
-            text-align: left;
-            padding: $spacing-small;
-            background: none;
-            border: none;
-            color: $color-text;
-            cursor: pointer;
+        &__entry {
+            border-bottom: 1px solid variables.$color-5;
 
-            &:hover {
-                color: $color-3;
-                text-indent: $spacing-xsmall;
+            &-button {
+                width: 100%;
+                height: 100%;
+                font-size: 0.9em;
+                text-align: left;
+                padding: variables.$spacing-small;
+                background: none;
+                border: none;
+                color: variables.$color-text;
+                cursor: pointer;
+
+                &:hover {
+                    color: variables.$color-3;
+                    text-indent: variables.$spacing-xsmall;
+                }
             }
-        }
 
-        &.selected {
-            // background-color: $color-3;
+            &.selected {
+                // background-color: variables.$color-3;
 
-            .scale-list__entry-button {
-                color: $color-2;
+                .scale-list__entry-button {
+                    color: variables.$color-2;
+                }
             }
         }
     }

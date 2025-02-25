@@ -160,26 +160,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/_mixins";
-@import "@/styles/ui";
+@use "@/styles/_mixins";
+@use "@/styles/_variables";
+@use "@/styles/ui";
 
 .fretboard {
     width: 100%;
-    padding: $spacing-medium $spacing-small 0 0;
-    // background-color: $color-5;
-    @include boxSize();
-    @include noSelect();
+    padding: variables.$spacing-medium variables.$spacing-small 0 0;
+    // background-color: variables.$color-5;
+    @include mixins.boxSize();
+    @include mixins.noSelect();
 
-    @include large() {
-        padding: $spacing-medium $spacing-medium 0 $spacing-medium;
+    @include mixins.large() {
+        padding: variables.$spacing-medium variables.$spacing-medium 0 variables.$spacing-medium;
     }
 
     &-scale-info {
-        padding: $spacing-small 0;
+        padding: variables.$spacing-small 0;
 
         &__title {
             margin: 0;
-            color: $color-2;
+            color: variables.$color-2;
         }
 
         &__alt-title {
@@ -188,24 +189,24 @@ export default {
 
         &__alt-names {
             font-style: italic;
-            color: $color-3;
+            color: variables.$color-3;
         }
 
-        @include large() {
-            padding-left: $spacing-large;
+        @include mixins.large() {
+            padding-left: variables.$spacing-large;
         }
     }
 
     &-view-options {
-        margin-top: $spacing-medium;
+        margin-top: variables.$spacing-medium;
 
         &__option {
             display: inline;
-            margin-right: $spacing-medium;
+            margin-right: variables.$spacing-medium;
             max-width: 240px;
 
             label {
-                margin-right: $spacing-medium;
+                margin-right: variables.$spacing-medium;
             }
 
             .small {
@@ -217,12 +218,12 @@ export default {
             }
 
             &-select {
-                @include selectField();
+                @include ui.selectField();
             }
         }
 
-        @include large() {
-            padding-left: $spacing-large;
+        @include mixins.large() {
+            padding-left: variables.$spacing-large;
         }
     }
 }

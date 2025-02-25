@@ -175,7 +175,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/layout";
+@use "@/styles/_mixins";
+@use "@/styles/_typography";
+@use "@/styles/_variables";
+@use "@/styles/layout";
+
+@use "sass:math";
+
 $size: 40px;
 
 .string {
@@ -190,10 +196,10 @@ $size: 40px;
     }
 
     &__note-name {
-        @include bodyFont();
-        color: $color-text;
+        @include typography.bodyFont();
+        color: variables.$color-text;
         font-weight: bold;
-        width: $spacing-large;
+        width: variables.$spacing-large;
     }
 
     &__wire {
@@ -201,14 +207,14 @@ $size: 40px;
         min-height: 1px;
         margin-top: 10px;
         width: 100%;
-        background-color: $color-strings;
+        background-color: variables.$color-strings;
     }
 
     &__fret {
         position: absolute;
         width: 2px;
         height: $size;
-        top: -($size / 2);
+        top: -(math.div($size, 2));
         background-color: grey;
 
         &-nut {
@@ -218,7 +224,7 @@ $size: 40px;
     }
 
     &__note {
-        $iconSize: $size / 2;
+        $iconSize: math.div($size, 2);
         position: absolute;
         top: -15px;
         height: $iconSize;
@@ -231,18 +237,18 @@ $size: 40px;
             position: absolute;
             width: $iconSize;
             left: 50%;
-            margin-left: -( $iconSize / 2 );
-            background-color: $color-3;
+            margin-left: -(math.div( $iconSize, 2 ));
+            background-color: variables.$color-3;
             border-radius: 50%;
             padding: 5px;
             font-weight: bold;
-            color: $color-5;
+            color: variables.$color-5;
             text-align: center;
         }
 
         &.root .string__note-icon {
-            background-color: $color-2;
-            color: $color-1;
+            background-color: variables.$color-2;
+            color: variables.$color-1;
         }
 
         &.hidden {
@@ -252,7 +258,7 @@ $size: 40px;
 
     /* mobile view */
 
-    @include mobile() {
+    @include mixins.mobile() {
         // (for now) these takes up too much space
         &__tuning,
         &__note-name {
@@ -260,7 +266,7 @@ $size: 40px;
         }
     }
 
-    @include large() {
+    @include mixins.large() {
         &__fret-first {
             display: none;
         }

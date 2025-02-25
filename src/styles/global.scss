@@ -1,4 +1,7 @@
-@import "@/styles/layout";
+@use "@/styles/_mixins";
+@use "@/styles/_variables";
+@use "@/styles/_typography";
+@use "@/styles/layout";
 
 .ui.search.selection.dropdown {
     &.search-only {
@@ -13,29 +16,29 @@
 }
 
 .tuning-spork-checkbox {
-    margin-right: $spacing-medium;
+    margin-right: variables.$spacing-medium;
 }
 
 .tuning-spork-label {
     cursor: pointer !important;
-    color: $color-text !important;
+    color: variables.$color-text !important;
 }
 
 .button {
-    @include button();
+    @include mixins.button();
 }
 
 .explanation {
-    @include ideal() {
+    @include mixins.ideal() {
         max-width: 600px;
-        margin: $spacing-medium 0 $spacing-large;
+        margin: variables.$spacing-medium 0 variables.$spacing-large;
     }
 }
 
 
 .tooltip {
   display: block !important;
-  @include bodyFont();
+  @include typography.bodyFont();
   z-index: 10000;
 
   .tooltip-inner {

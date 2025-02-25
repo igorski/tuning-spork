@@ -149,16 +149,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/_mixins";
-@import "@/styles/_variables";
+@use "@/styles/_mixins";
+@use "@/styles/_variables";
 
 .chord-types {
     border: none;
-    padding: 0 0 $spacing-small;
+    padding: 0 0 variables.$spacing-small;
     margin: 0;
 }
 
 .chord-button {
-    @include button();
+    @include mixins.button();
 }
 </style>

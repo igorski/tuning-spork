@@ -83,40 +83,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/layout";
+@use "@/styles/_typography";
+@use "@/styles/_mixins";
+@use "@/styles/_variables";
+@use "@/styles/layout";
 
 .header {
     width: 100%;
-    height: $menu-height;
+    height: variables.$menu-height;
     position: fixed;
-    background-color: $color-5;
+    background-color: variables.$color-5;
     top: 0;
     left: 0;
-    z-index: $z-index-header;
+    z-index: variables.$z-index-header;
 
-    @include ideal() {
-        border-top-left-radius: $spacing-medium;
-        border-top-right-radius: $spacing-medium;
-        width: $ideal-width;
-        left: calc(50% - #{$ideal-width / 2});
-        top: $app-ideal-top-margin;
+    @include mixins.ideal() {
+        border-top-left-radius: variables.$spacing-medium;
+        border-top-right-radius: variables.$spacing-medium;
+        width: variables.$ideal-width;
+        left: calc(50% - #{variables.$ideal-width / 2});
+        top: variables.$app-ideal-top-margin;
     }
 
     &__title {
         display: inline;
         color: #FFF;
-        margin: 0 #{(($spacing-xlarge) * 2) + $spacing-large} 0 $spacing-medium;
+        margin: 0 #{((variables.$spacing-xlarge) * 2) + variables.$spacing-large} 0 variables.$spacing-medium;
 
-        @include mobile() {
+        @include mixins.mobile() {
             display: none;
         }
     }
 
     &__menu {
-        height: $menu-height;
+        height: variables.$menu-height;
 
-        @include ideal() {
-            max-width: $ideal-width;
+        @include mixins.ideal() {
+            max-width: variables.$ideal-width;
             margin: 0 auto;
         }
 
@@ -126,24 +129,24 @@ export default {
             cursor: pointer;
             top: 0;
             left: 0;
-            width: $toggle-width;
-            height: $menu-height;
-            background-color: $color-3;
-            color: $color-1;
+            width: variables.$toggle-width;
+            height: variables.$menu-height;
+            background-color: variables.$color-3;
+            color: variables.$color-1;
 
             span {
                 position: absolute;
-                font-size: $spacing-large;
+                font-size: variables.$spacing-large;
                 top: 50%;
                 left: 50%;
-                margin-top: -($spacing-medium * 1.5);
-                margin-left: -$spacing-medium;
+                margin-top: -(variables.$spacing-medium * 1.5);
+                margin-left: -(variables.$spacing-medium);
             }
         }
 
         &-list {
-            @include large() {
-                padding-left: $spacing-medium;
+            @include mixins.large() {
+                padding-left: variables.$spacing-medium;
                 height: inherit;
 
                 h1, button {
@@ -152,16 +155,16 @@ export default {
                 }
             }
 
-            @include mobile() {
+            @include mixins.mobile() {
                 position: absolute;
-                top: $menu-height;
+                top: variables.$menu-height;
                 display: none;
             }
         }
 
-        @include mobile() {
+        @include mixins.mobile() {
             position: fixed;
-            z-index: $z-index-menu;
+            z-index: variables.$z-index-menu;
             overflow: hidden;
             width: 100%;
             top: 0;
@@ -173,7 +176,7 @@ export default {
         }
     }
 
-    @include mobile() {
+    @include mixins.mobile() {
         &.expanded {
             height: 100%;
 
@@ -191,11 +194,11 @@ export default {
                     button {
                         width: 100%;
                         border: none;
-                        border-bottom: 1px solid $color-1;
+                        border-bottom: 1px solid variables.$color-1;
                         background-color: transparent;
-                        padding: $spacing-large;
+                        padding: variables.$spacing-large;
                         font-size: .85em;
-                        @include boxSize();
+                        @include mixins.boxSize();
                     }
                 }
             }
@@ -204,7 +207,7 @@ export default {
 }
 
 .menu-button {
-    @include bodyFont();
+    @include typography.bodyFont();
     display: inline;
     cursor: pointer;
     border: none;
@@ -212,10 +215,10 @@ export default {
     font-weight: bold;
     color: #FFF;
     font-size: 100%;
-    margin-right: $spacing-medium;
+    margin-right: variables.$spacing-medium;
 
     &--active {
-        color: $color-2;
+        color: variables.$color-2;
     }
 }
 </style>
