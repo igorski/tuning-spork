@@ -23,6 +23,9 @@ export default defineConfig({
             }]
         }),
     ],
+    build: {
+        cssCodeSplit: false, // inline CSS into JS chunk
+    },
     resolve: {
         alias: {
             "@": path.resolve( __dirname, "./src" ),
