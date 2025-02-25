@@ -83,10 +83,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/_variables";
-@import "@/styles/_mixins";
+@use "@/styles/_variables";
+@use "@/styles/_mixins";
 
-$fretMargin: $spacing-small;
+$fretMargin: variables.$spacing-small;
 
 .chord-wrapper {
     display: inline-block;
@@ -94,7 +94,7 @@ $fretMargin: $spacing-small;
     height: 80px;
     vertical-align: top;
     text-align: center;
-    padding-bottom: $spacing-medium;
+    padding-bottom: variables.$spacing-medium;
 }
 
 .fretboard {
@@ -102,15 +102,15 @@ $fretMargin: $spacing-small;
     display: block;
     border-right: 1px solid grey;
     height: 120px;
-    border-radius: $spacing-medium;
-    background-color: $color-5;
-    @include boxSize();
-    @include noSelect();
+    border-radius: variables.$spacing-medium;
+    background-color: variables.$color-5;
+    @include mixins.boxSize();
+    @include mixins.noSelect();
 }
 
 .string {
     position: absolute;
-    color: $color-text;
+    color: variables.$color-text;
     font-weight: bold;
     width: 10px;
     height: 100%;
@@ -124,7 +124,7 @@ $fretMargin: $spacing-small;
 
 .note-name {
     position: absolute;
-    top: -$spacing-large;
+    top: -(variables.$spacing-large);
     font-weight: bold;
     font-size: 80%;
 }

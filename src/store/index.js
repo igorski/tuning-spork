@@ -20,8 +20,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Vue from "vue";
-import Vuex from "vuex";
 import Chords from "@/definitions/chords.json";
 import Scales from "@/definitions/scales.json";
 import Tunings from "@/definitions/tunings.json";
@@ -29,8 +27,6 @@ import { ucFirst } from "@/utils/string-util";
 
 // reverse the string order
 const TUNINGS = Tunings.filter(t => ({ ...t, strings: t.strings.reverse() }));
-
-Vue.use( Vuex );
 
 /* internal methods */
 
@@ -56,7 +52,7 @@ const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
     }));
 };
 
-export default new Vuex.Store({
+export default {
     state: {
         appMode: 0,                     // either 0 (scale visualiser) or 1 (name my chord)
         configurationOpened: false,
@@ -82,7 +78,9 @@ export default new Vuex.Store({
         },
     },
     getters: {
-        isMobile: state => state.windowSize.width <= 685, // see _variables.scss
+        isMobile( state ) {
+            return state.windowSize.width <= 685; // see _variables.scss
+        },
         availableStringAmountsForCurrentInstrument( state ) {
             return getTunings( state ).reduce(( acc, tuning ) => {
                 if ( !acc.includes( tuning.strings.length )) {
@@ -161,7 +159,7 @@ export default new Vuex.Store({
             if ( state.instrumentType !== type ) {
                 state.instrumentType = type;
                 state.tuning = standardTuningForInstrument( type );
-                state.chord = [];
+                state.chord.length = 0;
             }
         },
         setKey( state, key ) {
@@ -171,7 +169,7 @@ export default new Vuex.Store({
             state.scale = scale;
         },
         tuneString( state, { index, note }) {
-            Vue.set( state.tuning.strings, index, note );
+            state.tuning.strings[ index ] = note;
         },
         setTuning( state, tuning ) {
             state.tuning = cloneTuning( tuning );
@@ -188,8 +186,11 @@ export default new Vuex.Store({
         setStartFret( state, fret ) {
             state.startFret = fret;
         },
-        setChordStringFretIndex(state, { index, value }) {
-            Vue.set( state.chord, index, value );
+        setChordStringFretIndex( state, { index, value }) {
+            const chord = [ ...state.chord ];
+            chord[ index ] = value;
+
+            state.chord = chord;
         },
         setChordOption( state, { option, value }) {
             if ( /power|basic|extended/.test( option )) {
@@ -209,7 +210,7 @@ export default new Vuex.Store({
     actions: {
 
     }
-});
+};
 
 /**
  * clone tuning prior to setting it, this allows us to

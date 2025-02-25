@@ -95,8 +95,12 @@ export default {
         ]),
     },
     watch: {
-        chord() { this.calculateChord() },
-        tuning() { this.calculateChord() },
+        chord() {
+            this.calculateChord();
+        },
+        tuning() {
+            this.calculateChord();
+        },
     },
     created() {
         this.calculateChord();
@@ -205,20 +209,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/_variables";
-@import "@/styles/_mixins";
+@use "@/styles/_variables";
+@use "@/styles/_mixins";
 
 .name-my-chord {
     &__scale-button {
-        @include button();
+        @include mixins.button();
     }
 
     &__scale-divider {
-        margin-bottom: $spacing-medium;
+        margin-bottom: variables.$spacing-medium;
     }
 
     &__checkbox {
-        margin-top: $spacing-medium;
+        margin-top: variables.$spacing-medium;
     }
 }
 </style>

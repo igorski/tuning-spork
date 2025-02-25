@@ -1,27 +1,27 @@
 /* mixins */
 
-@import "_typography";
-@import "_variables";
+@use "_typography";
+@use "_variables";
 
 /* 1. responsive breakoff points */
 
 // phones
 @mixin mobile {
-    @media (max-width: #{$app-width}) {
+    @media (max-width: #{variables.$app-width}) {
         @content;
     }
 }
 
 // anything above phone resolution (e.g. tablet/laptop/desktop)
 @mixin large {
-    @media (min-width: #{$app-width}) {
+    @media (min-width: #{variables.$app-width}) {
         @content;
     }
 }
 
 // anything that matches the ideal app width
 @mixin ideal {
-    @media (min-width: #{$ideal-width}) {
+    @media (min-width: #{variables.$ideal-width}) {
         @content;
     }
 }
@@ -75,41 +75,41 @@
     cursor: pointer;
     display: inline-block;
     border: none;
-    border-radius: $spacing-small;
-    padding: $spacing-small $spacing-medium;
-    background-color: $color-2;
-    color: $color-1;
+    border-radius: variables.$spacing-small;
+    padding: variables.$spacing-small variables.$spacing-medium;
+    background-color: variables.$color-2;
+    color: variables.$color-1;
     font-size: 90%;
     font-weight: bold;
-    margin: 0 $spacing-small $spacing-small 0;
+    margin: 0 variables.$spacing-small variables.$spacing-small 0;
     @include noSelect();
 
     &:hover {
-        background-color: $color-3;
-        color: $color-1;
+        background-color: variables.$color-3;
+        color: variables.$color-1;
     }
 }
 
 @mixin roundButton() {
     @include button();
-    border: 2px solid $color-1;
+    border: 2px solid variables.$color-1;
 
     &:hover {
-        background-color: $color-1;
-        color: $color-2;
+        background-color: variables.$color-1;
+        color: variables.$color-2;
     }
 }
 
 @mixin overlay( $width, $height ) {
     position: fixed;
-    z-index: $z-index-overlay;
+    z-index: variables.$z-index-overlay;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: $color-5;
-    color: $color-text;
-    padding: $spacing-medium;
+    background-color: variables.$color-5;
+    color: variables.$color-text;
+    padding: variables.$spacing-medium;
     @include boxSize();
 
     @media screen and (min-width: $width) and (min-height: $height) {
@@ -118,9 +118,9 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        border-radius: $spacing-medium;
+        border-radius: variables.$spacing-medium;
         border: 2px solid #000;
-        padding: $spacing-medium;
+        padding: variables.$spacing-medium;
     }
 
     .close-button {
@@ -128,28 +128,28 @@
     }
 
     .content {
-        padding-top: $spacing-large + $spacing-medium;
+        padding-top: variables.$spacing-large + variables.$spacing-medium;
     }
 }
 
 @mixin closeButton() {
     cursor: pointer;
     position: absolute;
-    top: $spacing-medium;
-    right: $spacing-medium;
+    top: variables.$spacing-medium;
+    right: variables.$spacing-medium;
     border: none;
     background: none;
-    color: $color-2;
+    color: variables.$color-2;
 }
 
 @mixin scrollablePanel( $additionalPadding: 0 ) {
-    $padding: #{$menu-height + $footer-height + $additionalPadding};
+    $padding: #{variables.$menu-height + variables.$footer-height + $additionalPadding};
     height: calc(100vh - #{$padding});
     overflow-y: auto;
     box-sizing: border-box;
 
     @include large() {
-        $padding: #{$menu-height + $app-ideal-top-margin + $footer-height + $additionalPadding};
+        $padding: #{variables.$menu-height + variables.$app-ideal-top-margin + variables.$footer-height + $additionalPadding};
         height: calc(100vh - #{$padding});
 
         &::-webkit-scrollbar {
@@ -157,24 +157,24 @@
         }
 
         &::-webkit-scrollbar-corner {
-            background-color: $color-1;
+            background-color: variables.$color-1;
         }
 
         &::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            border-radius: $spacing-medium;
-            background-color: $color-1;
+            border-radius: variables.$spacing-medium;
+            background-color: variables.$color-1;
         }
 
         &::-webkit-scrollbar-thumb {
-            border-radius: $spacing-medium;
+            border-radius: variables.$spacing-medium;
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-            background-color: $color-2;
+            background-color: variables.$color-2;
         }
     }
 
     @include mobile() {
-        $mobilePadding: #{$menu-height + $additionalPadding}; // there's no footer on mobile
+        $mobilePadding: #{variables.$menu-height + $additionalPadding}; // there's no footer on mobile
         height: calc(100vh - #{$mobilePadding});
     }
 }
@@ -188,20 +188,20 @@
         display: none;
 
         &.expanded {
-            @include overlay( $mobile-width, $mobile-width );
-            margin-top: #{$menu-height};
+            @include overlay( variables.$mobile-width, variables.$mobile-width );
+            margin-top: #{variables.$menu-height};
             display: block;
 
             .close-button {
                 display: block;
-                top: $spacing-large;
-                right: #{$spacing-medium + $spacing-small};
-                color: $color-1;
+                top: variables.$spacing-large;
+                right: #{variables.$spacing-medium + variables.$spacing-small};
+                color: variables.$color-1;
 
                 &.secondary {
-                    color: $color-2;
-                    top: #{$spacing-medium + $spacing-small};
-                    right: $spacing-medium;
+                    color: variables.$color-2;
+                    top: #{variables.$spacing-medium + variables.$spacing-small};
+                    right: variables.$spacing-medium;
                 }
             }
         }

@@ -59,6 +59,7 @@ const STARTING_FRETS = [ 0, 2, 4, 6, 8, 10 ];
 const OCTAVE = 12;
 
 export default {
+    emits: [ "close" ],
     components: {
         ChordShape
     },
@@ -258,28 +259,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/_mixins";
-@import "@/styles/_variables";
+@use "@/styles/_mixins";
+@use "@/styles/_variables";
 
 .chord-overlay {
     position: fixed;
     background-color: rgba(255,255,255,.9);
-    color: $color-5;
-    z-index: $z-index-overlay;
+    color: variables.$color-5;
+    z-index: variables.$z-index-overlay;
     text-align: center;
 }
 
 .chord-name {
-    padding-bottom: $spacing-medium;
+    padding-bottom: variables.$spacing-medium;
 }
 
 .chord-shape {
     display: inline-block;
-    margin: $spacing-medium $spacing-large ($spacing-large * 2);
+    margin: variables.$spacing-medium variables.$spacing-large (variables.$spacing-large * 2);
 }
 
 .description {
-    padding: 0 $spacing-small;
+    padding: 0 variables.$spacing-small;
 }
 
 .close-button {
@@ -288,44 +289,44 @@ export default {
 
 /* anything above mobile view */
 
-@include large() {
+@include mixins.large() {
     .chord-overlay {
         width: 50%;
         max-width: 600px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        border: 3px solid $color-3;
-        border-radius: $spacing-medium;
-        @include noEvents();
+        border: 3px solid variables.$color-3;
+        border-radius: variables.$spacing-medium;
+        @include mixins.noEvents();
     }
 }
 
 /* mobile view */
 
-@include mobile() {
+@include mixins.mobile() {
     .chord-overlay {
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        padding: 0 $spacing-medium;
-        @include boxSize();
+        padding: 0 variables.$spacing-medium;
+        @include mixins.boxSize();
     }
 
     .chord-shape {
-        margin-right: $spacing-large;
+        margin-right: variables.$spacing-large;
 
         &:nth-child(n+4) {
-            margin-top: $spacing-large;
+            margin-top: variables.$spacing-large;
         }
     }
 
     .close-button {
         display: block;
         position: absolute;
-        top: $spacing-medium;
-        right: $spacing-medium;
+        top: variables.$spacing-medium;
+        right: variables.$spacing-medium;
     }
 }
 </style>

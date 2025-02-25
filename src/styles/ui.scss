@@ -1,3 +1,6 @@
+@use "@/styles/_mixins";
+@use "@/styles/_variables";
+
 @mixin formField() {
     display: inline;
 
@@ -6,16 +9,16 @@
         font-weight: bold;
     }
 
-    @include mobile() {
+    @include mixins.mobile() {
         display: inline-flex;
-        margin-bottom: $spacing-small;
+        margin-bottom: variables.$spacing-small;
         width: 100%;
         text-align: left;
-        padding-left: $spacing-medium;
-        @include boxSize();
+        padding-left: variables.$spacing-medium;
+        @include mixins.boxSize();
 
         label {
-            margin-top: $spacing-small;
+            margin-top: variables.$spacing-small;
         }
     }
 }

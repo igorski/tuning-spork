@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
 import { initAudioContext } from "@/utils/audio-util";
@@ -83,7 +84,9 @@ import { mapSelectOptions } from "@/utils/select-util";
 export default {
     components: {
         ModelSelect,
-        TunerWindow: () => import( "@/components/tuner-window.vue" ),
+        TunerWindow: defineAsyncComponent({
+            loader: () => import( "@/components/tuner-window.vue" ),
+        }),
     },
     data: () => ({
         tunerOpened: false,
@@ -151,20 +154,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/_mixins";
-@import "@/styles/ui";
+@use "@/styles/_mixins";
+@use "@/styles/_variables";
+@use "@/styles/ui";
 
 .instrument-selector {
     position: relative;
-    padding: $spacing-large;
-    border-bottom: 1px solid $color-5;
-    background-color: $color-2;
-    color: $color-5;
-    @include boxSize();
-    @include noSelect();
+    padding: variables.$spacing-large;
+    border-bottom: 1px solid variables.$color-5;
+    background-color: variables.$color-2;
+    color: variables.$color-5;
+    @include mixins.boxSize();
+    @include mixins.noSelect();
 
-    @include large() {
-        margin: 0 $spacing-medium $spacing-medium 0;
+    @include mixins.large() {
+        margin: 0 variables.$spacing-medium variables.$spacing-medium 0;
     }
 
     &--collapsed {
@@ -172,21 +176,21 @@ export default {
     }
 
     &__collapse-button {
-        @include roundButton();
+        @include mixins.roundButton();
         position: absolute;
-        top: $spacing-medium;
-        right: $spacing-medium;
+        top: variables.$spacing-medium;
+        right: variables.$spacing-medium;
 
-        @include mobile() {
+        @include mixins.mobile() {
             display: none;
         }
     }
 
     &__close-button {
-        @include closeButton();
+        @include mixins.closeButton();
         color: #000;
 
-        @include large() {
+        @include mixins.large() {
             display: none;
         }
     }
@@ -196,12 +200,12 @@ export default {
     }
 
     &__option {
-        @include formField();
+        @include ui.formField();
     }
 
     &__select {
-        @include selectField();
-        margin-right: $spacing-medium;
+        @include ui.selectField();
+        margin-right: variables.$spacing-medium;
     }
 
     &__tuner-button {
@@ -209,16 +213,16 @@ export default {
         border-radius: 50%;
         padding: 0 2px;
         background: none;
-        border: 3px solid $color-1;
+        border: 3px solid variables.$color-1;
         vertical-align: bottom;
 
-        @include large() {
+        @include mixins.large() {
             position: absolute;
-            right: #{$spacing-large - $spacing-small};
+            right: #{variables.$spacing-large - variables.$spacing-small};
         }
 
         &:hover {
-            background-color: $color-3;
+            background-color: variables.$color-3;
         }
 
         img {

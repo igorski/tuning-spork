@@ -66,6 +66,7 @@ import { detectPitch, getPitchByFrequency } from "@/utils/pitch-util";
 const THRESHOLD = 5; // threshold in cents a note can be sharp/flat but considered "in tune"
 
 export default {
+    emits: [ "close" ],
     components: {
         ModelSelect
     },
@@ -93,11 +94,11 @@ export default {
             // once we have permission, we immediately request the available audio inputs
             const devices = await navigator.mediaDevices.enumerateDevices();
             this.inputs = devices.filter(({ kind }) => kind === "audioinput" );
-        } catch {
-            this.handleError();
+        } catch ( error ) {
+            this.handleError( error );
         }
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.unlisten();
     },
     methods: {
@@ -140,18 +141,26 @@ export default {
                 this.pointer.class = pitch.cents <= THRESHOLD && pitch.cents >= -THRESHOLD ? "tuned" : "off";
             }
             this.raf = window.requestAnimationFrame( this.updateFn );
-        }
+        },
+        handleError( error ) {
+            console.error( error );
+        },
     },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/_variables";
-@import "@/styles/_mixins";
+@use "@/styles/_variables";
+@use "@/styles/_mixins";
+
+@use "sass:math";
 
 .tuner {
-    @include overlay( 400px, 360px );
-    text-align: center;
+    @include mixins.overlay( 400px, 360px );
+
+    & {
+        text-align: center;
+    }
 
     &__title {
         margin: 0;
@@ -162,11 +171,11 @@ export default {
     }
 
     .close-button {
-        top: #{$spacing-medium + $spacing-small};
+        top: #{variables.$spacing-medium + variables.$spacing-small};
     }
 
     &__ui {
-        padding: $spacing-large 0;
+        padding: variables.$spacing-large 0;
     }
 
     &__pitch {
@@ -174,7 +183,7 @@ export default {
         width: 200px;
         height: 2px;
         background-color: #666;
-        margin: $spacing-medium auto;
+        margin: variables.$spacing-medium auto;
 
         &__note {
             font-size: 200%;
@@ -182,12 +191,12 @@ export default {
         }
 
         &__pointer {
-            $pointerSize: $spacing-large;
+            $pointerSize: variables.$spacing-large;
             position: absolute;
             width: $pointerSize;
             height: $pointerSize;
-            bottom: -#{$pointerSize / 2};
-            margin-left: -#{$pointerSize / 2};
+            bottom: -(math.div($pointerSize, 2));
+            margin-left: -(math.div($pointerSize, 2));
             border-radius: 50%;
             transition: left 250ms;
 
