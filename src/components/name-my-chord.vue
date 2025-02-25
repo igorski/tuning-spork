@@ -98,8 +98,11 @@ export default {
         chord() {
             this.calculateChord();
         },
-        tuning() {
-            this.calculateChord();
+        tuning: {
+            deep: true,
+            handler() {
+                this.calculateChord();
+            }
         },
     },
     created() {

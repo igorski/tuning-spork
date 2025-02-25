@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2024 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2025 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -78,6 +78,7 @@
 import { defineAsyncComponent } from "vue";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
+import { INSTRUMENT_TYPES } from "@/definitions/types";
 import { initAudioContext } from "@/utils/audio-util";
 import { mapSelectOptions } from "@/utils/select-util";
 
@@ -105,7 +106,7 @@ export default {
             return `${this.selectedStringAmount} string ${this.selectedInstrumentType} in ${this.selectedTuning} tuning`;
         },
         availableInstruments() {
-            return mapSelectOptions([ "guitar", "bass", "ukelele", "mandolin" ]);
+            return mapSelectOptions([ INSTRUMENT_TYPES.GUITAR, INSTRUMENT_TYPES.BASS, INSTRUMENT_TYPES.UKELELE, INSTRUMENT_TYPES.MANDOLIN ]);
         },
         availableStringAmounts() {
             return mapSelectOptions( this.availableStringAmountsForCurrentInstrument );

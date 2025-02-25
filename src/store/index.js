@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2025 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,6 +23,7 @@
 import Chords from "@/definitions/chords.json";
 import Scales from "@/definitions/scales.json";
 import Tunings from "@/definitions/tunings.json";
+import { APP_MODES, INSTRUMENT_TYPES, VIEW_OPTIONS } from "@/definitions/types";
 import { ucFirst } from "@/utils/string-util";
 
 // reverse the string order
@@ -33,17 +34,18 @@ const TUNINGS = Tunings.filter(t => ({ ...t, strings: t.strings.reverse() }));
 const getTunings = state => {
     switch ( state.instrumentType ) {
         default:
+        case INSTRUMENT_TYPES.GUITAR:
             return TUNINGS.filter( t => t.type === "guitar" );
-        case "bass":
+        case INSTRUMENT_TYPES.BASS:
             return TUNINGS.filter( t => t.type === "bass" );
-        case "ukelele":
+        case INSTRUMENT_TYPES.UKELELE:
             return TUNINGS.filter( t => t.type === "ukelele" );
-        case "mandolin":
+        case INSTRUMENT_TYPES.MANDOLIN:
             return TUNINGS.filter( t => t.type === "mandolin" );
     }
 };
 
-const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
+const standardTuningForInstrument = ( instrumentType, optStringAmount = 0 ) => {
     return cloneTuning( TUNINGS.find( tuning => {
         if ( tuning.type !== instrumentType || tuning.name.trim().slice( 0, 8 ).toLowerCase() !== "standard" ) {
             return false;
@@ -52,34 +54,43 @@ const standardTuningForInstrument = (instrumentType, optStringAmount = 0) => {
     }));
 };
 
-export default {
-    state: {
-        appMode: 0,                     // either 0 (scale visualiser) or 1 (name my chord)
-        configurationOpened: false,
-        scaleSelectorOpened: false,
-        notes: [ "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" ],
-        scales: Scales,
-        instrumentType: "guitar",       // "guitar", "bass" or "ukelele"
-        tuning: standardTuningForInstrument( "guitar", 6 ), // start as six string
-        key: "E",                       // none more guitar friendly
-        scale: Object.keys( Scales ).find( name => name.includes( "major" )),
-        viewOption: "frets",            // whether to visualise "frets" or "notes",
-        fretAmount: 13,
-        startFret: 0,
-        chordOptions: {
-            power: false,
-            basic: true,
-            extended: false,
-        },
-        chord: [],                      // chord visualised by "Name my chord"-mode
-        windowSize: {
-            width: window.innerWidth,
-            height: window.innerHeight
-        },
+export const createState = ( partialState = {}) => ({
+    appMode: APP_MODES.SCALE_VIEWER,
+    configurationOpened: false,
+    scaleSelectorOpened: false,
+    notes: [ "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" ],
+    scales: Scales,
+    instrumentType: INSTRUMENT_TYPES.GUITAR,
+    tuning: standardTuningForInstrument( "guitar", 6 ), // start as six string
+    key: "E",                       // none more guitar friendly
+    scale: Object.keys( Scales ).find( name => name.includes( "major" )),
+    viewOption: VIEW_OPTIONS.FRETS,
+    fretAmount: 13,
+    startFret: 0,
+    chordOptions: {
+        power: false,
+        basic: true,
+        extended: false,
     },
+    chord: [],                      // chord visualised by "Name my chord"-mode
+    windowSize: {
+        width: window.innerWidth,
+        height: window.innerHeight
+    },
+    ...partialState,
+})
+
+export default {
+    state: createState(),
     getters: {
         isMobile( state ) {
             return state.windowSize.width <= 685; // see _variables.scss
+        },
+        isScaleViewer( state ) {
+            return state.appMode === APP_MODES.SCALE_VIEWER;
+        },
+        isNameMyChord( state ) {
+            return state.appMode === APP_MODES.NAME_MY_CHORD;
         },
         availableStringAmountsForCurrentInstrument( state ) {
             return getTunings( state ).reduce(( acc, tuning ) => {
@@ -149,6 +160,13 @@ export default {
                 return null;
             }
             return scale.names.map( ucFirst ).join( " / " );
+        },
+        viewOption( state ) {
+            const option = state.viewOption;
+            if ( state.appMode === APP_MODES.NAME_MY_CHORD && option === VIEW_OPTIONS.DEGREES ) {
+                return VIEW_OPTIONS.NOTES;
+            }
+            return option;
         },
     },
     mutations: {

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2025 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -43,7 +43,7 @@
                 :style="{ left: `${(fretIndex + 1 ) * 100 / fretAmount}%`}"
             ></div>
             <!-- app mode 0 : show scale notes -->
-            <template v-if="appMode === 0">
+            <template v-if="isScaleViewer">
                 <div
                     v-for="fret in fretsInScale"
                     class="string__note"
@@ -62,7 +62,7 @@
                     :style="{ left: getNoteOffset( fret ), width: `${100 / fretAmount}%`}"
                     @click="handleFretClick( fret )"
                 >
-                    <span class="string__note-icon">{{ fret }}</span>
+                    <span class="string__note-icon">{{ getFretNode( fret ) }}</span>
                 </div>
             </template>
         </div>
@@ -72,6 +72,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
+import { VIEW_OPTIONS } from "@/definitions/types";
 import { mapSelectOptions } from "@/utils/select-util";
 
 export default {
@@ -107,10 +108,11 @@ export default {
             "notes",
             "tuning",
             "key",
-            "viewOption",
         ]),
         ...mapGetters([
             "availableScaleNotes",
+            "isScaleViewer",
+            "viewOption",
         ]),
         tunedNote: {
             get() {
@@ -161,9 +163,9 @@ export default {
             switch ( this.viewOption ) {
                 default:
                     return this.getNoteByFret( fret );
-                case "frets":
+                case VIEW_OPTIONS.FRETS:
                     return fret;
-                case "degrees":
+                case VIEW_OPTIONS.DEGREES:
                     return this.availableScaleNotes.indexOf( this.getNoteByFret( fret )) + 1;
             }
         },

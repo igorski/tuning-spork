@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2025 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -31,13 +31,13 @@
                 <button
                     type="button"
                     class="menu-button"
-                    :class="{ 'menu-button--active': appMode === 0 }"
+                    :class="{ 'menu-button--active': isScaleViewer }"
                     @click="scaleViewerClick()"
                 >Scale viewer</button>
                 <button
                     type="button"
                     class="menu-button"
-                    :class="{ 'menu-button--active': appMode === 1 }"
+                    :class="{ 'menu-button--active': isNameMyChord }"
                     @click="nameMyChordClick()"
                 >Name my chord!</button>
             </div>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
     data: () => ({
@@ -55,6 +55,10 @@ export default {
     computed: {
         ...mapState([
             "appMode",
+        ]),
+        ...mapGetters([
+            "isScaleViewer",
+            "isNameMyChord",
         ]),
     },
     methods: {

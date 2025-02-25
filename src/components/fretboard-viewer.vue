@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 Igor Zinken - https://www.igorski.nl
+ * Copyright (c) 2019-2025 Igor Zinken - https://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -34,7 +34,7 @@
         </div>
         <div class="fretboard-info">
         <div
-            v-if="appMode === 0"
+            v-if="isScaleViewer"
             class="fretboard-scale-info"
         >
             <h2 class="fretboard-scale-info__title">{{ scaleName }}</h2>
@@ -76,6 +76,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { ModelSelect } from "vue-search-select";
+import { VIEW_OPTIONS } from "@/definitions/types";
 import { mapSelectOptions } from "@/utils/select-util";
 import StringViewer from "./string-viewer.vue";
 
@@ -86,23 +87,26 @@ export default {
     },
     computed: {
         ...mapState([
-            "appMode",
             "fretAmount",
             "startFret",
             "tuning",
-            "viewOption",
         ]),
         ...mapGetters([
             "isMobile",
+            "isScaleViewer",
             "scaleName",
             "scaleAltNames",
+            "viewOption",
         ]),
         availableViewOptions() {
-            return [
-                { value: "frets",   text: "Fret numbers" },
-                { value: "notes",   text: "Note names" },
-                { value: "degrees", text: "Scale degrees" }
+            const options = [
+                { value: VIEW_OPTIONS.FRETS,   text: "Fret numbers" },
+                { value: VIEW_OPTIONS.NOTES,   text: "Note names" },
             ];
+            if ( this.isScaleViewer ) {
+                options.push({ value: VIEW_OPTIONS.DEGREES, text: "Scale degrees" });
+            }
+            return options;
         },
         selectedViewOption: {
             get() {

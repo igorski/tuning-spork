@@ -42,7 +42,7 @@
                     <!-- scale configuration interface -->
                     <div class="tuning-spork__scale-selector">
                         <scale-selector
-                            :enabled="appMode === 0"
+                            :enabled="isScaleViewer"
                             class="tuning-spork__aside"
                             :class="{ expanded: scaleSelectorOpened }"
                             @close="setScaleSelectorOpened( false )"
@@ -62,7 +62,7 @@
                         <fretboard-viewer />
                         <div class="tuning-spork__details">
                             <!-- compatible chords list -->
-                            <chord-list v-if="appMode === 0" />
+                            <chord-list v-if="isScaleViewer" />
                             <!-- "name my chord" mode -->
                             <name-my-chord v-else />
                         </div>
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 import ApplicationMenu from "@/components/application-menu.vue";
 import ChordList from "@/components/chord-list.vue";
 import FretboardViewer from "@/components/fretboard-viewer.vue";
@@ -105,6 +105,9 @@ export default {
             "configurationOpened",
             "scaleSelectorOpened",
             "windowSize",
+        ]),
+        ...mapGetters([
+            "isScaleViewer",
         ]),
     },
     created() {
